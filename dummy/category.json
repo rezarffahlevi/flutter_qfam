@@ -1,0 +1,112 @@
+{
+    "code": "00",
+    "message": "Get data success",
+    "error": null,
+    "data": {
+        "category": [
+            {
+                "id": 1,
+                "name": "Pranikah"
+            },
+            {
+                "id": 2,
+                "name": "Mental"
+            },
+            {
+                "id": 3,
+                "name": "Finansial"
+            },
+            {
+                "id": 4,
+                "name": "Keluarga"
+            },
+            {
+                "id": 5,
+                "name": "Komitmen"
+            }
+        ],
+        "home": [
+            {
+                "type": "column-list",
+                "title": "Tentang Pranikah",
+                "category_id": 1,
+                "data": [
+                    {
+                        "id": 1,
+                        "title": "Ini artikel",
+                        "image": "https://d1vbn70lmn1nqe.cloudfront.net/prod/wp-content/uploads/2021/06/23030330/cek-pra-nikah-halodoc.jpg.webp",
+                        "author": "GueSehat"
+                    },
+                    {
+                        "id": 1,
+                        "title": "Ini artikel",
+                        "image": "https://d1vbn70lmn1nqe.cloudfront.net/prod/wp-content/uploads/2021/06/23030330/cek-pra-nikah-halodoc.jpg.webp",
+                        "author": "GueSehat"
+                    },
+                    {
+                        "id": 1,
+                        "title": "Ini artikel",
+                        "image": "https://d1vbn70lmn1nqe.cloudfront.net/prod/wp-content/uploads/2021/06/23030330/cek-pra-nikah-halodoc.jpg.webp",
+                        "author": "GueSehat"
+                    },
+                    {
+                        "id": 1,
+                        "title": "Ini artikel",
+                        "image": "https://d1vbn70lmn1nqe.cloudfront.net/prod/wp-content/uploads/2021/06/23030330/cek-pra-nikah-halodoc.jpg.webp",
+                        "author": "GueSehat"
+                    }
+                ]
+            },
+            {
+                "type": "row-list",
+                "title": "KUA Terdekat",
+                "category_id": 1,
+                "data": [
+                    {
+                        "id": 1,
+                        "title": "Ini artikel",
+                        "image": "https://d1vbn70lmn1nqe.cloudfront.net/prod/wp-content/uploads/2021/06/23030330/cek-pra-nikah-halodoc.jpg.webp",
+                        "author": "GueSehat"
+                    },
+                    {
+                        "id": 1,
+                        "title": "Ini artikel",
+                        "image": "https://d1vbn70lmn1nqe.cloudfront.net/prod/wp-content/uploads/2021/06/23030330/cek-pra-nikah-halodoc.jpg.webp",
+                        "author": "GueSehat"
+                    },
+                    {
+                        "id": 1,
+                        "title": "Ini artikel",
+                        "image": "https://d1vbn70lmn1nqe.cloudfront.net/prod/wp-content/uploads/2021/06/23030330/cek-pra-nikah-halodoc.jpg.webp",
+                        "author": "GueSehat"
+                    },
+                    {
+                        "id": 1,
+                        "title": "Ini artikel",
+                        "image": "https://d1vbn70lmn1nqe.cloudfront.net/prod/wp-content/uploads/2021/06/23030330/cek-pra-nikah-halodoc.jpg.webp",
+                        "author": "GueSehat"
+                    },
+                    {
+                        "id": 1,
+                        "title": "Ini artikel",
+                        "image": "https://d1vbn70lmn1nqe.cloudfront.net/prod/wp-content/uploads/2021/06/23030330/cek-pra-nikah-halodoc.jpg.webp",
+                        "author": "GueSehat"
+                    }
+                ]
+            },
+            {
+                "type": "row-list-person",
+                "title": "Penghulu",
+                "category_id": 1,
+                "data": [
+                    {
+                        "id": 1,
+                        "title": "nama penghulu",
+                        "image": "https://d1vbn70lmn1nqe.cloudfront.net/prod/wp-content/uploads/2021/06/23030330/cek-pra-nikah-halodoc.jpg.webp",
+                        "author": "GueSehat"
+                    }
+                ]
+            }
+        ]
+    }
+}
