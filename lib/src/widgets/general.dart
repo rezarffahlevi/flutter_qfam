@@ -6,6 +6,12 @@ import 'package:flutter_siap_nikah/src/styles/my_font_weight.dart';
 import 'package:flutter_siap_nikah/src/styles/my_text_style.dart';
 import 'package:getwidget/getwidget.dart';
 
+enum NetworkStates {
+  onLoading,
+  onLoaded,
+  onError,
+}
+
 Widget sectionWidget(text, {child, showAll = true, onTapAll}) {
   return InkWell(
     onTap: onTapAll,
@@ -41,6 +47,16 @@ Widget sectionWidget(text, {child, showAll = true, onTapAll}) {
       ],
     ),
   );
+}
+
+Widget renderContent(state, {onLoading, onLoaded, onError}) {
+  if (state == NetworkStates.onLoading) {
+    return onLoading;
+  } else if (state == NetworkStates.onLoaded) {
+    return onLoaded;
+  } else {
+    return onError;
+  }
 }
 
 Widget appBar({onTap: Function, icon: Icons.notifications}) {

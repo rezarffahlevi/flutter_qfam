@@ -87,6 +87,7 @@ class Data {
   String? title;
   String? image;
   String? author;
+  bool? isVideo;
 
   Data({this.id, this.title, this.image, this.author});
 
@@ -95,6 +96,7 @@ class Data {
     title = json['title'];
     image = json['image'];
     author = json['author'];
+    isVideo = json['is_video'];
   }
 
   Map<String, dynamic> toJson() {
@@ -103,6 +105,7 @@ class Data {
     data['title'] = this.title;
     data['image'] = this.image;
     data['author'] = this.author;
+    data['is_video'] = this.isVideo;
     return data;
   }
 }

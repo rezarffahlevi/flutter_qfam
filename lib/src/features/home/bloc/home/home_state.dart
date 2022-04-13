@@ -1,13 +1,6 @@
 part of 'home_bloc.dart';
-
-enum HomeStates {
-  onLoading,
-  onLoaded,
-  onError,
-}
-
 class HomeState extends Equatable {
-  final HomeStates state;
+  final NetworkStates state;
   final List<Category> listCategory;
   final List<Home> listHome;
   final String? photo;
@@ -15,14 +8,14 @@ class HomeState extends Equatable {
   const HomeState({
     this.listCategory = const [],
     this.listHome = const [],
-    this.state = HomeStates.onLoading,
+    this.state = NetworkStates.onLoading,
     this.photo,
   });
 
   HomeState copyWith({
     List<Category>? listCategory,
     List<Home>? listHome,
-    HomeStates? state,
+    NetworkStates? state,
     String? photo,
   }) {
     return HomeState(

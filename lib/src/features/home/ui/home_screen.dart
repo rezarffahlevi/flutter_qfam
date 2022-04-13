@@ -70,89 +70,41 @@ class _HomeScreenState extends State<HomeScreen> {
                             return Column(
                               children: [
                                 Spaces.normalVertical(),
-                                state.state == HomeStates.onLoading
-                                    ? GFShimmer(
-                                        child: _categoryBlock(dimension),
-                                      )
-                                    : sectionWidget(
-                                        'Kategori',
-                                        child: _categorySection(listCategory),
-                                        onTapAll: (){
-                                          debugPrint('Hii');
-                                        }
-                                      ),
-                                state.state == HomeStates.onLoading
-                                    ? GFShimmer(
-                                        child: Column(
-                                          children: [
-                                            for (var i = 0; i < 12; i++)
-                                              Column(
-                                                children: [
-                                                  _articleBlock(dimension),
-                                                  Spaces.normalVertical()
-                                                ],
-                                              ),
-                                          ],
-                                        ),
-                                      )
-                                    : ListView.separated(
-                                        shrinkWrap: true,
-                                        physics:
-                                            const NeverScrollableScrollPhysics(),
-                                        itemBuilder: (c, i) {
-                                          final item = listHome[i];
-                                          return sectionWidget(
-                                            item.title ?? '-',
-                                            child: Container(
-                                              width: dimension.width,
-                                              child: ListView.separated(
-                                                shrinkWrap: true,
-                                                physics:
-                                                    const NeverScrollableScrollPhysics(),
-                                                padding: EdgeInsets.only(
-                                                    left: 16, right: 16),
-                                                itemBuilder: (c, j) {
-                                                  final artikel = item.data?[j];
-                                                  return Column(
-                                                    crossAxisAlignment:
-                                                        CrossAxisAlignment
-                                                            .start,
-                                                    children: [
-                                                      GFImageOverlay(
-                                                        height: 130,
-                                                        borderRadius:
-                                                            BorderRadius.all(
-                                                                Radius.circular(
-                                                                    8)),
-                                                        image: NetworkImage(
-                                                            artikel?.image ??
-                                                                ''),
-                                                        boxFit: BoxFit.fitWidth,
-                                                      ),
-                                                      Spaces.smallVertical(),
-                                                      Text(artikel?.title ??
-                                                          '-', style: MyTextStyle.sessionTitle,),
-                                                      Spaces.smallVertical(),
-                                                      Text('By ' +
-                                                          (artikel?.author ??
-                                                              '-'), style: MyTextStyle.contentDescription,),
-                                                    ],
-                                                  );
-                                                },
-                                                separatorBuilder: (c, i) {
-                                                  return Spaces.largeVertical();
-                                                },
-                                                itemCount:
-                                                    item.data?.length ?? 0,
-                                              ),
-                                            ),
-                                          );
-                                        },
-                                        separatorBuilder: (c, i) {
-                                          return Spaces.normalHorizontal();
-                                        },
-                                        itemCount: listHome.length,
-                                      ),
+                                renderContent(
+                                  state.state,
+                                  onLoading: GFShimmer(
+                                    child: _categoryBlock(dimension),
+                                  ),
+                                  onLoaded: sectionWidget(
+                                    'Kategori',
+                                    child: _categorySection(listCategory),
+                                    onTapAll: () {
+                                      debugPrint('Hii');
+                                    },
+                                  ),
+                                  onError: sectionWidget('Kategori',
+                                      child: Text('Error Exception')),
+                                ),
+                                renderContent(
+                                  state.state,
+                                  onLoading: GFShimmer(
+                                    child: Column(
+                                      children: [
+                                        for (var i = 0; i < 12; i++)
+                                          Column(
+                                            children: [
+                                              _articleBlock(dimension),
+                                              Spaces.normalVertical()
+                                            ],
+                                          ),
+                                      ],
+                                    ),
+                                  ),
+                                  onLoaded: _renderArticle(
+                                      dimension, state, listHome),
+                                  onError: sectionWidget('Pranikah',
+                                      child: Text('Error Exception')),
+                                )
                               ],
                             );
                           }),
@@ -165,6 +117,207 @@ class _HomeScreenState extends State<HomeScreen> {
           ],
         ),
       )),
+    );
+  }
+
+  Widget _renderArticle(dimension, state, listHome) {
+    return ListView.separated(
+      shrinkWrap: true,
+      physics: const NeverScrollableScrollPhysics(),
+      itemBuilder: (c, i) {
+        final item = listHome[i];
+        switch (item.type) {
+          case "column-list":
+            return sectionWidget(
+              item.title ?? '-',
+              child: Container(
+                width: dimension.width,
+                child: ListView.separated(
+                  shrinkWrap: true,
+                  physics: const NeverScrollableScrollPhysics(),
+                  padding: EdgeInsets.only(left: 16, right: 16),
+                  itemBuilder: (c, j) {
+                    final article = item.data?[j];
+                    return Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        GFImageOverlay(
+                          color: MyColors.greyPlaceHolder,
+                          height: 130,
+                          borderRadius: BorderRadius.all(Radius.circular(8)),
+                          image: NetworkImage(article?.image ?? ''),
+                          boxFit: BoxFit.fitWidth,
+                          child: article.isVideo
+                              ? Icon(
+                                  Icons.play_circle,
+                                  size: 50,
+                                  color: Colors.white,
+                                )
+                              : Container(),
+                        ),
+                        Spaces.smallVertical(),
+                        Text(
+                          article?.title ?? '-',
+                          style: MyTextStyle.sessionTitle,
+                        ),
+                        Spaces.smallVertical(),
+                        Text(
+                          'By ' + (article?.author ?? '-'),
+                          style: MyTextStyle.contentDescription,
+                        ),
+                      ],
+                    );
+                  },
+                  separatorBuilder: (c, i) {
+                    return Spaces.largeVertical();
+                  },
+                  itemCount: item.data?.length ?? 0,
+                ),
+              ),
+            );
+          case "row-list":
+            return sectionWidget(
+              item.title ?? '-',
+              child: Container(
+                width: dimension.width,
+                height: 180,
+                child: ListView.separated(
+                  shrinkWrap: true,
+                  scrollDirection: Axis.horizontal,
+                  padding: EdgeInsets.symmetric(horizontal: 15),
+                  physics: const AlwaysScrollableScrollPhysics(),
+                  itemBuilder: (c, j) {
+                    final article = item.data?[j];
+                    return Container(
+                      width: 120,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          GFImageOverlay(
+                            color: MyColors.greyPlaceHolder,
+                            height: 170,
+                            borderRadius: BorderRadius.all(Radius.circular(8)),
+                            image: NetworkImage(article?.image ?? ''),
+                            boxFit: BoxFit.fitHeight,
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Padding(
+                                  padding: EdgeInsets.only(top: 10),
+                                  child: Text(
+                                    article?.title ?? '-',
+                                    style: MyTextStyle.sessionTitle.copyWith(
+                                        color: MyColors.textReverse,
+                                        shadows: [
+                                          Shadow(
+                                            offset: Offset(2.0, 2.0),
+                                            blurRadius: 3.0,
+                                            color: Color.fromARGB(255, 0, 0, 0),
+                                          ),
+                                        ]),
+                                  ),
+                                ),
+                                Container(
+                                  margin: EdgeInsets.symmetric(horizontal: 10),
+                                  child: GFButton(
+                                    onPressed: () {},
+                                    text: "Lihat Detail",
+                                    blockButton: true,
+                                    size: 25,
+                                    color: MyColors.background,
+                                    textColor: MyColors.text,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
+                    );
+                  },
+                  separatorBuilder: (c, i) {
+                    return Spaces.normalHorizontal();
+                  },
+                  itemCount: item.data?.length ?? 0,
+                ),
+              ),
+            );
+          case "row-list-profile":
+            return sectionWidget(
+              item.title ?? '-',
+              child: Container(
+                width: dimension.width,
+                height: 180,
+                child: ListView.separated(
+                  shrinkWrap: true,
+                  scrollDirection: Axis.horizontal,
+                  physics: const AlwaysScrollableScrollPhysics(),
+                  padding: EdgeInsets.symmetric(horizontal: 15),
+                  itemBuilder: (c, j) {
+                    final article = item.data?[j];
+                    return Container(
+                      width: 120,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Container(
+                            height: 170,
+                            decoration: BoxDecoration(
+                                color: MyColors.background,
+                                borderRadius: BorderRadius.circular(8)),
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Padding(
+                                  padding: EdgeInsets.only(top: 10),
+                                  child: Column(
+                                    children: [
+                                      GFAvatar(
+                                        backgroundImage:
+                                            NetworkImage(article.image),
+                                      ),
+                                      Spaces.normalVertical(),
+                                      Text(article?.title ?? '-',
+                                          style: MyTextStyle.h5.bold),
+                                      Spaces.smallVertical(),
+                                      Text(article?.author ?? '-',
+                                          style: MyTextStyle.contentDescription)
+                                    ],
+                                  ),
+                                ),
+                                Container(
+                                  margin: EdgeInsets.symmetric(horizontal: 10),
+                                  child: GFButton(
+                                    onPressed: () {},
+                                    text: "Lihat Detail",
+                                    blockButton: true,
+                                    size: 25,
+                                    color: MyColors.primary,
+                                    textColor: MyColors.textReverse,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
+                    );
+                  },
+                  separatorBuilder: (c, i) {
+                    return Spaces.normalHorizontal();
+                  },
+                  itemCount: item.data?.length ?? 0,
+                ),
+              ),
+            );
+          default:
+            return Container();
+        }
+      },
+      separatorBuilder: (c, i) {
+        return Spaces.normalHorizontal();
+      },
+      itemCount: listHome.length,
     );
   }
 
@@ -188,7 +341,10 @@ class _HomeScreenState extends State<HomeScreen> {
                         width: 1.4)),
                 padding:
                     const EdgeInsets.symmetric(horizontal: 30, vertical: 2),
-                child: Text(item.name ?? '-', style: MyTextStyle.contentDescription,),
+                child: Text(
+                  item.name ?? '-',
+                  style: MyTextStyle.contentDescription,
+                ),
               ),
               onTap: () {});
         },

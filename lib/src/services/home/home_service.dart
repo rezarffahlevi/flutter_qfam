@@ -12,7 +12,7 @@ class HomeService {
 
   Future<DefaultResponseModel?> getHomeData() async {
     try {
-      var response = await apiHelper.get('/dummy/category.json');
+      var response = await apiHelper.get('/dummy/home.json');
       var homeModel = HomeModel.fromJson(response['data']);
       List<Category>? category = <Category>[];
       List<Home>? home = <Home>[];
@@ -31,7 +31,7 @@ class HomeService {
       return DefaultResponseModel.fromJson(response, homeModel);
     } catch (e) {
       debugPrint(e.toString());
-      return null;
+      throw Exception(e);
     }
   }
 

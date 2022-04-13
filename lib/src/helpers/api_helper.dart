@@ -18,12 +18,13 @@ class ApiHelper {
     baseUrl = baseUrl ?? BASE_URL;
     options.baseUrl = baseUrl;
     dio.options = options;
-    
+
     try {
       var response = await dio.get(url, queryParameters: params);
       return json.decode(response.toString());
-    } catch (e) {
+    } on DioError catch (e) {
       debugPrint(e.toString());
+      throw Exception(e.error);
     }
   }
 }

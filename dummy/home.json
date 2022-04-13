@@ -35,24 +35,28 @@
                         "id": 1,
                         "title": "Ini artikel",
                         "image": "https://d1vbn70lmn1nqe.cloudfront.net/prod/wp-content/uploads/2021/06/23030330/cek-pra-nikah-halodoc.jpg.webp",
+                        "is_video" : false,
                         "author": "GueSehat"
                     },
                     {
                         "id": 1,
                         "title": "Ini artikel",
                         "image": "https://d1vbn70lmn1nqe.cloudfront.net/prod/wp-content/uploads/2021/06/23030330/cek-pra-nikah-halodoc.jpg.webp",
+                        "is_video" : true,
                         "author": "GueSehat"
                     },
                     {
                         "id": 1,
                         "title": "Ini artikel",
                         "image": "https://d1vbn70lmn1nqe.cloudfront.net/prod/wp-content/uploads/2021/06/23030330/cek-pra-nikah-halodoc.jpg.webp",
+                        "is_video" : false,
                         "author": "GueSehat"
                     },
                     {
                         "id": 1,
                         "title": "Ini artikel",
                         "image": "https://d1vbn70lmn1nqe.cloudfront.net/prod/wp-content/uploads/2021/06/23030330/cek-pra-nikah-halodoc.jpg.webp",
+                        "is_video" : false,
                         "author": "GueSehat"
                     }
                 ]
@@ -64,20 +68,20 @@
                 "data": [
                     {
                         "id": 1,
-                        "title": "Ini artikel",
-                        "image": "https://d1vbn70lmn1nqe.cloudfront.net/prod/wp-content/uploads/2021/06/23030330/cek-pra-nikah-halodoc.jpg.webp",
+                        "title": "KUA Cinere",
+                        "image": "http://cdn.kemenag.go.id/storage/posts/16_9/mid/1622346389.jpg",
                         "author": "GueSehat"
                     },
                     {
                         "id": 1,
-                        "title": "Ini artikel",
-                        "image": "https://d1vbn70lmn1nqe.cloudfront.net/prod/wp-content/uploads/2021/06/23030330/cek-pra-nikah-halodoc.jpg.webp",
+                        "title": "KUA Limo",
+                        "image": "https://awsimages.detik.net.id/community/media/visual/2019/09/03/5907d610-fa85-4bdd-aa98-f3675c004d7f_169.jpeg?w=700&q=90",
                         "author": "GueSehat"
                     },
                     {
                         "id": 1,
-                        "title": "Ini artikel",
-                        "image": "https://d1vbn70lmn1nqe.cloudfront.net/prod/wp-content/uploads/2021/06/23030330/cek-pra-nikah-halodoc.jpg.webp",
+                        "title": "KUA Pamulang",
+                        "image": "https://assets.promediateknologi.com/crop/0x0:0x0/750x500/photo/ayobandung/images-bandung/post/articles/2018/12/03/41288/idcdvqqcio3fcdlhedbv.jpg",
                         "author": "GueSehat"
                     },
                     {
@@ -95,10 +99,28 @@
                 ]
             },
             {
-                "type": "row-list-person",
+                "type": "row-list-profile",
                 "title": "Penghulu",
                 "category_id": 1,
                 "data": [
+                    {
+                        "id": 1,
+                        "title": "nama penghulu",
+                        "image": "https://d1vbn70lmn1nqe.cloudfront.net/prod/wp-content/uploads/2021/06/23030330/cek-pra-nikah-halodoc.jpg.webp",
+                        "author": "GueSehat"
+                    },
+                    {
+                        "id": 1,
+                        "title": "nama penghulu",
+                        "image": "https://d1vbn70lmn1nqe.cloudfront.net/prod/wp-content/uploads/2021/06/23030330/cek-pra-nikah-halodoc.jpg.webp",
+                        "author": "GueSehat"
+                    },
+                    {
+                        "id": 1,
+                        "title": "nama penghulu",
+                        "image": "https://d1vbn70lmn1nqe.cloudfront.net/prod/wp-content/uploads/2021/06/23030330/cek-pra-nikah-halodoc.jpg.webp",
+                        "author": "GueSehat"
+                    },
                     {
                         "id": 1,
                         "title": "nama penghulu",
