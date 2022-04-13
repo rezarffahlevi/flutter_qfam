@@ -13,12 +13,12 @@ enum NetworkStates {
 }
 
 Widget sectionWidget(text, {child, showAll = true, onTapAll}) {
-  return InkWell(
-    onTap: onTapAll,
-    child: Column(
-      children: [
-        Container(
-          margin: EdgeInsets.symmetric(horizontal: 15),
+  return Column(
+    children: [
+      Container(
+        margin: EdgeInsets.symmetric(horizontal: 15),
+        child: InkWell(
+          onTap: onTapAll,
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: <Widget>[
@@ -41,11 +41,11 @@ Widget sectionWidget(text, {child, showAll = true, onTapAll}) {
             ],
           ),
         ),
-        Spaces.smallVertical(),
-        child,
-        Spaces.normalVertical(),
-      ],
-    ),
+      ),
+      Spaces.smallVertical(),
+      child,
+      Spaces.normalVertical(),
+    ],
   );
 }
 
@@ -79,11 +79,15 @@ Widget appBar({child, onTap: Function, icon: Icons.notifications}) {
           onTap: () {},
         ),
         Spaces.normalHorizontal(),
-        (child == null || child is String) ? Text(
-          child ?? AppSettings.name,
-          style: MyTextStyle.appBarTitle.copyWith(
-              color: MyColors.textReverse, fontWeight: MyFontWeight.bold, fontFamily: 'GreatVibes'),
-        ) : child,
+        (child == null || child is String)
+            ? Text(
+                child ?? AppSettings.name,
+                style: MyTextStyle.appBarTitle.copyWith(
+                    color: MyColors.textReverse,
+                    fontWeight: MyFontWeight.bold,
+                    fontFamily: 'GreatVibes'),
+              )
+            : child,
         Spaces.normalHorizontal(),
         onTap == null
             ? Container()
