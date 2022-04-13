@@ -77,7 +77,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                   ),
                                   onLoaded: sectionWidget(
                                     'Kategori',
-                                    child: _categorySection(listCategory),
+                                    child: _categorySection(listCategory, state),
                                     onTapAll: () {
                                       debugPrint('Hii');
                                     },
@@ -335,7 +335,7 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  Widget _categorySection(listCategory) {
+  Widget _categorySection(listCategory, state) {
     return Container(
       height: 40,
       margin: EdgeInsets.symmetric(horizontal: 15),
@@ -351,7 +351,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(20),
                     border: Border.all(
-                        color: i == 1 ? MyColors.primary : Colors.grey,
+                        color: state.selectedCategory == item.id ? MyColors.primary : Colors.grey,
                         width: 1.4)),
                 padding:
                     const EdgeInsets.symmetric(horizontal: 30, vertical: 2),
@@ -360,7 +360,9 @@ class _HomeScreenState extends State<HomeScreen> {
                   style: MyTextStyle.h7,
                 ),
               ),
-              onTap: () {});
+              onTap: () {
+                bloc.add(HomeEventSelectedCategory(selectedCategory: item.id));
+              });
         },
         separatorBuilder: (c, i) {
           return Spaces.normalHorizontal();

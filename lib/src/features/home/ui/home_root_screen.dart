@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_siap_nikah/src/features/home/bloc/home/home_bloc.dart';
 import 'package:flutter_siap_nikah/src/features/home/bloc/home_root/home_root_bloc.dart';
 import 'package:flutter_siap_nikah/src/styles/my_colors.dart';
+import 'package:flutter_siap_nikah/src/styles/my_font_weight.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 
 class HomeRootScreen extends StatefulWidget {
@@ -46,10 +47,21 @@ class _HomeRootScreenState extends State<HomeRootScreen> {
                     selectedItemColor: MyColors.primary,
                     unselectedItemColor: Colors.grey,
                     currentIndex: state.index,
-                    selectedLabelStyle: Theme.of(context).textTheme.subtitle2?.copyWith(fontSize: 12.0),
-                    unselectedLabelStyle: Theme.of(context).textTheme.subtitle2?.copyWith(fontSize: 10.0),
-                    selectedIconTheme: Theme.of(context).iconTheme.copyWith(size: 20.0, color: MyColors.primary),
-                    unselectedIconTheme: Theme.of(context).iconTheme.copyWith(size: 16.0),
+                    selectedLabelStyle: Theme.of(context)
+                        .textTheme
+                        .subtitle2
+                        ?.copyWith(
+                            fontSize: 12.0, fontWeight: MyFontWeight.bold),
+                    unselectedLabelStyle: Theme.of(context)
+                        .textTheme
+                        .subtitle2
+                        ?.copyWith(
+                            fontSize: 10.0, fontWeight: MyFontWeight.bold),
+                    selectedIconTheme: Theme.of(context)
+                        .iconTheme
+                        .copyWith(size: 20.0, color: MyColors.primary),
+                    unselectedIconTheme:
+                        Theme.of(context).iconTheme.copyWith(size: 16.0),
                     onTap: (index) {
                       bloc.add(HomeRootEventSelectedIndex(index: index));
                     },

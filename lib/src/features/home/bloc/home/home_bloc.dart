@@ -14,8 +14,9 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
   HomeBloc() : super(const HomeState()) {
     // on<HomeEvent>((event, emit) {});
     on<HomeEventGetData>(_getHomeData);
-    on<HomeEventSetPhoto>(_setPhoto);
     on<HomeEventRefresh>(_onRefresh);
+    on<HomeEventSetPhoto>(_setPhoto);
+    on<HomeEventSelectedCategory>(_selectedCategory);
 
     add(HomeEventRefresh());
   }
@@ -44,5 +45,10 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
     emit(state.copyWith(state: NetworkStates.onLoading));
     await Future.delayed(const Duration(seconds: 1));
     emit(state.copyWith(photo: event.photo, state: NetworkStates.onLoaded));
+  }
+
+  _selectedCategory(
+      HomeEventSelectedCategory event, Emitter<HomeState> emit) async {
+    emit(state.copyWith(selectedCategory: event.selectedCategory));
   }
 }
