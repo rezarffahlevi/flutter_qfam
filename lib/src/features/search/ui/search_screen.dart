@@ -44,44 +44,32 @@ class _SearchScreenState extends State<SearchScreen> {
     return BlocProvider(
       create: (BuildContext context) => SearchBloc(),
       child: Scaffold(
-          body: SafeArea(
-        child: Stack(
-          children: [
-            Container(
-              margin: EdgeInsets.only(top: 60),
-              child: SmartRefresher(
-                enablePullDown: true,
-                enablePullUp: false,
-                controller: _refreshController,
-                onRefresh: () => bloc.add(SearchEventRefresh()),
-                child: SingleChildScrollView(
-                  child: Column(
-                    children: [
-                      BlocConsumer<SearchBloc, SearchState>(
-                          bloc: bloc,
-                          listener: (context, state) {
-                            _refreshController.refreshCompleted();
-                            _refreshController.loadComplete();
-                          },
-                          builder: (context, state) {
-
-                            return Column(
-                              children: [
-                                Spaces.normalVertical(),
-                                
-                              ],
-                            );
-                          }),
-                    ],
-                  ),
-                ),
+          appBar: appBar(onTap: () {}, icon: Icons.filter_list, child: "Cari"),
+          body: SmartRefresher(
+            enablePullDown: true,
+            enablePullUp: false,
+            controller: _refreshController,
+            onRefresh: () => bloc.add(SearchEventRefresh()),
+            child: SingleChildScrollView(
+              child: Column(
+                children: [
+                  BlocConsumer<SearchBloc, SearchState>(
+                      bloc: bloc,
+                      listener: (context, state) {
+                        _refreshController.refreshCompleted();
+                        _refreshController.loadComplete();
+                      },
+                      builder: (context, state) {
+                        return Column(
+                          children: [
+                            Spaces.normalVertical(),
+                          ],
+                        );
+                      }),
+                ],
               ),
             ),
-            appBar(onTap: () {}, icon: Icons.filter_list, child: "Cari"),
-          ],
-        ),
-      )),
+          )),
     );
   }
-
 }

@@ -37,44 +37,32 @@ class _ForumScreenState extends State<ForumScreen> {
     return BlocProvider(
       create: (BuildContext context) => ForumBloc(),
       child: Scaffold(
-          body: SafeArea(
-        child: Stack(
-          children: [
-            Container(
-              margin: EdgeInsets.only(top: 60),
-              child: SmartRefresher(
-                enablePullDown: true,
-                enablePullUp: false,
-                controller: _refreshController,
-                onRefresh: () => bloc.add(ForumEventRefresh()),
-                child: SingleChildScrollView(
-                  child: Column(
-                    children: [
-                      BlocConsumer<ForumBloc, ForumState>(
-                          bloc: bloc,
-                          listener: (context, state) {
-                            _refreshController.refreshCompleted();
-                            _refreshController.loadComplete();
-                          },
-                          builder: (context, state) {
-
-                            return Column(
-                              children: [
-                                Spaces.normalVertical(),
-                                
-                              ],
-                            );
-                          }),
-                    ],
-                  ),
-                ),
+          appBar: appBar(onTap: () {}, icon: Icons.filter_list, child: "Forum"),
+          body: SmartRefresher(
+            enablePullDown: true,
+            enablePullUp: false,
+            controller: _refreshController,
+            onRefresh: () => bloc.add(ForumEventRefresh()),
+            child: SingleChildScrollView(
+              child: Column(
+                children: [
+                  BlocConsumer<ForumBloc, ForumState>(
+                      bloc: bloc,
+                      listener: (context, state) {
+                        _refreshController.refreshCompleted();
+                        _refreshController.loadComplete();
+                      },
+                      builder: (context, state) {
+                        return Column(
+                          children: [
+                            Spaces.normalVertical(),
+                          ],
+                        );
+                      }),
+                ],
               ),
             ),
-            appBar(onTap: () {}, icon: Icons.filter_list, child: "Forum"),
-          ],
-        ),
-      )),
+          )),
     );
   }
-
 }

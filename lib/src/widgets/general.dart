@@ -59,50 +59,44 @@ Widget renderContent(state, {onLoading, onLoaded, onError}) {
   }
 }
 
-Widget appBar({child, onTap: Function, icon: Icons.notifications}) {
-  return Container(
-    padding: const EdgeInsets.symmetric(horizontal: 15.0),
-    height: 60.0,
-    color: MyColors.primary,
-    child: Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: <Widget>[
-        InkWell(
-          child: Container(
-              padding: const EdgeInsets.all(5.0),
-              child: GFAvatar(
-                backgroundImage: NetworkImage(
-                    'https://i.pinimg.com/originals/7c/c7/a6/7cc7a630624d20f7797cb4c8e93c09c1.png'),
-                size: 20,
-                backgroundColor: MyColors.background,
-              )),
-          onTap: () {},
-        ),
-        Spaces.normalHorizontal(),
-        (child == null || child is String)
-            ? Text(
-                child ?? AppSettings.name,
-                style: MyTextStyle.appBarTitle.copyWith(
-                    color: MyColors.textReverse,
-                    fontWeight: MyFontWeight.bold,
-                    fontFamily: 'GreatVibes'),
-              )
-            : child,
-        Spaces.normalHorizontal(),
-        onTap == null
-            ? Container()
-            : InkWell(
-                child: Container(
-                  padding: const EdgeInsets.all(5.0),
-                  child: Icon(
-                    icon,
-                    color: MyColors.textReverse,
-                    size: 24,
-                  ),
-                ),
-                onTap: onTap,
-              ),
-      ],
+AppBar appBar({child, onTap: Function, icon: Icons.notifications}) {
+  return AppBar(
+    backgroundColor: MyColors.primary,
+    leading: InkWell(
+      child: Container(
+          padding: const EdgeInsets.all(10.0),
+          child: GFAvatar(
+            backgroundImage: NetworkImage(
+                'https://i.pinimg.com/originals/7c/c7/a6/7cc7a630624d20f7797cb4c8e93c09c1.png'),
+            size: 20,
+            backgroundColor: MyColors.background,
+          )),
+      onTap: () {},
     ),
+    centerTitle: true,
+    title: (child == null || child is String)
+        ? Text(
+            child ?? AppSettings.name,
+            style: MyTextStyle.appBarTitle.copyWith(
+                color: MyColors.textReverse,
+                fontWeight: MyFontWeight.bold,
+                fontFamily: 'GreatVibes'),
+          )
+        : child,
+    actions: [
+      onTap == null
+          ? Container()
+          : InkWell(
+              child: Container(
+                padding: const EdgeInsets.all(10.0),
+                child: Icon(
+                  icon,
+                  color: MyColors.textReverse,
+                  size: 24,
+                ),
+              ),
+              onTap: onTap,
+            ),
+    ],
   );
 }

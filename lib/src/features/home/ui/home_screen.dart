@@ -44,93 +44,84 @@ class _HomeScreenState extends State<HomeScreen> {
     return BlocProvider(
       create: (BuildContext context) => HomeBloc(),
       child: Scaffold(
-          body: SafeArea(
-        child: Stack(
-          children: [
-            Container(
-              margin: EdgeInsets.only(top: 60),
-              child: SmartRefresher(
-                enablePullDown: true,
-                enablePullUp: false,
-                controller: _refreshController,
-                onRefresh: () => bloc.add(HomeEventRefresh()),
-                child: SingleChildScrollView(
-                  child: Column(
-                    children: [
-                      BlocConsumer<HomeBloc, HomeState>(
-                          bloc: bloc,
-                          listener: (context, state) {
-                            _refreshController.refreshCompleted();
-                            _refreshController.loadComplete();
-                          },
-                          builder: (context, state) {
-                            final listCategory = state.listCategory;
-                            final listHome = state.listHome;
+          appBar: appBar(onTap: () {}),
+          body: SmartRefresher(
+            enablePullDown: true,
+            enablePullUp: false,
+            controller: _refreshController,
+            onRefresh: () => bloc.add(HomeEventRefresh()),
+            child: SingleChildScrollView(
+              child: Column(
+                children: [
+                  BlocConsumer<HomeBloc, HomeState>(
+                      bloc: bloc,
+                      listener: (context, state) {
+                        _refreshController.refreshCompleted();
+                        _refreshController.loadComplete();
+                      },
+                      builder: (context, state) {
+                        final listCategory = state.listCategory;
+                        final listHome = state.listHome;
 
-                            return Column(
-                              children: [
-                                Spaces.normalVertical(),
-                                renderContent(
-                                  state.state,
-                                  onLoading: GFShimmer(
-                                    child: _categoryBlock(dimension),
-                                  ),
-                                  onLoaded: sectionWidget(
-                                    'Kategori',
-                                    child: _categorySection(listCategory, state),
-                                    onTapAll: () {
-                                      debugPrint('Hii');
-                                    },
-                                  ),
-                                  onError: sectionWidget('Kategori',
-                                      child: Align(
-                                        alignment: Alignment.topLeft,
-                                        child: Padding(
-                                            padding: const EdgeInsets.symmetric(
-                                                horizontal: 15.0),
-                                            child: Text(state.message ??
-                                                'Unknown Error')),
-                                      )),
+                        return Column(
+                          children: [
+                            Spaces.normalVertical(),
+                            renderContent(
+                              state.state,
+                              onLoading: GFShimmer(
+                                child: _categoryBlock(dimension),
+                              ),
+                              onLoaded: sectionWidget(
+                                'Kategori',
+                                child: _categorySection(listCategory, state),
+                                onTapAll: () {
+                                  debugPrint('Hii');
+                                },
+                              ),
+                              onError: sectionWidget('Kategori',
+                                  child: Align(
+                                    alignment: Alignment.topLeft,
+                                    child: Padding(
+                                        padding: const EdgeInsets.symmetric(
+                                            horizontal: 15.0),
+                                        child: Text(
+                                            state.message ?? 'Unknown Error')),
+                                  )),
+                            ),
+                            renderContent(
+                              state.state,
+                              onLoading: GFShimmer(
+                                child: Column(
+                                  children: [
+                                    for (var i = 0; i < 12; i++)
+                                      Column(
+                                        children: [
+                                          _articleBlock(dimension),
+                                          Spaces.normalVertical()
+                                        ],
+                                      ),
+                                  ],
                                 ),
-                                renderContent(
-                                  state.state,
-                                  onLoading: GFShimmer(
-                                    child: Column(
-                                      children: [
-                                        for (var i = 0; i < 12; i++)
-                                          Column(
-                                            children: [
-                                              _articleBlock(dimension),
-                                              Spaces.normalVertical()
-                                            ],
-                                          ),
-                                      ],
-                                    ),
-                                  ),
-                                  onLoaded: _renderArticle(
-                                      dimension, state, listHome),
-                                  onError: sectionWidget('Pranikah',
-                                      child: Align(
-                                        alignment: Alignment.topLeft,
-                                        child: Padding(
-                                            padding: const EdgeInsets.symmetric(
-                                                horizontal: 15.0),
-                                            child: Text(state.message ??
-                                                'Unknown Error')),
-                                      )),
-                                )
-                              ],
-                            );
-                          }),
-                    ],
-                  ),
-                ),
+                              ),
+                              onLoaded:
+                                  _renderArticle(dimension, state, listHome),
+                              onError: sectionWidget('Pranikah',
+                                  child: Align(
+                                    alignment: Alignment.topLeft,
+                                    child: Padding(
+                                        padding: const EdgeInsets.symmetric(
+                                            horizontal: 15.0),
+                                        child: Text(
+                                            state.message ?? 'Unknown Error')),
+                                  )),
+                            )
+                          ],
+                        );
+                      }),
+                ],
               ),
             ),
-            appBar(onTap: () {}),
-          ],
-        ),
-      )),
+          )),
     );
   }
 
@@ -202,51 +193,49 @@ class _HomeScreenState extends State<HomeScreen> {
                   physics: const AlwaysScrollableScrollPhysics(),
                   itemBuilder: (c, j) {
                     final article = item.data?[j];
-                    return Container(
-                      width: 120,
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          GFImageOverlay(
-                            color: MyColors.greyPlaceHolder,
-                            height: 170,
-                            borderRadius: BorderRadius.all(Radius.circular(8)),
-                            image: NetworkImage(article?.image ?? ''),
-                            boxFit: BoxFit.fitHeight,
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Padding(
-                                  padding: EdgeInsets.only(top: 10),
-                                  child: Text(
-                                    article?.title ?? '-',
-                                    style: MyTextStyle.sessionTitle.copyWith(
-                                        color: MyColors.textReverse,
-                                        shadows: [
-                                          Shadow(
-                                            offset: Offset(2.0, 2.0),
-                                            blurRadius: 3.0,
-                                            color: Color.fromARGB(255, 0, 0, 0),
-                                          ),
-                                        ]),
-                                  ),
+                    return Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        GFImageOverlay(
+                          color: MyColors.greyPlaceHolder,
+                          height: 170,
+                          width: 120,
+                          borderRadius: BorderRadius.all(Radius.circular(8)),
+                          image: NetworkImage(article?.image ?? ''),
+                          boxFit: BoxFit.fitHeight,
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Padding(
+                                padding: EdgeInsets.only(top: 10),
+                                child: Text(
+                                  article?.title ?? '-',
+                                  style: MyTextStyle.sessionTitle.copyWith(
+                                      color: MyColors.textReverse,
+                                      shadows: [
+                                        Shadow(
+                                          offset: Offset(2.0, 2.0),
+                                          blurRadius: 3.0,
+                                          color: Color.fromARGB(255, 0, 0, 0),
+                                        ),
+                                      ]),
                                 ),
-                                Container(
-                                  margin: EdgeInsets.symmetric(horizontal: 10),
-                                  child: GFButton(
-                                    onPressed: () {},
-                                    text: "Lihat Detail",
-                                    blockButton: true,
-                                    size: 25,
-                                    color: MyColors.background,
-                                    textColor: MyColors.text,
-                                  ),
+                              ),
+                              Container(
+                                margin: EdgeInsets.symmetric(horizontal: 10),
+                                child: GFButton(
+                                  onPressed: () {},
+                                  text: "Lihat Detail",
+                                  blockButton: true,
+                                  size: 25,
+                                  color: MyColors.background,
+                                  textColor: MyColors.text,
                                 ),
-                              ],
-                            ),
+                              ),
+                            ],
                           ),
-                        ],
-                      ),
+                        ),
+                      ],
                     );
                   },
                   separatorBuilder: (c, i) {
@@ -261,7 +250,7 @@ class _HomeScreenState extends State<HomeScreen> {
               item.title ?? '-',
               child: Container(
                 width: dimension.width,
-                height: 180,
+                height: 200,
                 child: ListView.separated(
                   shrinkWrap: true,
                   scrollDirection: Axis.horizontal,
@@ -269,52 +258,55 @@ class _HomeScreenState extends State<HomeScreen> {
                   padding: EdgeInsets.symmetric(horizontal: 15),
                   itemBuilder: (c, j) {
                     final article = item.data?[j];
-                    return Container(
-                      width: 120,
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Container(
-                            height: 170,
-                            decoration: BoxDecoration(
-                                color: MyColors.background,
-                                borderRadius: BorderRadius.circular(8)),
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Padding(
-                                  padding: EdgeInsets.only(top: 10),
-                                  child: Column(
-                                    children: [
-                                      GFAvatar(
-                                        backgroundImage:
-                                            NetworkImage(article.image),
-                                      ),
-                                      Spaces.normalVertical(),
-                                      Text(article?.title ?? '-',
-                                          style: MyTextStyle.h5.bold),
-                                      Spaces.smallVertical(),
-                                      Text(article?.author ?? '-',
-                                          style: MyTextStyle.contentDescription)
-                                    ],
-                                  ),
+                    return Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Container(
+                          height: 200,
+                          width: 140,
+                          decoration: BoxDecoration(
+                              color: MyColors.background,
+                              borderRadius: BorderRadius.circular(8)),
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Padding(
+                                padding: EdgeInsets.only(
+                                    top: 10, left: 10, right: 10),
+                                child: Column(
+                                  children: [
+                                    GFAvatar(
+                                      backgroundImage:
+                                          NetworkImage(article.image),
+                                    ),
+                                    Spaces.normalVertical(),
+                                    Text(article?.title ?? '-',
+                                        style: MyTextStyle.h5.bold,
+                                        maxLines: 2,
+                                        overflow: TextOverflow.ellipsis),
+                                    Spaces.smallVertical(),
+                                    Text(article?.author ?? '-',
+                                        style: MyTextStyle.contentDescription,
+                                        maxLines: 1,
+                                        overflow: TextOverflow.ellipsis),
+                                  ],
                                 ),
-                                Container(
-                                  margin: EdgeInsets.symmetric(horizontal: 10),
-                                  child: GFButton(
-                                    onPressed: () {},
-                                    text: "Lihat Detail",
-                                    blockButton: true,
-                                    size: 25,
-                                    color: MyColors.primary,
-                                    textColor: MyColors.textReverse,
-                                  ),
+                              ),
+                              Container(
+                                margin: EdgeInsets.symmetric(horizontal: 10),
+                                child: GFButton(
+                                  onPressed: () {},
+                                  text: "Lihat Detail",
+                                  blockButton: true,
+                                  size: 25,
+                                  color: MyColors.primary,
+                                  textColor: MyColors.textReverse,
                                 ),
-                              ],
-                            ),
+                              ),
+                            ],
                           ),
-                        ],
-                      ),
+                        ),
+                      ],
                     );
                   },
                   separatorBuilder: (c, i) {
@@ -351,13 +343,18 @@ class _HomeScreenState extends State<HomeScreen> {
                 decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(20),
                     border: Border.all(
-                        color: state.selectedCategory == item.id ? MyColors.primary : Colors.grey,
+                        color: state.selectedCategory == item.id
+                            ? MyColors.primary
+                            : Colors.grey,
                         width: 1.4)),
                 padding:
                     const EdgeInsets.symmetric(horizontal: 30, vertical: 2),
                 child: Text(
                   item.name ?? '-',
-                  style: MyTextStyle.h7,
+                  style: MyTextStyle.h7.copyWith(
+                      color: state.selectedCategory == item.id
+                          ? MyColors.primary
+                          : MyColors.text),
                 ),
               ),
               onTap: () {

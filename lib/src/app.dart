@@ -31,7 +31,7 @@ class _AppState extends State<App> {
       child: MaterialApp(
         title: AppSettings.name,
         initialRoute: SplashScreen.routeName,
-        theme: ThemeData(fontFamily: 'HelveticaNeue', brightness: Brightness.light),
+        theme: ThemeData(fontFamily: 'Nunito', brightness: Brightness.light),
         routes: {
           SplashScreen.routeName: (context) => const SplashScreen(),
           HomeRootScreen.routeName: (context) => const HomeRootScreen(),

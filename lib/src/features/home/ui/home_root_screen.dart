@@ -22,6 +22,7 @@ class _HomeRootScreenState extends State<HomeRootScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final dimension = MediaQuery.of(context).size;
     return BlocListener<HomeRootBloc, HomeRootState>(
       listenWhen: (prev, curr) => prev.isLoading != curr.isLoading,
       listener: (context, state) {
@@ -40,49 +41,45 @@ class _HomeRootScreenState extends State<HomeRootScreen> {
               return Scaffold(
                 key: null,
                 body: bloc.children[state.index],
-                bottomNavigationBar: SizedBox(
-                  height: 50.0,
-                  child: BottomNavigationBar(
-                    type: BottomNavigationBarType.fixed,
-                    selectedItemColor: MyColors.primary,
-                    unselectedItemColor: Colors.grey,
-                    currentIndex: state.index,
-                    selectedLabelStyle: Theme.of(context)
-                        .textTheme
-                        .subtitle2
-                        ?.copyWith(
-                            fontSize: 12.0, fontWeight: MyFontWeight.bold),
-                    unselectedLabelStyle: Theme.of(context)
-                        .textTheme
-                        .subtitle2
-                        ?.copyWith(
-                            fontSize: 10.0,
-                            fontWeight: MyFontWeight.bold,
-                            color: MyColors.grey),
-                    iconSize: 20,
-                    selectedIconTheme: IconThemeData(size: 24),
-                    onTap: (index) {
-                      bloc.add(HomeRootEventSelectedIndex(index: index));
-                    },
-                    items: [
-                      BottomNavigationBarItem(
-                        icon: Icon(Icons.home),
-                        label: 'Beranda',
-                      ),
-                      BottomNavigationBarItem(
-                        icon: Icon(Icons.search),
-                        label: 'Cari',
-                      ),
-                      BottomNavigationBarItem(
-                        icon: Icon(Icons.forum),
-                        label: 'Forum',
-                      ),
-                      BottomNavigationBarItem(
-                        icon: Icon(Icons.person),
-                        label: 'Profil',
-                      ),
-                    ],
-                  ),
+                bottomNavigationBar: BottomNavigationBar(
+                  type: BottomNavigationBarType.fixed,
+                  selectedItemColor: MyColors.primary,
+                  unselectedItemColor: Colors.grey,
+                  currentIndex: state.index,
+                  selectedLabelStyle: Theme.of(context)
+                      .textTheme
+                      .subtitle2
+                      ?.copyWith(fontSize: 12.0, fontWeight: MyFontWeight.bold),
+                  unselectedLabelStyle: Theme.of(context)
+                      .textTheme
+                      .subtitle2
+                      ?.copyWith(
+                          fontSize: 10.0,
+                          fontWeight: MyFontWeight.bold,
+                          color: MyColors.grey),
+                  iconSize: 20,
+                  selectedIconTheme: IconThemeData(size: 24),
+                  onTap: (index) {
+                    bloc.add(HomeRootEventSelectedIndex(index: index));
+                  },
+                  items: [
+                    BottomNavigationBarItem(
+                      icon: Icon(Icons.home),
+                      label: 'Beranda',
+                    ),
+                    BottomNavigationBarItem(
+                      icon: Icon(Icons.search),
+                      label: 'Cari',
+                    ),
+                    BottomNavigationBarItem(
+                      icon: Icon(Icons.forum),
+                      label: 'Forum',
+                    ),
+                    BottomNavigationBarItem(
+                      icon: Icon(Icons.person),
+                      label: 'Profil',
+                    ),
+                  ],
                 ),
               );
             }),

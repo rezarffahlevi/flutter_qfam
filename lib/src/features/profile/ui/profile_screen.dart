@@ -21,9 +21,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
   ProfileBloc bloc = ProfileBloc();
   final RefreshController _refreshController =
       RefreshController(initialRefresh: false);
-  bool _pinned = true;
-  bool _snap = false;
-  bool _floating = false;
 
   @override
   void initState() {
@@ -43,37 +40,35 @@ class _ProfileScreenState extends State<ProfileScreen> {
     return BlocProvider(
       create: (BuildContext context) => ProfileBloc(),
       child: Scaffold(
-        body: SafeArea(
-          child: CustomScrollView(
-            slivers: <Widget>[
-              SliverAppBar(
-                pinned: _pinned,
-                snap: _snap,
-                floating: _floating,
-                expandedHeight: 300.0,
-                backgroundColor: MyColors.primary,
-                flexibleSpace: FlexibleSpaceBar(
-                  title: Text(
-                    "Aku nama",
-                    style: TextStyle(
-                      color: MyColors.white,
-                      fontWeight: MyFontWeight.bold,
-                      fontSize: 18,
-                    ),
+        body: CustomScrollView(
+          slivers: <Widget>[
+            SliverAppBar(
+              pinned: true,
+              snap: false,
+              floating: true,
+              expandedHeight: 300.0,
+              backgroundColor: MyColors.primary,
+              flexibleSpace: FlexibleSpaceBar(
+                title: Text(
+                  "Aku nama",
+                  style: TextStyle(
+                    color: MyColors.white,
+                    fontWeight: MyFontWeight.bold,
+                    fontSize: 18,
                   ),
-                  background: Container(
-                    decoration: BoxDecoration(
-                      image: DecorationImage(
-                          image: NetworkImage(
-                              'https://weddingmarket.com/storage/images/artikelidea/c66afbcc39555a48c1ec3a7f4a300be3a3401b32.webp'),
-                          fit: BoxFit.cover),
-                    ),
+                ),
+                background: Container(
+                  decoration: BoxDecoration(
+                    image: DecorationImage(
+                        image: NetworkImage(
+                            'https://weddingmarket.com/storage/images/artikelidea/c66afbcc39555a48c1ec3a7f4a300be3a3401b32.webp'),
+                        fit: BoxFit.cover),
                   ),
                 ),
               ),
-              SliverToBoxAdapter(child: _body(context)),
-            ],
-          ),
+            ),
+            SliverToBoxAdapter(child: _body(context)),
+          ],
         ),
       ),
     );
