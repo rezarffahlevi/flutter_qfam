@@ -27,7 +27,7 @@ class MyTextStyle {
   static TextStyle get contentTitle => MyTextStyle.h4.bold;
 
   static TextStyle get contentDescription =>
-      MyTextStyle.h7.normal.copyWith(color: MyColors.text);
+      MyTextStyle.h7.normal.copyWith(color: Colors.black54);
 
   static TextStyle get sectionTitle => MyTextStyle.h3.bold;
 

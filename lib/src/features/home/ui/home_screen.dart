@@ -83,7 +83,14 @@ class _HomeScreenState extends State<HomeScreen> {
                                     },
                                   ),
                                   onError: sectionWidget('Kategori',
-                                      child: Text('Error Exception')),
+                                      child: Align(
+                                        alignment: Alignment.topLeft,
+                                        child: Padding(
+                                            padding: const EdgeInsets.symmetric(
+                                                horizontal: 15.0),
+                                            child: Text(state.message ??
+                                                'Unknown Error')),
+                                      )),
                                 ),
                                 renderContent(
                                   state.state,
@@ -103,7 +110,14 @@ class _HomeScreenState extends State<HomeScreen> {
                                   onLoaded: _renderArticle(
                                       dimension, state, listHome),
                                   onError: sectionWidget('Pranikah',
-                                      child: Text('Error Exception')),
+                                      child: Align(
+                                        alignment: Alignment.topLeft,
+                                        child: Padding(
+                                            padding: const EdgeInsets.symmetric(
+                                                horizontal: 15.0),
+                                            child: Text(state.message ??
+                                                'Unknown Error')),
+                                      )),
                                 )
                               ],
                             );
@@ -343,7 +357,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     const EdgeInsets.symmetric(horizontal: 30, vertical: 2),
                 child: Text(
                   item.name ?? '-',
-                  style: MyTextStyle.contentDescription,
+                  style: MyTextStyle.h7,
                 ),
               ),
               onTap: () {});

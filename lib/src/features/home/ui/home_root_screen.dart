@@ -60,7 +60,7 @@ class _HomeRootScreenState extends State<HomeRootScreen> {
                       ),
                       BottomNavigationBarItem(
                         icon: Icon(Icons.search),
-                        label: 'Search',
+                        label: 'Cari',
                       ),
                       BottomNavigationBarItem(
                         icon: Icon(Icons.forum),

@@ -23,8 +23,8 @@ class ApiHelper {
       var response = await dio.get(url, queryParameters: params);
       return json.decode(response.toString());
     } on DioError catch (e) {
-      debugPrint(e.toString());
-      throw Exception(e.error);
+      debugPrint("======== ERROR API ${url} : ${e.message} ========");
+      throw e.error;
     }
   }
 }

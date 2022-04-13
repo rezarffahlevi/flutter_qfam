@@ -1,11 +1,9 @@
 import 'package:bloc/bloc.dart';
-import 'package:flutter_siap_nikah/src/models/default_response_model.dart';
-import 'package:flutter_siap_nikah/src/models/home/category_model.dart';
+import 'package:dio/dio.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_siap_nikah/src/models/home/home_model.dart';
-import 'package:flutter_siap_nikah/src/models/home/product_model.dart';
 import 'package:flutter_siap_nikah/src/services/home/home_service.dart';
 import 'package:equatable/equatable.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_siap_nikah/src/widgets/general.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -15,7 +13,7 @@ part 'home_state.dart';
 class HomeBloc extends Bloc<HomeEvent, HomeState> {
   HomeBloc() : super(const HomeState()) {
     // on<HomeEvent>((event, emit) {});
-    on<HomeEventGetHomeData>(_getHomeData);
+    on<HomeEventGetData>(_getHomeData);
     on<HomeEventSetPhoto>(_setPhoto);
     on<HomeEventRefresh>(_onRefresh);
 
@@ -24,10 +22,10 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
   HomeService homeService = HomeService();
 
   _onRefresh(HomeEventRefresh event, Emitter<HomeState> emit) async {
-    add(HomeEventGetHomeData());
+    add(HomeEventGetData());
   }
 
-  _getHomeData(HomeEventGetHomeData event, Emitter<HomeState> emit) async {
+  _getHomeData(HomeEventGetData event, Emitter<HomeState> emit) async {
     try {
       emit(state.copyWith(state: NetworkStates.onLoading));
       var response = await homeService.getHomeData();
@@ -36,8 +34,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
           listHome: response?.data?.home,
           state: NetworkStates.onLoaded));
     } catch (e) {
-      debugPrint(e.toString());
-      emit(state.copyWith(state: NetworkStates.onError));
+      emit(state.copyWith(state: NetworkStates.onError, message: '${e}'));
     }
   }
 

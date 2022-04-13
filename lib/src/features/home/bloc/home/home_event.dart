@@ -5,8 +5,8 @@ abstract class HomeEvent extends Equatable {
   List<Object?> get props => [];
 }
 
-class HomeEventGetHomeData extends HomeEvent {}
-
+class HomeEventGetData extends HomeEvent {}
+class HomeEventRefresh extends HomeEvent {}
 class HomeEventSetPhoto extends HomeEvent {
   String? photo;
 
@@ -16,4 +16,3 @@ class HomeEventSetPhoto extends HomeEvent {
   List<Object?> get props => [photo];
 }
 
-class HomeEventRefresh extends HomeEvent {}

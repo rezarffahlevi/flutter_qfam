@@ -59,7 +59,7 @@ Widget renderContent(state, {onLoading, onLoaded, onError}) {
   }
 }
 
-Widget appBar({onTap: Function, icon: Icons.notifications}) {
+Widget appBar({child, onTap: Function, icon: Icons.notifications}) {
   return Container(
     padding: const EdgeInsets.symmetric(horizontal: 15.0),
     height: 60.0,
@@ -79,11 +79,11 @@ Widget appBar({onTap: Function, icon: Icons.notifications}) {
           onTap: () {},
         ),
         Spaces.normalHorizontal(),
-        Text(
-          AppSettings.name,
+        (child == null || child is String) ? Text(
+          child ?? AppSettings.name,
           style: MyTextStyle.appBarTitle.copyWith(
-              color: MyColors.textReverse, fontWeight: MyFontWeight.bold),
-        ),
+              color: MyColors.textReverse, fontWeight: MyFontWeight.bold, fontFamily: 'GreatVibes'),
+        ) : child,
         Spaces.normalHorizontal(),
         onTap == null
             ? Container()

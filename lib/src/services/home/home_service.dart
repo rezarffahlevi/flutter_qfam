@@ -1,6 +1,5 @@
 import 'package:flutter_siap_nikah/src/helpers/api_helper.dart';
 import 'package:flutter_siap_nikah/src/models/default_response_model.dart';
-import 'package:flutter_siap_nikah/src/models/home/category_model.dart';
 import 'package:flutter_siap_nikah/src/models/home/home_model.dart';
 import 'package:flutter_siap_nikah/src/models/home/product_model.dart';
 import 'package:flutter/material.dart';
@@ -30,8 +29,7 @@ class HomeService {
       homeModel.home = home;
       return DefaultResponseModel.fromJson(response, homeModel);
     } catch (e) {
-      debugPrint(e.toString());
-      throw Exception(e);
+      throw e;
     }
   }
 
