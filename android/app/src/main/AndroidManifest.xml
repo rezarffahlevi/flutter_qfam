@@ -1,11 +1,13 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.example.flutter_siap_nikah">
+    package="com.siap_nikah.android">
     <uses-permission android:name="android.permission.INTERNET"/>
     <application
-        android:label="flutter_siap_nikah"
+        android:label="Siap Nikah"
         android:name="${applicationName}"
-        android:icon="@mipmap/ic_launcher"
-        android:requestLegacyExternalStorage="true">
+        android:icon="@mipmap/launcher_icon"
+        android:allowBackup="false"
+        android:requestLegacyExternalStorage="true"
+        android:usesCleartextTraffic="true">
         <activity
             android:name=".MainActivity"
             android:exported="true"

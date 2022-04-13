@@ -56,12 +56,11 @@ class _HomeRootScreenState extends State<HomeRootScreen> {
                         .textTheme
                         .subtitle2
                         ?.copyWith(
-                            fontSize: 10.0, fontWeight: MyFontWeight.bold),
-                    selectedIconTheme: Theme.of(context)
-                        .iconTheme
-                        .copyWith(size: 20.0, color: MyColors.primary),
-                    unselectedIconTheme:
-                        Theme.of(context).iconTheme.copyWith(size: 16.0),
+                            fontSize: 10.0,
+                            fontWeight: MyFontWeight.bold,
+                            color: MyColors.grey),
+                    iconSize: 20,
+                    selectedIconTheme: IconThemeData(size: 24),
                     onTap: (index) {
                       bloc.add(HomeRootEventSelectedIndex(index: index));
                     },

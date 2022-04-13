@@ -1,4 +1,4 @@
-package com.example.flutter_siap_nikah
+package com.siap_nikah.android
 
 import io.flutter.embedding.android.FlutterActivity
 
