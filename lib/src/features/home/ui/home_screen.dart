@@ -4,6 +4,7 @@ import 'package:flutter_siap_nikah/src/features/home/ui/product_detail_screen.da
 import 'package:flutter_siap_nikah/src/styles/my_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_siap_nikah/src/styles/my_text_style.dart';
 import 'package:flutter_siap_nikah/src/widgets/general.dart';
 import 'package:getwidget/getwidget.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
@@ -68,6 +69,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
                             return Column(
                               children: [
+                                Spaces.normalVertical(),
                                 state.state == HomeStates.onLoading
                                     ? GFShimmer(
                                         child: _categoryBlock(dimension),
@@ -129,11 +131,11 @@ class _HomeScreenState extends State<HomeScreen> {
                                                       ),
                                                       Spaces.smallVertical(),
                                                       Text(artikel?.title ??
-                                                          '-'),
+                                                          '-', style: MyTextStyle.sessionTitle,),
                                                       Spaces.smallVertical(),
                                                       Text('By ' +
                                                           (artikel?.author ??
-                                                              '-')),
+                                                              '-'), style: MyTextStyle.contentDescription,),
                                                     ],
                                                   );
                                                 },
@@ -186,7 +188,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         width: 1.4)),
                 padding:
                     const EdgeInsets.symmetric(horizontal: 30, vertical: 2),
-                child: Text(item.name ?? '-'),
+                child: Text(item.name ?? '-', style: MyTextStyle.contentDescription,),
               ),
               onTap: () {});
         },

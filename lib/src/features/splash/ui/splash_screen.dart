@@ -5,6 +5,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_siap_nikah/src/features/splash/bloc/splash_bloc.dart';
 import 'package:flutter_siap_nikah/src/styles/my_colors.dart';
+import 'package:flutter_siap_nikah/src/styles/my_font_weight.dart';
+import 'package:flutter_siap_nikah/src/styles/my_text_style.dart';
 
 class SplashScreen extends StatefulWidget {
   static const String routeName = '/';
@@ -50,11 +52,7 @@ class _SplashScreenState extends State<SplashScreen> {
             child: Text(
               AppSettings.name,
               textAlign: TextAlign.center,
-              style: TextStyle(
-                color: MyColors.text,
-                fontWeight: FontWeight.bold,
-                fontSize: 22
-              ),
+              style: MyTextStyle.appBarTitle.copyWith(fontWeight: MyFontWeight.bold),
             ),
           ),
         ),

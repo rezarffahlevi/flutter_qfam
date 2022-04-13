@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_siap_nikah/src/commons/app_settings.dart';
 import 'package:flutter_siap_nikah/src/commons/spaces.dart';
 import 'package:flutter_siap_nikah/src/styles/my_colors.dart';
+import 'package:flutter_siap_nikah/src/styles/my_font_weight.dart';
+import 'package:flutter_siap_nikah/src/styles/my_text_style.dart';
 import 'package:getwidget/getwidget.dart';
 
 Widget sectionWidget(text, {child, showAll = true, onTapAll}) {
@@ -14,20 +16,26 @@ Widget sectionWidget(text, {child, showAll = true, onTapAll}) {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: <Widget>[
-              Text(text,
-                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
+              Text(text, style: MyTextStyle.contentTitle),
               showAll
-                  ? TextButton(
-                      onPressed: onTapAll,
-                      child: Text(
-                        "Lihat semua",
-                        style: TextStyle(color: MyColors.primary),
-                      ),
+                  ? Row(
+                      children: [
+                        Text(
+                          "Lihat semua",
+                          style: MyTextStyle.sessionTitle
+                              .copyWith(color: MyColors.primary),
+                        ),
+                        Icon(
+                          Icons.chevron_right,
+                          color: MyColors.primary,
+                        ),
+                      ],
                     )
                   : Container(),
             ],
           ),
         ),
+        Spaces.smallVertical(),
         child,
         Spaces.normalVertical(),
       ],
@@ -49,15 +57,16 @@ Widget appBar({onTap: Function, icon: Icons.notifications}) {
               child: GFAvatar(
                 backgroundImage: NetworkImage(
                     'https://i.pinimg.com/originals/7c/c7/a6/7cc7a630624d20f7797cb4c8e93c09c1.png'),
-                    size: 20,
-                    backgroundColor: MyColors.background,
+                size: 20,
+                backgroundColor: MyColors.background,
               )),
           onTap: () {},
         ),
         Spaces.normalHorizontal(),
         Text(
           AppSettings.name,
-          style: TextStyle(color: MyColors.textReverse),
+          style: MyTextStyle.appBarTitle.copyWith(
+              color: MyColors.textReverse, fontWeight: MyFontWeight.bold),
         ),
         Spaces.normalHorizontal(),
         onTap == null
@@ -65,7 +74,11 @@ Widget appBar({onTap: Function, icon: Icons.notifications}) {
             : InkWell(
                 child: Container(
                   padding: const EdgeInsets.all(5.0),
-                  child: Icon(icon, color: MyColors.textReverse, size: 24,),
+                  child: Icon(
+                    icon,
+                    color: MyColors.textReverse,
+                    size: 24,
+                  ),
                 ),
                 onTap: onTap,
               ),
