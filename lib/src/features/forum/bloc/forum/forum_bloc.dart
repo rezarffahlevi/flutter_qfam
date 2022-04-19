@@ -2,7 +2,7 @@ import 'package:bloc/bloc.dart';
 import 'package:flutter_siap_nikah/src/services/home/home_service.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_siap_nikah/src/widgets/general.dart';
+import 'package:flutter_siap_nikah/src/widgets/widgets.dart';
 
 part 'forum_event.dart';
 part 'forum_state.dart';

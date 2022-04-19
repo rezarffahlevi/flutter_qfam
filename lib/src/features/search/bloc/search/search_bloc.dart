@@ -6,7 +6,7 @@ import 'package:flutter_siap_nikah/src/models/home/product_model.dart';
 import 'package:flutter_siap_nikah/src/services/home/home_service.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_siap_nikah/src/widgets/general.dart';
+import 'package:flutter_siap_nikah/src/widgets/widgets.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 part 'search_event.dart';

@@ -5,7 +5,7 @@ import 'package:flutter_siap_nikah/src/styles/my_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_siap_nikah/src/styles/my_text_style.dart';
-import 'package:flutter_siap_nikah/src/widgets/general.dart';
+import 'package:flutter_siap_nikah/src/widgets/widgets.dart';
 import 'package:getwidget/getwidget.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:flutter_siap_nikah/src/widgets/card/card_product_list.dart';
@@ -66,8 +66,8 @@ class _HomeScreenState extends State<HomeScreen> {
                         return Column(
                           children: [
                             Spaces.normalVertical(),
-                            renderContent(
-                              state.state,
+                            Wrapper(
+                              state: state.state,
                               onLoading: GFShimmer(
                                 child: _categoryBlock(dimension),
                               ),
@@ -88,15 +88,15 @@ class _HomeScreenState extends State<HomeScreen> {
                                             state.message ?? 'Unknown Error')),
                                   )),
                             ),
-                            renderContent(
-                              state.state,
+                            Wrapper(
+                              state: state.state,
                               onLoading: GFShimmer(
                                 child: Column(
                                   children: [
                                     for (var i = 0; i < 12; i++)
                                       Column(
                                         children: [
-                                          _articleBlock(dimension),
+                                          loadingBlock(dimension),
                                           Spaces.normalVertical()
                                         ],
                                       ),
@@ -114,7 +114,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                         child: Text(
                                             state.message ?? 'Unknown Error')),
                                   )),
-                            )
+                            ),
                           ],
                         );
                       }),
@@ -406,44 +406,4 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  Widget _articleBlock(dimension) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Container(
-            width: 54,
-            height: 46,
-            color: Colors.white,
-          ),
-          const SizedBox(width: 12),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: <Widget>[
-                Container(
-                  width: double.infinity,
-                  height: 8,
-                  color: Colors.white,
-                ),
-                const SizedBox(height: 6),
-                Container(
-                  width: MediaQuery.of(context).size.width * 0.5,
-                  height: 8,
-                  color: Colors.white,
-                ),
-                const SizedBox(height: 6),
-                Container(
-                  width: MediaQuery.of(context).size.width * 0.25,
-                  height: 8,
-                  color: Colors.white,
-                ),
-              ],
-            ),
-          )
-        ],
-      ),
-    );
-  }
 }

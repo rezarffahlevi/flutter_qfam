@@ -1,4 +1,5 @@
 import 'package:flutter_siap_nikah/src/commons/app_settings.dart';
+import 'package:flutter_siap_nikah/src/features/forum/ui/detail_forum_screen.dart';
 import 'package:flutter_siap_nikah/src/features/home/arguments/product_argument.dart';
 import 'package:flutter_siap_nikah/src/features/home/bloc/home/home_bloc.dart';
 import 'package:flutter_siap_nikah/src/features/home/bloc/home_root/home_root_bloc.dart';
@@ -35,6 +36,7 @@ class _AppState extends State<App> {
         routes: {
           SplashScreen.routeName: (context) => const SplashScreen(),
           HomeRootScreen.routeName: (context) => const HomeRootScreen(),
+          DetailForumScreen.routeName: (context) => const DetailForumScreen(),
           MovieListScreen.routeName: (context) => const MovieListScreen(),
           ProductDetailScreen.routeName: (context) => ProductDetailScreen(
               argument:

@@ -4,6 +4,7 @@ class MyColors {
   static Color primary = Color(0xFFFD4E77);
   static Color background = Color(0xFFFFFFFF);
   static Color text = Colors.black;
+  static Color textContent = Colors.black87;
   static Color textReverse = Color(0xFFFFFFFF);
   static Color blue = Color(0XFFBCE1FF).withOpacity(0.95);
   static Color grey = Color(0XFFf4f5f9);

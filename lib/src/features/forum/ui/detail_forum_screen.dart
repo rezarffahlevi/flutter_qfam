@@ -2,7 +2,6 @@ import 'package:flutter_siap_nikah/src/commons/spaces.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_siap_nikah/src/features/forum/bloc/forum/forum_bloc.dart';
-import 'package:flutter_siap_nikah/src/features/forum/ui/detail_forum_screen.dart';
 import 'package:flutter_siap_nikah/src/styles/my_colors.dart';
 import 'package:flutter_siap_nikah/src/styles/my_font_weight.dart';
 import 'package:flutter_siap_nikah/src/styles/my_text_style.dart';
@@ -10,16 +9,16 @@ import 'package:flutter_siap_nikah/src/widgets/widgets.dart';
 import 'package:getwidget/getwidget.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 
-class ForumScreen extends StatefulWidget {
-  static const String routeName = '/forum';
+class DetailForumScreen extends StatefulWidget {
+  static const String routeName = '/detail-forum';
 
-  const ForumScreen({Key? key}) : super(key: key);
+  const DetailForumScreen({Key? key}) : super(key: key);
 
   @override
-  _ForumScreenState createState() => _ForumScreenState();
+  _DetailForumScreenState createState() => _DetailForumScreenState();
 }
 
-class _ForumScreenState extends State<ForumScreen> {
+class _DetailForumScreenState extends State<DetailForumScreen> {
   ForumBloc bloc = ForumBloc();
   final RefreshController _refreshController =
       RefreshController(initialRefresh: false);
@@ -42,31 +41,39 @@ class _ForumScreenState extends State<ForumScreen> {
     return BlocProvider(
       create: (BuildContext context) => ForumBloc(),
       child: Scaffold(
-          appBar: appBar(onTap: () {}, icon: Icons.filter_list, child: "Forum"),
+          appBar: appBar(
+              child: "Utas",
+              onTapBack: () {
+                Navigator.pop(context);
+              }),
           body: SmartRefresher(
             enablePullDown: true,
             enablePullUp: true,
             controller: _refreshController,
             onRefresh: () => bloc.add(ForumEventRefresh()),
             child: SingleChildScrollView(
-              child: Column(
-                children: [
-                  BlocConsumer<ForumBloc, ForumState>(
-                      bloc: bloc,
-                      listener: (context, state) {
-                        _refreshController.refreshCompleted();
-                        _refreshController.loadComplete();
-                      },
-                      builder: (context, state) {
-                        return Wrapper(
+              child: BlocConsumer<ForumBloc, ForumState>(
+                  bloc: bloc,
+                  listener: (context, state) {
+                    _refreshController.refreshCompleted();
+                    _refreshController.loadComplete();
+                  },
+                  builder: (context, state) {
+                    return Column(
+                      children: [
+                        Threads(
+                          isDetail: true,
+                        ),
+                        Wrapper(
                           state: NetworkStates.onLoaded,
                           onLoaded: ListView.separated(
+                            padding: EdgeInsets.all(8),
                             shrinkWrap: true,
                             physics: const NeverScrollableScrollPhysics(),
                             itemBuilder: (c, i) {
                               return Threads(
-                                onTap: () => Navigator.pushNamed(context, DetailForumScreen.routeName)
-                              );
+                                  onTap: () => Navigator.pushNamed(
+                                      context, DetailForumScreen.routeName));
                             },
                             separatorBuilder: (c, i) {
                               return Spaces.normalHorizontal();
@@ -87,10 +94,10 @@ class _ForumScreenState extends State<ForumScreen> {
                               ],
                             ),
                           ),
-                        );
-                      }),
-                ],
-              ),
+                        ),
+                      ],
+                    );
+                  }),
             ),
           )),
     );

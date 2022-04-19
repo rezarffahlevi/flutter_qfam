@@ -1,10 +1,4 @@
-import 'package:flutter/material.dart';
-import 'package:flutter_siap_nikah/src/commons/app_settings.dart';
-import 'package:flutter_siap_nikah/src/commons/spaces.dart';
-import 'package:flutter_siap_nikah/src/styles/my_colors.dart';
-import 'package:flutter_siap_nikah/src/styles/my_font_weight.dart';
-import 'package:flutter_siap_nikah/src/styles/my_text_style.dart';
-import 'package:getwidget/getwidget.dart';
+part of 'widgets.dart';
 
 enum NetworkStates {
   onLoading,
@@ -59,13 +53,54 @@ Widget renderContent(state, {onLoading, onLoaded, onError}) {
   }
 }
 
-AppBar appBar({child, onTap: Function, icon: Icons.notifications}) {
+Widget loadingBlock(dimension) {
+  return Padding(
+    padding: const EdgeInsets.symmetric(horizontal: 16),
+    child: Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Container(
+          width: 54,
+          height: 46,
+          color: Colors.white,
+        ),
+        const SizedBox(width: 12),
+        Expanded(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
+              Container(
+                width: double.infinity,
+                height: 8,
+                color: Colors.white,
+              ),
+              const SizedBox(height: 6),
+              Container(
+                width: dimension.width * 0.5,
+                height: 8,
+                color: Colors.white,
+              ),
+              const SizedBox(height: 6),
+              Container(
+                width: dimension.width * 0.25,
+                height: 8,
+                color: Colors.white,
+              ),
+            ],
+          ),
+        )
+      ],
+    ),
+  );
+}
+
+AppBar appBar({child, onTapBack: null, onTap: null, icon: Icons.notifications}) {
   return AppBar(
     backgroundColor: MyColors.primary,
     leading: InkWell(
       child: Container(
           padding: const EdgeInsets.all(10.0),
-          child: GFAvatar(
+          child: onTapBack != null ? BackButton(onPressed: onTapBack,) : GFAvatar(
             backgroundImage: NetworkImage(
                 'https://i.pinimg.com/originals/7c/c7/a6/7cc7a630624d20f7797cb4c8e93c09c1.png'),
             size: 20,
