@@ -22,16 +22,24 @@ class _DetailForumScreenState extends State<DetailForumScreen> {
   ForumBloc bloc = ForumBloc();
   final RefreshController _refreshController =
       RefreshController(initialRefresh: false);
+  late ScrollController _scrollController;
 
   @override
   void initState() {
     super.initState();
+    _scrollController = ScrollController();
   }
 
   @override
   void dispose() {
     bloc.close();
     super.dispose();
+    _scrollController.dispose();
+  }
+
+  void _scrollToTop() {
+    _scrollController.animateTo(0,
+        duration: const Duration(milliseconds: 400), curve: Curves.linear);
   }
 
   @override
@@ -49,6 +57,7 @@ class _DetailForumScreenState extends State<DetailForumScreen> {
           body: SmartRefresher(
             enablePullDown: true,
             enablePullUp: true,
+            scrollController: _scrollController,
             controller: _refreshController,
             onRefresh: () => bloc.add(ForumEventRefresh()),
             child: SingleChildScrollView(
@@ -72,8 +81,13 @@ class _DetailForumScreenState extends State<DetailForumScreen> {
                             physics: const NeverScrollableScrollPhysics(),
                             itemBuilder: (c, i) {
                               return Threads(
-                                  onTap: () => Navigator.pushNamed(
-                                      context, DetailForumScreen.routeName));
+                                onTap: () => Navigator.pushNamed(
+                                  context,
+                                  DetailForumScreen.routeName,
+                                ),
+                                isChild: true,
+                                scrollToTop: _scrollToTop,
+                              );
                             },
                             separatorBuilder: (c, i) {
                               return Spaces.normalHorizontal();

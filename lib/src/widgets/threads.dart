@@ -5,13 +5,17 @@ class Threads extends StatelessWidget {
     Key? key,
     this.onTap,
     this.isDetail = false,
+    this.isChild = false,
+    this.scrollToTop,
     this.onLoading,
     this.onLoaded,
     this.onError,
   }) : super(key: key);
 
   final bool isDetail;
+  final bool isChild;
   final Function()? onTap;
+  final Function()? scrollToTop;
   final Widget? onLoading;
   final Widget? onLoaded;
   final Widget? onError;
@@ -85,10 +89,16 @@ class Threads extends StatelessWidget {
                       ),
                       Spaces.normalHorizontal(),
                       IconButton(
-                        onPressed: null,
+                        onPressed: () {
+                          debugPrint('Fav');
+                        },
                         icon: Row(
                           children: [
-                            Icon(Icons.favorite_border, size: 16),
+                            Icon(
+                              Icons.favorite_border,
+                              size: 16,
+                              color: Colors.black38,
+                            ),
                             Spaces.smallHorizontal(),
                             Text(
                               '1',
@@ -99,10 +109,16 @@ class Threads extends StatelessWidget {
                       ),
                       Spaces.normalHorizontal(),
                       IconButton(
-                        onPressed: null,
+                        onPressed: () {
+                          debugPrint('Share');
+                        },
                         icon: Row(
                           children: [
-                            Icon(Icons.share_outlined, size: 16),
+                            Icon(
+                              Icons.share_outlined,
+                              size: 16,
+                              color: Colors.black38,
+                            ),
                             Spaces.smallHorizontal(),
                             Text(
                               '1',
@@ -113,10 +129,11 @@ class Threads extends StatelessWidget {
                       ),
                     ],
                   ),
-                  false
+                  isChild
                       ? Padding(
                           padding: const EdgeInsets.only(right: 8),
                           child: GestureDetector(
+                            onTap: scrollToTop,
                             child: Row(
                               children: [
                                 Icon(
@@ -240,10 +257,16 @@ class Threads extends StatelessWidget {
                       ),
                       Spaces.normalHorizontal(),
                       IconButton(
-                        onPressed: null,
+                        onPressed: () {
+                          debugPrint('Fav');
+                        },
                         icon: Row(
                           children: [
-                            Icon(Icons.favorite_border, size: 16),
+                            Icon(
+                              Icons.favorite_border,
+                              size: 16,
+                              color: Colors.black38,
+                            ),
                             Spaces.smallHorizontal(),
                             Text(
                               '1',
@@ -254,10 +277,16 @@ class Threads extends StatelessWidget {
                       ),
                       Spaces.normalHorizontal(),
                       IconButton(
-                        onPressed: null,
+                        onPressed: () {
+                          debugPrint('Share');
+                        },
                         icon: Row(
                           children: [
-                            Icon(Icons.share_outlined, size: 16),
+                            Icon(
+                              Icons.share_outlined,
+                              size: 16,
+                              color: Colors.black38,
+                            ),
                             Spaces.smallHorizontal(),
                             Text(
                               '1',
