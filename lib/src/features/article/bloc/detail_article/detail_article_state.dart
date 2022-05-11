@@ -1,17 +1,17 @@
-part of 'movie_list_bloc.dart';
+part of 'detail_article_bloc.dart';
 
-class MovieListState extends Equatable {
+class DetailArticleState extends Equatable {
   final bool isLoading;
 
-  const MovieListState({
+  const DetailArticleState({
     this.isLoading = false,
   });
 
-  MovieListState copyWith({
+  DetailArticleState copyWith({
     int? number,
     bool? isLoading,
   }) {
-    return MovieListState(
+    return DetailArticleState(
       isLoading: isLoading ?? this.isLoading,
     );
   }

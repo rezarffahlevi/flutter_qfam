@@ -44,7 +44,7 @@ class _SearchScreenState extends State<SearchScreen> {
     return BlocProvider(
       create: (BuildContext context) => SearchBloc(),
       child: Scaffold(
-          appBar: appBar(onTap: () {}, icon: Icons.filter_list, child: "Cari"),
+          appBar: appBar(onTap: () {}, icon: Icons.filter_list, child: "Cari", fontFamily: 'GreatVibes'),
           body: SmartRefresher(
             enablePullDown: true,
             enablePullUp: false,

@@ -1,4 +1,5 @@
 import 'package:flutter_siap_nikah/src/commons/spaces.dart';
+import 'package:flutter_siap_nikah/src/features/article/ui/detail_article_screen.dart';
 import 'package:flutter_siap_nikah/src/features/home/bloc/home/home_bloc.dart';
 import 'package:flutter_siap_nikah/src/features/home/ui/product_detail_screen.dart';
 import 'package:flutter_siap_nikah/src/styles/my_colors.dart';
@@ -44,7 +45,7 @@ class _HomeScreenState extends State<HomeScreen> {
     return BlocProvider(
       create: (BuildContext context) => HomeBloc(),
       child: Scaffold(
-          appBar: appBar(onTap: () {}),
+          appBar: appBar(onTap: () {}, fontFamily: 'GreatVibes'),
           body: SmartRefresher(
             enablePullDown: true,
             enablePullUp: false,
@@ -143,34 +144,40 @@ class _HomeScreenState extends State<HomeScreen> {
                   padding: EdgeInsets.only(left: 16, right: 16),
                   itemBuilder: (c, j) {
                     final article = item.data?[j];
-                    return Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        GFImageOverlay(
-                          color: MyColors.greyPlaceHolder,
-                          height: 130,
-                          borderRadius: BorderRadius.all(Radius.circular(8)),
-                          image: NetworkImage(article?.image ?? ''),
-                          boxFit: BoxFit.fitWidth,
-                          child: article.isVideo
-                              ? Icon(
-                                  Icons.play_circle,
-                                  size: 50,
-                                  color: Colors.white,
-                                )
-                              : Container(),
-                        ),
-                        Spaces.smallVertical(),
-                        Text(
-                          article?.title ?? '-',
-                          style: MyTextStyle.sessionTitle,
-                        ),
-                        Spaces.smallVertical(),
-                        Text(
-                          'By ' + (article?.author ?? '-'),
-                          style: MyTextStyle.contentDescription,
-                        ),
-                      ],
+                    return GestureDetector(
+                      onTap: () {
+                        Navigator.of(context)
+                            .pushNamed(DetailArticleScreen.routeName, arguments: article);
+                      },
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          GFImageOverlay(
+                            color: MyColors.greyPlaceHolder,
+                            height: 130,
+                            borderRadius: BorderRadius.all(Radius.circular(8)),
+                            image: NetworkImage(article?.image ?? ''),
+                            boxFit: BoxFit.fitWidth,
+                            child: article.isVideo
+                                ? Icon(
+                                    Icons.play_circle,
+                                    size: 50,
+                                    color: Colors.white,
+                                  )
+                                : Container(),
+                          ),
+                          Spaces.smallVertical(),
+                          Text(
+                            article?.title ?? '-',
+                            style: MyTextStyle.sessionTitle,
+                          ),
+                          Spaces.smallVertical(),
+                          Text(
+                            'By ' + (article?.author ?? '-'),
+                            style: MyTextStyle.contentDescription,
+                          ),
+                        ],
+                      ),
                     );
                   },
                   separatorBuilder: (c, i) {
@@ -193,49 +200,55 @@ class _HomeScreenState extends State<HomeScreen> {
                   physics: const AlwaysScrollableScrollPhysics(),
                   itemBuilder: (c, j) {
                     final article = item.data?[j];
-                    return Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        GFImageOverlay(
-                          color: MyColors.greyPlaceHolder,
-                          height: 170,
-                          width: 120,
-                          borderRadius: BorderRadius.all(Radius.circular(8)),
-                          image: NetworkImage(article?.image ?? ''),
-                          boxFit: BoxFit.fitHeight,
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Padding(
-                                padding: EdgeInsets.only(top: 10),
-                                child: Text(
-                                  article?.title ?? '-',
-                                  style: MyTextStyle.sessionTitle.copyWith(
-                                      color: MyColors.textReverse,
-                                      shadows: [
-                                        Shadow(
-                                          offset: Offset(2.0, 2.0),
-                                          blurRadius: 3.0,
-                                          color: Color.fromARGB(255, 0, 0, 0),
-                                        ),
-                                      ]),
+                    return GestureDetector(
+                      onTap: () {
+                        Navigator.of(context)
+                            .pushNamed(DetailArticleScreen.routeName, arguments: article);
+                      },
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          GFImageOverlay(
+                            color: MyColors.greyPlaceHolder,
+                            height: 170,
+                            width: 120,
+                            borderRadius: BorderRadius.all(Radius.circular(8)),
+                            image: NetworkImage(article?.image ?? ''),
+                            boxFit: BoxFit.fitHeight,
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Padding(
+                                  padding: EdgeInsets.only(top: 10),
+                                  child: Text(
+                                    article?.title ?? '-',
+                                    style: MyTextStyle.sessionTitle.copyWith(
+                                        color: MyColors.textReverse,
+                                        shadows: [
+                                          Shadow(
+                                            offset: Offset(2.0, 2.0),
+                                            blurRadius: 3.0,
+                                            color: Color.fromARGB(255, 0, 0, 0),
+                                          ),
+                                        ]),
+                                  ),
                                 ),
-                              ),
-                              Container(
-                                margin: EdgeInsets.symmetric(horizontal: 10),
-                                child: GFButton(
-                                  onPressed: () {},
-                                  text: "Lihat Detail",
-                                  blockButton: true,
-                                  size: 25,
-                                  color: MyColors.background,
-                                  textColor: MyColors.text,
+                                Container(
+                                  margin: EdgeInsets.symmetric(horizontal: 10),
+                                  child: GFButton(
+                                    onPressed: () {},
+                                    text: "Lihat Detail",
+                                    blockButton: true,
+                                    size: 25,
+                                    color: MyColors.background,
+                                    textColor: MyColors.text,
+                                  ),
                                 ),
-                              ),
-                            ],
+                              ],
+                            ),
                           ),
-                        ),
-                      ],
+                        ],
+                      ),
                     );
                   },
                   separatorBuilder: (c, i) {
@@ -258,55 +271,61 @@ class _HomeScreenState extends State<HomeScreen> {
                   padding: EdgeInsets.symmetric(horizontal: 15),
                   itemBuilder: (c, j) {
                     final article = item.data?[j];
-                    return Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Container(
-                          height: 200,
-                          width: 140,
-                          decoration: BoxDecoration(
-                              color: MyColors.background,
-                              borderRadius: BorderRadius.circular(8)),
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Padding(
-                                padding: EdgeInsets.only(
-                                    top: 10, left: 10, right: 10),
-                                child: Column(
-                                  children: [
-                                    GFAvatar(
-                                      backgroundImage:
-                                          NetworkImage(article.image),
-                                    ),
-                                    Spaces.normalVertical(),
-                                    Text(article?.title ?? '-',
-                                        style: MyTextStyle.h5.bold,
-                                        maxLines: 2,
-                                        overflow: TextOverflow.ellipsis),
-                                    Spaces.smallVertical(),
-                                    Text(article?.author ?? '-',
-                                        style: MyTextStyle.contentDescription,
-                                        maxLines: 1,
-                                        overflow: TextOverflow.ellipsis),
-                                  ],
+                    return GestureDetector(
+                      onTap: () {
+                        Navigator.of(context)
+                            .pushNamed(DetailArticleScreen.routeName, arguments: article);
+                      },
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Container(
+                            height: 200,
+                            width: 140,
+                            decoration: BoxDecoration(
+                                color: MyColors.background,
+                                borderRadius: BorderRadius.circular(8)),
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Padding(
+                                  padding: EdgeInsets.only(
+                                      top: 10, left: 10, right: 10),
+                                  child: Column(
+                                    children: [
+                                      GFAvatar(
+                                        backgroundImage:
+                                            NetworkImage(article.image),
+                                      ),
+                                      Spaces.normalVertical(),
+                                      Text(article?.title ?? '-',
+                                          style: MyTextStyle.h5.bold,
+                                          maxLines: 2,
+                                          overflow: TextOverflow.ellipsis),
+                                      Spaces.smallVertical(),
+                                      Text(article?.author ?? '-',
+                                          style: MyTextStyle.contentDescription,
+                                          maxLines: 1,
+                                          overflow: TextOverflow.ellipsis),
+                                    ],
+                                  ),
                                 ),
-                              ),
-                              Container(
-                                margin: EdgeInsets.symmetric(horizontal: 10),
-                                child: GFButton(
-                                  onPressed: () {},
-                                  text: "Lihat Detail",
-                                  blockButton: true,
-                                  size: 25,
-                                  color: MyColors.primary,
-                                  textColor: MyColors.textReverse,
+                                Container(
+                                  margin: EdgeInsets.symmetric(horizontal: 10),
+                                  child: GFButton(
+                                    onPressed: () {},
+                                    text: "Lihat Detail",
+                                    blockButton: true,
+                                    size: 25,
+                                    color: MyColors.primary,
+                                    textColor: MyColors.textReverse,
+                                  ),
                                 ),
-                              ),
-                            ],
+                              ],
+                            ),
                           ),
-                        ),
-                      ],
+                        ],
+                      ),
                     );
                   },
                   separatorBuilder: (c, i) {
@@ -405,5 +424,4 @@ class _HomeScreenState extends State<HomeScreen> {
       ),
     );
   }
-
 }

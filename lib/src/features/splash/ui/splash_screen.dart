@@ -1,8 +1,6 @@
 import 'package:flutter_siap_nikah/src/commons/app_settings.dart';
 import 'package:flutter_siap_nikah/src/commons/assets.dart';
 import 'package:flutter_siap_nikah/src/commons/spaces.dart';
-import 'package:flutter_siap_nikah/src/features/home/ui/home_screen.dart';
-import 'package:flutter_siap_nikah/src/features/movie/ui/movie_list_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_siap_nikah/src/features/splash/bloc/splash_bloc.dart';

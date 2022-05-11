@@ -94,28 +94,37 @@ Widget loadingBlock(dimension) {
   );
 }
 
-AppBar appBar({child, onTapBack: null, onTap: null, icon: Icons.notifications}) {
+AppBar appBar(
+    {child,
+    onTapBack: null,
+    onTap: null,
+    icon: Icons.notifications,
+    fontFamily: null}) {
   return AppBar(
     backgroundColor: MyColors.primary,
     leading: InkWell(
       child: Container(
           padding: const EdgeInsets.all(10.0),
-          child: onTapBack != null ? BackButton(onPressed: onTapBack,) : GFAvatar(
-            backgroundImage: NetworkImage(
-                'https://i.pinimg.com/originals/7c/c7/a6/7cc7a630624d20f7797cb4c8e93c09c1.png'),
-            size: 20,
-            backgroundColor: MyColors.background,
-          )),
+          child: onTapBack != null
+              ? BackButton(
+                  onPressed: onTapBack,
+                )
+              : GFAvatar(
+                  backgroundImage: NetworkImage(
+                      'https://i.pinimg.com/originals/7c/c7/a6/7cc7a630624d20f7797cb4c8e93c09c1.png'),
+                  size: 20,
+                  backgroundColor: MyColors.background,
+                )),
       onTap: () {},
     ),
-    centerTitle: true,
+    centerTitle: fontFamily == null ? false : true,
     title: (child == null || child is String)
         ? Text(
             child ?? AppSettings.name,
             style: MyTextStyle.appBarTitle.copyWith(
                 color: MyColors.textReverse,
                 fontWeight: MyFontWeight.bold,
-                fontFamily: 'GreatVibes'),
+                fontFamily: fontFamily),
           )
         : child,
     actions: [

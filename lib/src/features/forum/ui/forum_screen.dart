@@ -42,7 +42,7 @@ class _ForumScreenState extends State<ForumScreen> {
     return BlocProvider(
       create: (BuildContext context) => ForumBloc(),
       child: Scaffold(
-          appBar: appBar(onTap: () {}, icon: Icons.filter_list, child: "Forum"),
+          appBar: appBar(onTap: () {}, icon: Icons.filter_list, child: "Forum", fontFamily: 'GreatVibes'),
           body: SmartRefresher(
             enablePullDown: true,
             enablePullUp: true,
