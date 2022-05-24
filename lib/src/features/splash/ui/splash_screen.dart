@@ -1,12 +1,12 @@
-import 'package:flutter_siap_nikah/src/commons/app_settings.dart';
-import 'package:flutter_siap_nikah/src/commons/assets.dart';
-import 'package:flutter_siap_nikah/src/commons/spaces.dart';
+import 'package:flutter_qfam/src/commons/app_settings.dart';
+import 'package:flutter_qfam/src/commons/assets.dart';
+import 'package:flutter_qfam/src/commons/spaces.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_siap_nikah/src/features/splash/bloc/splash_bloc.dart';
-import 'package:flutter_siap_nikah/src/styles/my_colors.dart';
-import 'package:flutter_siap_nikah/src/styles/my_font_weight.dart';
-import 'package:flutter_siap_nikah/src/styles/my_text_style.dart';
+import 'package:flutter_qfam/src/features/splash/bloc/splash_bloc.dart';
+import 'package:flutter_qfam/src/styles/my_colors.dart';
+import 'package:flutter_qfam/src/styles/my_font_weight.dart';
+import 'package:flutter_qfam/src/styles/my_text_style.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:getwidget/getwidget.dart';
 
@@ -56,7 +56,9 @@ class _SplashScreenState extends State<SplashScreen> {
               SizedBox(
                   height: 100,
                   width: 100,
-                  child: SvgPicture.asset(Assets.logo)),
+                  // child: SvgPicture.asset(Assets.logo),
+                  child: Image.asset(Assets.logo),
+                  ),
               Spaces.normalVertical(),
               GFLoader(type: GFLoaderType.circle),
               Spaces.normalVertical(),

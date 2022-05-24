@@ -1,10 +1,10 @@
-import 'package:flutter_siap_nikah/src/commons/spaces.dart';
-import 'package:flutter_siap_nikah/src/features/profile/bloc/profile/profile_bloc.dart';
-import 'package:flutter_siap_nikah/src/features/search/bloc/search/search_bloc.dart';
+import 'package:flutter_qfam/src/commons/spaces.dart';
+import 'package:flutter_qfam/src/features/profile/bloc/profile/profile_bloc.dart';
+import 'package:flutter_qfam/src/features/search/bloc/search/search_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_siap_nikah/src/styles/my_colors.dart';
-import 'package:flutter_siap_nikah/src/styles/my_font_weight.dart';
+import 'package:flutter_qfam/src/styles/my_colors.dart';
+import 'package:flutter_qfam/src/styles/my_font_weight.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 
 class ProfileScreen extends StatefulWidget {

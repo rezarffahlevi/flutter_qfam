@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.14)
-project(flutter_siap_nikah LANGUAGES CXX)
+project(flutter_qfam LANGUAGES CXX)
 
-set(BINARY_NAME "flutter_siap_nikah")
+set(BINARY_NAME "flutter_qfam")
 
 cmake_policy(SET CMP0063 NEW)
 

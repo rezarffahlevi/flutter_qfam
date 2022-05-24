@@ -1,9 +1,9 @@
 import 'dart:io';
 
-import 'package:flutter_siap_nikah/src/commons/spaces.dart';
-import 'package:flutter_siap_nikah/src/features/home/bloc/product_detail/product_detail_bloc.dart';
-import 'package:flutter_siap_nikah/src/models/home/product_model.dart';
-import 'package:flutter_siap_nikah/src/styles/my_colors.dart';
+import 'package:flutter_qfam/src/commons/spaces.dart';
+import 'package:flutter_qfam/src/features/home/bloc/product_detail/product_detail_bloc.dart';
+import 'package:flutter_qfam/src/models/home/product_model.dart';
+import 'package:flutter_qfam/src/styles/my_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';

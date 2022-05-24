@@ -1,5 +1,5 @@
 import 'package:bloc/bloc.dart';
-import 'package:flutter_siap_nikah/src/models/home/product_model.dart';
+import 'package:flutter_qfam/src/models/home/product_model.dart';
 import 'package:equatable/equatable.dart';
 
 part 'product_detail_event.dart';

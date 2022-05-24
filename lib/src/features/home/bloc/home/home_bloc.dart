@@ -1,10 +1,10 @@
 import 'package:bloc/bloc.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_siap_nikah/src/models/home/home_model.dart';
-import 'package:flutter_siap_nikah/src/services/home/home_service.dart';
+import 'package:flutter_qfam/src/models/home/home_model.dart';
+import 'package:flutter_qfam/src/services/home/home_service.dart';
 import 'package:equatable/equatable.dart';
-import 'package:flutter_siap_nikah/src/widgets/widgets.dart';
+import 'package:flutter_qfam/src/widgets/widgets.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 part 'home_event.dart';

@@ -1,4 +1,4 @@
-import 'package:flutter_siap_nikah/src/models/home/category_model.dart';
+import 'package:flutter_qfam/src/models/home/category_model.dart';
 
 class DefaultResponseModel {
   String? code;

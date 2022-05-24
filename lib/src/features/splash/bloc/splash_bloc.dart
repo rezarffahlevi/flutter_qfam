@@ -2,7 +2,7 @@ import 'dart:async';
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_siap_nikah/src/features/home/ui/home_root_screen.dart';
+import 'package:flutter_qfam/src/features/home/ui/home_root_screen.dart';
 
 part 'splash_event.dart';
 part 'splash_state.dart';

@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_siap_nikah/src/features/home/bloc/home/home_bloc.dart';
-import 'package:flutter_siap_nikah/src/features/home/bloc/home_root/home_root_bloc.dart';
-import 'package:flutter_siap_nikah/src/styles/my_colors.dart';
-import 'package:flutter_siap_nikah/src/styles/my_font_weight.dart';
+import 'package:flutter_qfam/src/features/home/bloc/home/home_bloc.dart';
+import 'package:flutter_qfam/src/features/home/bloc/home_root/home_root_bloc.dart';
+import 'package:flutter_qfam/src/styles/my_colors.dart';
+import 'package:flutter_qfam/src/styles/my_font_weight.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 
 class HomeRootScreen extends StatefulWidget {

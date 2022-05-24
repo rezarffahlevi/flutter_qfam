@@ -1,15 +1,15 @@
-import 'package:flutter_siap_nikah/src/commons/spaces.dart';
-import 'package:flutter_siap_nikah/src/features/home/bloc/home/home_bloc.dart';
-import 'package:flutter_siap_nikah/src/features/home/ui/product_detail_screen.dart';
-import 'package:flutter_siap_nikah/src/features/search/bloc/search/search_bloc.dart';
-import 'package:flutter_siap_nikah/src/styles/my_colors.dart';
+import 'package:flutter_qfam/src/commons/spaces.dart';
+import 'package:flutter_qfam/src/features/home/bloc/home/home_bloc.dart';
+import 'package:flutter_qfam/src/features/home/ui/product_detail_screen.dart';
+import 'package:flutter_qfam/src/features/search/bloc/search/search_bloc.dart';
+import 'package:flutter_qfam/src/styles/my_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_siap_nikah/src/styles/my_text_style.dart';
-import 'package:flutter_siap_nikah/src/widgets/widgets.dart';
+import 'package:flutter_qfam/src/styles/my_text_style.dart';
+import 'package:flutter_qfam/src/widgets/widgets.dart';
 import 'package:getwidget/getwidget.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
-import 'package:flutter_siap_nikah/src/widgets/card/card_product_list.dart';
+import 'package:flutter_qfam/src/widgets/card/card_product_list.dart';
 import 'package:image_picker/image_picker.dart';
 
 class SearchScreen extends StatefulWidget {

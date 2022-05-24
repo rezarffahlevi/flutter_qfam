@@ -1,4 +1,4 @@
-package com.siap_nikah.android
+package com.qfam.android
 
 import io.flutter.embedding.android.FlutterActivity
 
