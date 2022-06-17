@@ -12,10 +12,20 @@ class ForumBloc extends Bloc<ForumEvent, ForumState> {
   ForumBloc() : super(const ForumState()) {
     on<ForumEventGetData>(_getData);
     on<ForumEventRefresh>(_onRefresh);
+    on<ForumEventPostThread>(_postThread);
+    on<ForumEventOnChangeThread>(_onChangeThread);
 
     // add(ForumEventGetData());
+    _didMount();
   }
   ForumService apiService = ForumService();
+  final txtContent = TextEditingController();
+
+  _didMount() {
+    txtContent.addListener(() {
+      add(ForumEventOnChangeThread(content: txtContent.text));
+    });
+  }
 
   _onRefresh(ForumEventRefresh event, Emitter<ForumState> emit) async {
     add(ForumEventGetData());
@@ -25,11 +35,30 @@ class ForumBloc extends Bloc<ForumEvent, ForumState> {
     try {
       emit(state.copyWith(state: NetworkStates.onLoading));
       var response = await apiService.getList({'id': event.uuid});
-      debugPrint(response?.data!.length.toString());
+      emit(state.copyWith(
+          state: NetworkStates.onLoaded, threadsList: response?.data));
+    } catch (e) {
+      emit(state.copyWith(state: NetworkStates.onError, message: '${e}'));
+    }
+  }
+
+  _postThread(ForumEventPostThread event, Emitter<ForumState> emit) async {
+    try {
+      emit(state.copyWith(state: NetworkStates.onLoading));
+      var params = {'parent_id': state.parentId, 'content': state.content};
+      var response = await apiService.postThread(params);
       emit(state.copyWith(
           state: NetworkStates.onLoaded, threads: response?.data));
     } catch (e) {
-      debugPrint('catch ${e}');
+      emit(state.copyWith(state: NetworkStates.onError, message: '${e}'));
+    }
+  }
+
+  _onChangeThread(
+      ForumEventOnChangeThread event, Emitter<ForumState> emit) async {
+    try {
+      emit(state.copyWith(parentId: event.parentId, content: event.content));
+    } catch (e) {
       emit(state.copyWith(state: NetworkStates.onError, message: '${e}'));
     }
   }

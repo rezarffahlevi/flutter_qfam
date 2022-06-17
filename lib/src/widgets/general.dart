@@ -132,12 +132,13 @@ AppBar appBar(
           ? Container()
           : InkWell(
               child: Container(
+                alignment: Alignment.center,
                 padding: const EdgeInsets.all(10.0),
-                child: Icon(
+                child: icon.runtimeType == IconData ? Icon(
                   icon,
                   color: MyColors.textReverse,
                   size: 24,
-                ),
+                ) : icon,
               ),
               onTap: onTap,
             ),

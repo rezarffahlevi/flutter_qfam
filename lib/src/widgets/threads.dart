@@ -5,6 +5,7 @@ class Threads extends StatelessWidget {
     Key? key,
     this.name,
     this.content,
+    this.countComments,
     this.onTap,
     this.isDetail = false,
     this.isChild = false,
@@ -16,6 +17,7 @@ class Threads extends StatelessWidget {
 
   final String? name;
   final String? content;
+  final int? countComments;
   final bool isDetail;
   final bool isChild;
   final Function()? onTap;
@@ -85,7 +87,7 @@ class Threads extends StatelessWidget {
                             Icon(Icons.mode_comment_outlined, size: 16),
                             Spaces.smallHorizontal(),
                             Text(
-                              '1',
+                              '${countComments ?? ''}',
                               style: MyTextStyle.contentDescription,
                             ),
                           ],
@@ -105,7 +107,7 @@ class Threads extends StatelessWidget {
                             ),
                             Spaces.smallHorizontal(),
                             Text(
-                              '1',
+                              '',
                               style: MyTextStyle.contentDescription,
                             ),
                           ],
@@ -125,7 +127,7 @@ class Threads extends StatelessWidget {
                             ),
                             Spaces.smallHorizontal(),
                             Text(
-                              '1',
+                              '',
                               style: MyTextStyle.contentDescription,
                             ),
                           ],
@@ -220,7 +222,7 @@ class Threads extends StatelessWidget {
                     Row(
                       children: [
                         Text(
-                          '1',
+                          '${countComments ?? 0}',
                           style: MyTextStyle.h7.bold,
                         ),
                         Spaces.smallHorizontal(),
@@ -231,7 +233,7 @@ class Threads extends StatelessWidget {
                     Row(
                       children: [
                         Text(
-                          '1',
+                          '0',
                           style: MyTextStyle.h7.bold,
                         ),
                         Spaces.smallHorizontal(),
@@ -253,7 +255,7 @@ class Threads extends StatelessWidget {
                             Icon(Icons.mode_comment_outlined, size: 16),
                             Spaces.smallHorizontal(),
                             Text(
-                              '1',
+                              '${countComments ?? ''}',
                               style: MyTextStyle.contentDescription,
                             ),
                           ],
@@ -273,7 +275,7 @@ class Threads extends StatelessWidget {
                             ),
                             Spaces.smallHorizontal(),
                             Text(
-                              '1',
+                              '',
                               style: MyTextStyle.contentDescription,
                             ),
                           ],
@@ -293,7 +295,7 @@ class Threads extends StatelessWidget {
                             ),
                             Spaces.smallHorizontal(),
                             Text(
-                              '1',
+                              '',
                               style: MyTextStyle.contentDescription,
                             ),
                           ],

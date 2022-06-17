@@ -13,13 +13,21 @@ class ForumService {
 
   Future<DefaultResponseModel?> getList(dynamic params) async {
     try {
-      debugPrint('${params}');
       var response = await apiHelper.get('/threads', params: params);
       List<ThreadsModel>? data = <ThreadsModel>[];
       response['data']!.forEach((v) {
         data.add(new ThreadsModel.fromJson(v));
       });
       return DefaultResponseModel.fromJson(response, data);
+    } catch (e) {
+      throw e;
+    }
+  }
+
+  Future<DefaultResponseModel?> postThread(dynamic params) async {
+    try {
+      var response = await apiHelper.post('/threads/save', params: params);
+      return DefaultResponseModel.fromJson(response, null);
     } catch (e) {
       throw e;
     }

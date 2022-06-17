@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_qfam/src/features/forum/bloc/forum/forum_bloc.dart';
 import 'package:flutter_qfam/src/features/forum/ui/detail_forum_screen.dart';
+import 'package:flutter_qfam/src/features/forum/ui/post_thread_screen.dart';
 import 'package:flutter_qfam/src/styles/my_colors.dart';
 import 'package:flutter_qfam/src/styles/my_font_weight.dart';
 import 'package:flutter_qfam/src/styles/my_text_style.dart';
@@ -63,7 +64,7 @@ class _ForumScreenState extends State<ForumScreen> {
                       _refreshController.loadComplete();
                     },
                     builder: (context, state) {
-                      final list = state.threads;
+                      final list = state.threadsList;
                       return Wrapper(
                         state: state.state,
                         onLoaded: ListView.separated(
@@ -75,8 +76,9 @@ class _ForumScreenState extends State<ForumScreen> {
                               onTap: () => Navigator.pushNamed(
                                   context, DetailForumScreen.routeName,
                                   arguments: item),
-                              name: item?.name,
+                              name: item?.createdBy,
                               content: item?.content,
+                              countComments: item?.countComments,
                             );
                           },
                           separatorBuilder: (c, i) {
@@ -98,7 +100,7 @@ class _ForumScreenState extends State<ForumScreen> {
                             ],
                           ),
                         ),
-                        onError: Text('state.state.name'),
+                        onError: Text(state.message),
                       );
                     }),
               ],
@@ -106,8 +108,12 @@ class _ForumScreenState extends State<ForumScreen> {
           ),
         ),
         floatingActionButton: FloatingActionButton(
-          onPressed: () {
-            // Add your onPressed code here!
+          onPressed: () async {
+            var postThread = await Navigator.of(context)
+                .pushNamed(PostThreadScreen.routeName, arguments: 0);
+            if (postThread != null) {
+              bloc.add(ForumEventGetData());
+            }
           },
           backgroundColor: MyColors.primary,
           child: const Icon(

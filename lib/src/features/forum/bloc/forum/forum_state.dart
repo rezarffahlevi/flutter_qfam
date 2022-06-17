@@ -3,26 +3,38 @@ part of 'forum_bloc.dart';
 class ForumState extends Equatable {
   final NetworkStates state;
   final dynamic message;
-  final List<ThreadsModel>? threads;
+  final List<ThreadsModel>? threadsList;
+  final ThreadsModel? threads;
+  final int? parentId;
+  final String? content;
 
   const ForumState({
-    this.state = NetworkStates.onLoading,
-    this.threads = const [],
+    this.state = NetworkStates.onLoaded,
     this.message = '',
+    this.threadsList = const [],
+    this.threads = null,
+    this.parentId = null,
+    this.content = null,
   });
 
   ForumState copyWith({
     NetworkStates? state,
-    final List<ThreadsModel>? threads,
     final dynamic message,
+    final List<ThreadsModel>? threadsList,
+    final ThreadsModel? threads,
+    final int? parentId,
+    final String? content,
   }) {
     return ForumState(
       state: state ?? this.state,
-      threads: threads ?? this.threads,
       message: message ?? this.message,
+      threadsList: threadsList ?? this.threadsList,
+      threads: threads ?? this.threads,
+      parentId: parentId ?? this.parentId,
+      content: content ?? this.content,
     );
   }
 
   @override
-  List<Object?> get props => [state, threads, message];
+  List<Object?> get props => [state, message, threadsList, threads, parentId, content];
 }

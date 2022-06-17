@@ -11,6 +11,28 @@ class ForumEventGetData extends ForumEvent {
   ForumEventGetData({this.uuid});
 
   @override
-  List<Object?> get props => [uuid];}
+  List<Object?> get props => [uuid];
+}
 
 class ForumEventRefresh extends ForumEvent {}
+
+class ForumEventPostThread extends ForumEvent {
+  String? content;
+
+  ForumEventPostThread({this.content});
+
+  @override
+  List<Object?> get props => [content];
+}
+
+
+class ForumEventOnChangeThread extends ForumEvent {
+  ThreadsModel? threads;
+  int? parentId;
+  String? content;
+
+  ForumEventOnChangeThread({this.threads, this.parentId, this.content});
+
+  @override
+  List<Object?> get props => [threads, parentId, content];
+}

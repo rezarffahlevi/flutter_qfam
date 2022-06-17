@@ -2,8 +2,10 @@ import 'package:flutter_qfam/src/commons/spaces.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_qfam/src/features/forum/bloc/forum/forum_bloc.dart';
+import 'package:flutter_qfam/src/features/forum/ui/post_thread_screen.dart';
 import 'package:flutter_qfam/src/features/home/bloc/home/home_bloc.dart';
 import 'package:flutter_qfam/src/models/forum/threads_model.dart';
+import 'package:flutter_qfam/src/styles/my_colors.dart';
 import 'package:flutter_qfam/src/widgets/widgets.dart';
 import 'package:getwidget/getwidget.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
@@ -50,76 +52,94 @@ class _DetailForumScreenState extends State<DetailForumScreen> {
     return BlocProvider(
       create: (BuildContext context) => ForumBloc(),
       child: Scaffold(
-          appBar: appBar(
-              child: "Utas",
-              onTapBack: () {
-                Navigator.pop(context);
-              }),
-          body: SmartRefresher(
-            enablePullDown: true,
-            enablePullUp: true,
-            scrollController: _scrollController,
-            controller: _refreshController,
-            onRefresh: () => bloc.add(ForumEventGetData(uuid: widget.argument.uuid)),
-            child: SingleChildScrollView(
-              child: BlocConsumer<ForumBloc, ForumState>(
-                  bloc: bloc,
-                  listener: (context, state) {
-                    _refreshController.refreshCompleted();
-                    _refreshController.loadComplete();
-                  },
-                  builder: (context, state) {
-                    ThreadsModel detail = state.threads!.length > 0
-                        ? state.threads![0]
-                        : ThreadsModel();
-                    return Column(
-                      children: [
-                        Threads(
-                          isDetail: true,
-                          name: detail.name,
-                          content: detail.content,
+        appBar: appBar(
+            child: "Utas",
+            onTapBack: () {
+              Navigator.pop(context);
+            }),
+        body: SmartRefresher(
+          enablePullDown: true,
+          enablePullUp: true,
+          scrollController: _scrollController,
+          controller: _refreshController,
+          onRefresh: () =>
+              bloc.add(ForumEventGetData(uuid: widget.argument.uuid)),
+          child: SingleChildScrollView(
+            child: BlocConsumer<ForumBloc, ForumState>(
+                bloc: bloc,
+                listener: (context, state) {
+                  _refreshController.refreshCompleted();
+                  _refreshController.loadComplete();
+                },
+                builder: (context, state) {
+                  ThreadsModel detail = state.threadsList!.length > 0
+                      ? state.threadsList![0]
+                      : ThreadsModel();
+                  return Column(
+                    children: [
+                      Threads(
+                        isDetail: true,
+                        name: detail.createdBy,
+                        content: detail.content,
+                        countComments: detail.countComments,
+                      ),
+                      Wrapper(
+                        state: state.state,
+                        onLoaded: ListView.separated(
+                          padding: EdgeInsets.all(8),
+                          shrinkWrap: true,
+                          physics: const NeverScrollableScrollPhysics(),
+                          itemBuilder: (c, i) {
+                            ThreadsModel item = detail.child![i];
+                            return Threads(
+                              onTap: () => Navigator.pushNamed(
+                                  context, DetailForumScreen.routeName,
+                                  arguments: item),
+                              name: item.createdBy,
+                              content: item.content,
+                              countComments: item.countComments,
+                            );
+                          },
+                          separatorBuilder: (c, i) {
+                            return Spaces.normalHorizontal();
+                          },
+                          itemCount: detail.child?.length ?? 0,
                         ),
-                        Wrapper(
-                          state: state.state,
-                          onLoaded: ListView.separated(
-                            padding: EdgeInsets.all(8),
-                            shrinkWrap: true,
-                            physics: const NeverScrollableScrollPhysics(),
-                            itemBuilder: (c, i) {
-                              ThreadsModel item = detail.child![i];
-                              return Threads(
-                                onTap: () => Navigator.pushNamed(
-                                    context, DetailForumScreen.routeName,
-                                    arguments: item),
-                                name: item.name,
-                                content: item.content,
-                              );
-                            },
-                            separatorBuilder: (c, i) {
-                              return Spaces.normalHorizontal();
-                            },
-                            itemCount: detail.child?.length ?? 0,
-                          ),
-                          onLoading: GFShimmer(
-                            child: Column(
-                              children: [
-                                Spaces.normalVertical(),
-                                for (var i = 0; i < 12; i++)
-                                  Column(
-                                    children: [
-                                      loadingBlock(dimension),
-                                      Spaces.normalVertical()
-                                    ],
-                                  ),
-                              ],
-                            ),
+                        onLoading: GFShimmer(
+                          child: Column(
+                            children: [
+                              Spaces.normalVertical(),
+                              for (var i = 0; i < 12; i++)
+                                Column(
+                                  children: [
+                                    loadingBlock(dimension),
+                                    Spaces.normalVertical()
+                                  ],
+                                ),
+                            ],
                           ),
                         ),
-                      ],
-                    );
-                  }),
-            ),
-          )),
+                      ),
+                    ],
+                  );
+                }),
+          ),
+        ),
+        floatingActionButton: FloatingActionButton(
+          onPressed: () async {
+            var postThread = await Navigator.of(context).pushNamed(
+                PostThreadScreen.routeName,
+                arguments: widget.argument.id);
+            if (postThread != null) {
+              bloc.add(ForumEventGetData(uuid: widget.argument.uuid));
+            }
+          },
+          backgroundColor: MyColors.primary,
+          child: const Icon(
+            Icons.add,
+          ),
+        ),
+      ),
     );
   }
 }
