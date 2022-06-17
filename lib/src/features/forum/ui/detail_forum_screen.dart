@@ -2,14 +2,17 @@ import 'package:flutter_qfam/src/commons/spaces.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_qfam/src/features/forum/bloc/forum/forum_bloc.dart';
+import 'package:flutter_qfam/src/features/home/bloc/home/home_bloc.dart';
+import 'package:flutter_qfam/src/models/forum/threads_model.dart';
 import 'package:flutter_qfam/src/widgets/widgets.dart';
 import 'package:getwidget/getwidget.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 
 class DetailForumScreen extends StatefulWidget {
   static const String routeName = '/detail-forum';
+  final ThreadsModel argument;
 
-  const DetailForumScreen({Key? key}) : super(key: key);
+  const DetailForumScreen({Key? key, required this.argument}) : super(key: key);
 
   @override
   _DetailForumScreenState createState() => _DetailForumScreenState();
@@ -25,6 +28,7 @@ class _DetailForumScreenState extends State<DetailForumScreen> {
   void initState() {
     super.initState();
     _scrollController = ScrollController();
+    bloc.add(ForumEventGetData(uuid: widget.argument.uuid));
   }
 
   @override
@@ -56,7 +60,7 @@ class _DetailForumScreenState extends State<DetailForumScreen> {
             enablePullUp: true,
             scrollController: _scrollController,
             controller: _refreshController,
-            onRefresh: () => bloc.add(ForumEventRefresh()),
+            onRefresh: () => bloc.add(ForumEventGetData(uuid: widget.argument.uuid)),
             child: SingleChildScrollView(
               child: BlocConsumer<ForumBloc, ForumState>(
                   bloc: bloc,
@@ -65,31 +69,36 @@ class _DetailForumScreenState extends State<DetailForumScreen> {
                     _refreshController.loadComplete();
                   },
                   builder: (context, state) {
+                    ThreadsModel detail = state.threads!.length > 0
+                        ? state.threads![0]
+                        : ThreadsModel();
                     return Column(
                       children: [
                         Threads(
                           isDetail: true,
+                          name: detail.name,
+                          content: detail.content,
                         ),
                         Wrapper(
-                          state: NetworkStates.onLoaded,
+                          state: state.state,
                           onLoaded: ListView.separated(
                             padding: EdgeInsets.all(8),
                             shrinkWrap: true,
                             physics: const NeverScrollableScrollPhysics(),
                             itemBuilder: (c, i) {
+                              ThreadsModel item = detail.child![i];
                               return Threads(
                                 onTap: () => Navigator.pushNamed(
-                                  context,
-                                  DetailForumScreen.routeName,
-                                ),
-                                isChild: true,
-                                scrollToTop: _scrollToTop,
+                                    context, DetailForumScreen.routeName,
+                                    arguments: item),
+                                name: item.name,
+                                content: item.content,
                               );
                             },
                             separatorBuilder: (c, i) {
                               return Spaces.normalHorizontal();
                             },
-                            itemCount: 5,
+                            itemCount: detail.child?.length ?? 0,
                           ),
                           onLoading: GFShimmer(
                             child: Column(

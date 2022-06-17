@@ -44,32 +44,46 @@ class _SearchScreenState extends State<SearchScreen> {
     return BlocProvider(
       create: (BuildContext context) => SearchBloc(),
       child: Scaffold(
-          appBar: appBar(onTap: () {}, icon: Icons.filter_list, child: "Cari", fontFamily: 'GreatVibes'),
-          body: SmartRefresher(
-            enablePullDown: true,
-            enablePullUp: false,
-            controller: _refreshController,
-            onRefresh: () => bloc.add(SearchEventRefresh()),
-            child: SingleChildScrollView(
-              child: Column(
-                children: [
-                  BlocConsumer<SearchBloc, SearchState>(
-                      bloc: bloc,
-                      listener: (context, state) {
-                        _refreshController.refreshCompleted();
-                        _refreshController.loadComplete();
-                      },
-                      builder: (context, state) {
-                        return Column(
-                          children: [
-                            Spaces.normalVertical(),
-                          ],
-                        );
-                      }),
-                ],
-              ),
+        appBar: appBar(
+            onTap: () {},
+            icon: Icons.filter_list,
+            child: "Edukasi",
+            fontFamily: 'GreatVibes'),
+        body: SmartRefresher(
+          enablePullDown: true,
+          enablePullUp: false,
+          controller: _refreshController,
+          onRefresh: () => bloc.add(SearchEventRefresh()),
+          child: SingleChildScrollView(
+            child: Column(
+              children: [
+                BlocConsumer<SearchBloc, SearchState>(
+                    bloc: bloc,
+                    listener: (context, state) {
+                      _refreshController.refreshCompleted();
+                      _refreshController.loadComplete();
+                    },
+                    builder: (context, state) {
+                      return Column(
+                        children: [
+                          Spaces.normalVertical(),
+                        ],
+                      );
+                    }),
+              ],
             ),
-          )),
+          ),
+        ),
+        floatingActionButton: FloatingActionButton(
+          onPressed: () {
+            // Add your onPressed code here!
+          },
+          backgroundColor: MyColors.primary,
+          child: const Icon(
+            Icons.add,
+          ),
+        ),
+      ),
     );
   }
 }

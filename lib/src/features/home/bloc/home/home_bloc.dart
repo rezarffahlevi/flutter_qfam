@@ -1,7 +1,9 @@
 import 'package:bloc/bloc.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_qfam/src/models/home/sections_model.dart';
 import 'package:flutter_qfam/src/models/home/home_model.dart';
+import 'package:flutter_qfam/src/services/contents/content_service.dart';
 import 'package:flutter_qfam/src/services/home/home_service.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter_qfam/src/widgets/widgets.dart';
@@ -21,6 +23,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
     add(HomeEventRefresh());
   }
   HomeService homeService = HomeService();
+  ContentService apiService = ContentService();
 
   _onRefresh(HomeEventRefresh event, Emitter<HomeState> emit) async {
     add(HomeEventGetData());
@@ -29,10 +32,9 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
   _getHomeData(HomeEventGetData event, Emitter<HomeState> emit) async {
     try {
       emit(state.copyWith(state: NetworkStates.onLoading));
-      var response = await homeService.getHomeData();
+      var response = await apiService.getList();
       emit(state.copyWith(
-          listCategory: response?.data?.category,
-          listHome: response?.data?.home,
+          sections: response?.data,
           state: NetworkStates.onLoaded));
     } catch (e) {
       emit(state.copyWith(state: NetworkStates.onError, message: '${e}'));

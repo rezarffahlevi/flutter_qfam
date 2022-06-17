@@ -3,6 +3,8 @@ part of 'widgets.dart';
 class Threads extends StatelessWidget {
   const Threads({
     Key? key,
+    this.name,
+    this.content,
     this.onTap,
     this.isDetail = false,
     this.isChild = false,
@@ -12,6 +14,8 @@ class Threads extends StatelessWidget {
     this.onError,
   }) : super(key: key);
 
+  final String? name;
+  final String? content;
   final bool isDetail;
   final bool isChild;
   final Function()? onTap;
@@ -54,10 +58,10 @@ class Threads extends StatelessWidget {
               Spaces.smallVertical(),
               Row(
                 children: [
-                  Text('Nama user', style: MyTextStyle.h5.bold),
+                  Text(name ?? '-', style: MyTextStyle.h5.bold),
                   Spaces.smallHorizontal(),
                   Text(
-                    '@username · 7h',
+                    '@${name} · 7h',
                     style: MyTextStyle.contentDescription,
                   ),
                 ],
@@ -65,7 +69,7 @@ class Threads extends StatelessWidget {
               Padding(
                 padding: const EdgeInsets.only(right: 8),
                 child: Text(
-                  'ada yang punya pdf mengenai Qualitative research ngga? Yang enak buat di resensi yang ada silakan tinggalkan jejak di reply ya terimakasih sebelumnya 🙏',
+                  '${content}',
                   style: MyTextStyle.h5,
                 ),
               ),
@@ -177,9 +181,9 @@ class Threads extends StatelessWidget {
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text('Nama user', style: MyTextStyle.h5.bold),
+                  Text(name ?? '-', style: MyTextStyle.h5.bold),
                   Text(
-                    '@username',
+                    '@${name}',
                     style: MyTextStyle.contentDescription,
                   ),
                 ],
@@ -193,13 +197,13 @@ class Threads extends StatelessWidget {
               Padding(
                 padding: const EdgeInsets.only(right: 8),
                 child: Text(
-                  'ada yang punya pdf mengenai Qualitative research ngga? Yang enak buat di resensi yang ada silakan tinggalkan jejak di reply ya terimakasih sebelumnya 🙏',
+                  '${content}',
                   style: MyTextStyle.h4,
                 ),
               ),
               Spaces.normalVertical(),
               Text(
-                '19.30 · 19.04/22',
+                '19.30 · 19/04/22',
                 style: MyTextStyle.contentDescription,
               ),
               Container(

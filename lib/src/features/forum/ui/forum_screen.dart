@@ -27,6 +27,7 @@ class _ForumScreenState extends State<ForumScreen> {
   @override
   void initState() {
     super.initState();
+    bloc.add(ForumEventGetData());
   }
 
   @override
@@ -42,57 +43,78 @@ class _ForumScreenState extends State<ForumScreen> {
     return BlocProvider(
       create: (BuildContext context) => ForumBloc(),
       child: Scaffold(
-          appBar: appBar(onTap: () {}, icon: Icons.filter_list, child: "Forum", fontFamily: 'GreatVibes'),
-          body: SmartRefresher(
-            enablePullDown: true,
-            enablePullUp: true,
-            controller: _refreshController,
-            onRefresh: () => bloc.add(ForumEventRefresh()),
-            child: SingleChildScrollView(
-              child: Column(
-                children: [
-                  BlocConsumer<ForumBloc, ForumState>(
-                      bloc: bloc,
-                      listener: (context, state) {
-                        _refreshController.refreshCompleted();
-                        _refreshController.loadComplete();
-                      },
-                      builder: (context, state) {
-                        return Wrapper(
-                          state: NetworkStates.onLoaded,
-                          onLoaded: ListView.separated(
-                            shrinkWrap: true,
-                            physics: const NeverScrollableScrollPhysics(),
-                            itemBuilder: (c, i) {
-                              return Threads(
-                                onTap: () => Navigator.pushNamed(context, DetailForumScreen.routeName)
-                              );
-                            },
-                            separatorBuilder: (c, i) {
-                              return Spaces.normalHorizontal();
-                            },
-                            itemCount: 5,
+        appBar: appBar(
+            onTap: () {},
+            icon: Icons.filter_list,
+            child: "Forum",
+            fontFamily: 'GreatVibes'),
+        body: SmartRefresher(
+          enablePullDown: true,
+          enablePullUp: true,
+          controller: _refreshController,
+          onRefresh: () => bloc.add(ForumEventRefresh()),
+          child: SingleChildScrollView(
+            child: Column(
+              children: [
+                BlocConsumer<ForumBloc, ForumState>(
+                    bloc: bloc,
+                    listener: (context, state) {
+                      _refreshController.refreshCompleted();
+                      _refreshController.loadComplete();
+                    },
+                    builder: (context, state) {
+                      final list = state.threads;
+                      return Wrapper(
+                        state: state.state,
+                        onLoaded: ListView.separated(
+                          shrinkWrap: true,
+                          physics: const NeverScrollableScrollPhysics(),
+                          itemBuilder: (c, i) {
+                            final item = list?[i];
+                            return Threads(
+                              onTap: () => Navigator.pushNamed(
+                                  context, DetailForumScreen.routeName,
+                                  arguments: item),
+                              name: item?.name,
+                              content: item?.content,
+                            );
+                          },
+                          separatorBuilder: (c, i) {
+                            return Spaces.normalHorizontal();
+                          },
+                          itemCount: list!.length,
+                        ),
+                        onLoading: GFShimmer(
+                          child: Column(
+                            children: [
+                              Spaces.normalVertical(),
+                              for (var i = 0; i < 12; i++)
+                                Column(
+                                  children: [
+                                    loadingBlock(dimension),
+                                    Spaces.normalVertical()
+                                  ],
+                                ),
+                            ],
                           ),
-                          onLoading: GFShimmer(
-                            child: Column(
-                              children: [
-                                Spaces.normalVertical(),
-                                for (var i = 0; i < 12; i++)
-                                  Column(
-                                    children: [
-                                      loadingBlock(dimension),
-                                      Spaces.normalVertical()
-                                    ],
-                                  ),
-                              ],
-                            ),
-                          ),
-                        );
-                      }),
-                ],
-              ),
+                        ),
+                        onError: Text('state.state.name'),
+                      );
+                    }),
+              ],
             ),
-          )),
+          ),
+        ),
+        floatingActionButton: FloatingActionButton(
+          onPressed: () {
+            // Add your onPressed code here!
+          },
+          backgroundColor: MyColors.primary,
+          child: const Icon(
+            Icons.add,
+          ),
+        ),
+      ),
     );
   }
 }

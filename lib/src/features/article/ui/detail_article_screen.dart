@@ -2,11 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_qfam/src/features/article/bloc/detail_article/detail_article_bloc.dart';
 import 'package:flutter_qfam/src/models/home/home_model.dart';
+import 'package:flutter_qfam/src/models/home/sections_model.dart';
 import 'package:flutter_qfam/src/widgets/widgets.dart';
 
 class DetailArticleScreen extends StatefulWidget {
   static const String routeName = '/detail-article';
-  final Data argument;
+  final ContentsModel argument;
   const DetailArticleScreen({Key? key, required this.argument}) : super(key: key);
 
   @override
@@ -34,7 +35,7 @@ class _DetailArticleScreenState extends State<DetailArticleScreen> {
       create: (BuildContext context) => DetailArticleBloc(),
       child: Scaffold(
         appBar: appBar(
-            child: widget.argument.title ?? "Detail",
+            // child: widget.argument.t itle ?? "Detail",
             onTapBack: () {
               Navigator.pop(context);
             }),

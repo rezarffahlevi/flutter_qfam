@@ -2,6 +2,7 @@ import 'package:flutter_qfam/src/commons/spaces.dart';
 import 'package:flutter_qfam/src/features/article/ui/detail_article_screen.dart';
 import 'package:flutter_qfam/src/features/home/bloc/home/home_bloc.dart';
 import 'package:flutter_qfam/src/features/home/ui/product_detail_screen.dart';
+import 'package:flutter_qfam/src/features/search/ui/search_screen.dart';
 import 'package:flutter_qfam/src/styles/my_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -62,33 +63,33 @@ class _HomeScreenState extends State<HomeScreen> {
                       },
                       builder: (context, state) {
                         final listCategory = state.listCategory;
-                        final listHome = state.listHome;
+                        final sections = state.sections;
 
                         return Column(
                           children: [
                             Spaces.normalVertical(),
-                            Wrapper(
-                              state: state.state,
-                              onLoading: GFShimmer(
-                                child: _categoryBlock(dimension),
-                              ),
-                              onLoaded: sectionWidget(
-                                'Kategori',
-                                child: _categorySection(listCategory, state),
-                                onTapAll: () {
-                                  debugPrint('Hii');
-                                },
-                              ),
-                              onError: sectionWidget('Kategori',
-                                  child: Align(
-                                    alignment: Alignment.topLeft,
-                                    child: Padding(
-                                        padding: const EdgeInsets.symmetric(
-                                            horizontal: 15.0),
-                                        child: Text(
-                                            state.message ?? 'Unknown Error')),
-                                  )),
-                            ),
+                            // Wrapper(
+                            //   state: state.state,
+                            //   onLoading: GFShimmer(
+                            //     child: _categoryBlock(dimension),
+                            //   ),
+                            //   onLoaded: sectionWidget(
+                            //     'Kategori',
+                            //     child: _categorySection(listCategory, state),
+                            //     onTapAll: () {
+                            //       debugPrint('Hii');
+                            //     },
+                            //   ),
+                            //   onError: sectionWidget('Kategori',
+                            //       child: Align(
+                            //         alignment: Alignment.topLeft,
+                            //         child: Padding(
+                            //             padding: const EdgeInsets.symmetric(
+                            //                 horizontal: 15.0),
+                            //             child: Text(
+                            //                 state.message ?? 'Unknown Error')),
+                            //       )),
+                            // ),
                             Wrapper(
                               state: state.state,
                               onLoading: GFShimmer(
@@ -105,7 +106,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                 ),
                               ),
                               onLoaded:
-                                  _renderArticle(dimension, state, listHome),
+                                  _renderArticle(dimension, state, sections),
                               onError: sectionWidget('Pranikah',
                                   child: Align(
                                     alignment: Alignment.topLeft,
@@ -126,16 +127,21 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  Widget _renderArticle(dimension, state, listHome) {
+  Widget _renderArticle(dimension, state, sections) {
+    onTapAll() {
+      Navigator.of(context).pushNamed(SearchScreen.routeName);
+    }
+
     return ListView.separated(
       shrinkWrap: true,
       physics: const NeverScrollableScrollPhysics(),
       itemBuilder: (c, i) {
-        final item = listHome[i];
+        final item = sections[i];
         switch (item.type) {
           case "column-list":
             return sectionWidget(
               item.title ?? '-',
+              onTapAll: onTapAll,
               child: Container(
                 width: dimension.width,
                 child: ListView.separated(
@@ -143,11 +149,12 @@ class _HomeScreenState extends State<HomeScreen> {
                   physics: const NeverScrollableScrollPhysics(),
                   padding: EdgeInsets.only(left: 16, right: 16),
                   itemBuilder: (c, j) {
-                    final article = item.data?[j];
+                    final article = item.contents?[j];
                     return GestureDetector(
                       onTap: () {
-                        Navigator.of(context)
-                            .pushNamed(DetailArticleScreen.routeName, arguments: article);
+                        Navigator.of(context).pushNamed(
+                            DetailArticleScreen.routeName,
+                            arguments: article);
                       },
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
@@ -156,9 +163,9 @@ class _HomeScreenState extends State<HomeScreen> {
                             color: MyColors.greyPlaceHolder,
                             height: 130,
                             borderRadius: BorderRadius.all(Radius.circular(8)),
-                            image: NetworkImage(article?.image ?? ''),
+                            image: NetworkImage(article?.thumbnail ?? ''),
                             boxFit: BoxFit.fitWidth,
-                            child: article.isVideo
+                            child: article.isVideo == 1
                                 ? Icon(
                                     Icons.play_circle,
                                     size: 50,
@@ -173,7 +180,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           ),
                           Spaces.smallVertical(),
                           Text(
-                            'By ' + (article?.author ?? '-'),
+                            'By ${article?.createdBy}',
                             style: MyTextStyle.contentDescription,
                           ),
                         ],
@@ -183,13 +190,14 @@ class _HomeScreenState extends State<HomeScreen> {
                   separatorBuilder: (c, i) {
                     return Spaces.largeVertical();
                   },
-                  itemCount: item.data?.length ?? 0,
+                  itemCount: item.contents?.length ?? 0,
                 ),
               ),
             );
           case "row-list":
             return sectionWidget(
-              item.title ?? '-',
+              item?.title ?? '-',
+              onTapAll: onTapAll,
               child: Container(
                 width: dimension.width,
                 height: 180,
@@ -199,11 +207,12 @@ class _HomeScreenState extends State<HomeScreen> {
                   padding: EdgeInsets.symmetric(horizontal: 15),
                   physics: const AlwaysScrollableScrollPhysics(),
                   itemBuilder: (c, j) {
-                    final article = item.data?[j];
+                    final article = item.contents?[j];
                     return GestureDetector(
                       onTap: () {
-                        Navigator.of(context)
-                            .pushNamed(DetailArticleScreen.routeName, arguments: article);
+                        Navigator.of(context).pushNamed(
+                            DetailArticleScreen.routeName,
+                            arguments: article);
                       },
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
@@ -213,7 +222,7 @@ class _HomeScreenState extends State<HomeScreen> {
                             height: 170,
                             width: 120,
                             borderRadius: BorderRadius.all(Radius.circular(8)),
-                            image: NetworkImage(article?.image ?? ''),
+                            image: NetworkImage(article?.thumbnail ?? ''),
                             boxFit: BoxFit.fitHeight,
                             child: Column(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -254,13 +263,14 @@ class _HomeScreenState extends State<HomeScreen> {
                   separatorBuilder: (c, i) {
                     return Spaces.normalHorizontal();
                   },
-                  itemCount: item.data?.length ?? 0,
+                  itemCount: item.contents?.length ?? 0,
                 ),
               ),
             );
           case "row-list-profile":
             return sectionWidget(
               item.title ?? '-',
+              onTapAll: onTapAll,
               child: Container(
                 width: dimension.width,
                 height: 200,
@@ -270,11 +280,12 @@ class _HomeScreenState extends State<HomeScreen> {
                   physics: const AlwaysScrollableScrollPhysics(),
                   padding: EdgeInsets.symmetric(horizontal: 15),
                   itemBuilder: (c, j) {
-                    final article = item.data?[j];
+                    final article = item?.contents?[j];
                     return GestureDetector(
                       onTap: () {
-                        Navigator.of(context)
-                            .pushNamed(DetailArticleScreen.routeName, arguments: article);
+                        Navigator.of(context).pushNamed(
+                            DetailArticleScreen.routeName,
+                            arguments: article);
                       },
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
@@ -295,7 +306,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                     children: [
                                       GFAvatar(
                                         backgroundImage:
-                                            NetworkImage(article.image),
+                                            NetworkImage(article.thumbnail),
                                       ),
                                       Spaces.normalVertical(),
                                       Text(article?.title ?? '-',
@@ -303,7 +314,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                           maxLines: 2,
                                           overflow: TextOverflow.ellipsis),
                                       Spaces.smallVertical(),
-                                      Text(article?.author ?? '-',
+                                      Text('${article?.createdBy}',
                                           style: MyTextStyle.contentDescription,
                                           maxLines: 1,
                                           overflow: TextOverflow.ellipsis),
@@ -331,7 +342,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   separatorBuilder: (c, i) {
                     return Spaces.normalHorizontal();
                   },
-                  itemCount: item.data?.length ?? 0,
+                  itemCount: item.contents?.length ?? 0,
                 ),
               ),
             );
@@ -342,7 +353,7 @@ class _HomeScreenState extends State<HomeScreen> {
       separatorBuilder: (c, i) {
         return Spaces.normalHorizontal();
       },
-      itemCount: listHome.length,
+      itemCount: sections.length,
     );
   }
 

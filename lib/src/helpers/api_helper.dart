@@ -22,6 +22,7 @@ class ApiHelper {
 
     try {
       var response = await dio.get(url, queryParameters: params);
+      debugPrint("======== GET API ${url} : ${params} ========");
       return json.decode(response.toString());
     } on DioError catch (e) {
       debugPrint("======== ERROR API ${url} : ${e.message} ========");

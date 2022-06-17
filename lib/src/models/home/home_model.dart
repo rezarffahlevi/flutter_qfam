@@ -1,31 +1,24 @@
+import 'package:flutter_qfam/src/models/home/sections_model.dart';
+
 class HomeModel {
   List<Category>? category;
-  List<Home>? home;
+  List<SectionsModel>? sections;
 
-  HomeModel({this.category, this.home});
+  HomeModel({this.category, this.sections});
 
-  HomeModel.fromJson(Map<String, dynamic> json) {
-    if (json['category'] != null) {
-      category = <Category>[];
-      json['category'].forEach((v) {
-        category!.add(new Category.fromJson(v));
-      });
-    }
-    if (json['home'] != null) {
-      home = <Home>[];
-      json['home'].forEach((v) {
-        home!.add(new Home.fromJson(v));
+  HomeModel.fromJson(String object, List<dynamic>? json) {
+    sections = <SectionsModel>[];
+    if (object == 'sections') {
+      json!.forEach((v) {
+        sections!.add(new SectionsModel.fromJson(v));
       });
     }
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
-    if (this.category != null) {
-      data['category'] = this.category!.map((v) => v.toJson()).toList();
-    }
-    if (this.home != null) {
-      data['home'] = this.home!.map((v) => v.toJson()).toList();
+    if (this.sections != null) {
+      data['home'] = this.sections!.map((v) => v.toJson()).toList();
     }
     return data;
   }
@@ -46,66 +39,6 @@ class Category {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['id'] = this.id;
     data['name'] = this.name;
-    return data;
-  }
-}
-
-class Home {
-  String? type;
-  String? title;
-  int? categoryId;
-  List<Data>? data;
-
-  Home({this.type, this.title, this.categoryId, this.data});
-
-  Home.fromJson(Map<String, dynamic> json) {
-    type = json['type'];
-    title = json['title'];
-    categoryId = json['category_id'];
-    if (json['data'] != null) {
-      data = <Data>[];
-      json['data'].forEach((v) {
-        data!.add(new Data.fromJson(v));
-      });
-    }
-  }
-
-  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['type'] = this.type;
-    data['title'] = this.title;
-    data['category_id'] = this.categoryId;
-    if (this.data != null) {
-      data['data'] = this.data!.map((v) => v.toJson()).toList();
-    }
-    return data;
-  }
-}
-
-class Data {
-  int? id;
-  String? title;
-  String? image;
-  String? author;
-  bool? isVideo;
-
-  Data({this.id, this.title, this.image, this.author});
-
-  Data.fromJson(Map<String, dynamic> json) {
-    id = json['id'];
-    title = json['title'];
-    image = json['image'];
-    author = json['author'];
-    isVideo = json['is_video'];
-  }
-
-  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['id'] = this.id;
-    data['title'] = this.title;
-    data['image'] = this.image;
-    data['author'] = this.author;
-    data['is_video'] = this.isVideo;
     return data;
   }
 }
