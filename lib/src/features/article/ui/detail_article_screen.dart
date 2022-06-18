@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_qfam/src/features/article/bloc/detail_article/detail_article_bloc.dart';
-import 'package:flutter_qfam/src/models/home/home_model.dart';
-import 'package:flutter_qfam/src/models/home/sections_model.dart';
+import 'package:flutter_qfam/src/models/contents/contents_model.dart';
 import 'package:flutter_qfam/src/widgets/widgets.dart';
 
 class DetailArticleScreen extends StatefulWidget {

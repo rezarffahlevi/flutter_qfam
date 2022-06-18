@@ -55,8 +55,8 @@ class _PostThreadScreenState extends State<PostThreadScreen> {
             icon: Text('Simpan'),
             fontFamily: 'GreatVibes'),
         body: SmartRefresher(
-          enablePullDown: false,
-          enablePullUp: true,
+          enablePullDown: true,
+          enablePullUp: false,
           controller: _refreshController,
           onRefresh: () => bloc.add(ForumEventRefresh()),
           child: SingleChildScrollView(
@@ -91,6 +91,7 @@ class _PostThreadScreenState extends State<PostThreadScreen> {
                                     margin: EdgeInsets.only(right: 10),
                                     child: TextField(
                                       controller:bloc.txtContent,
+                                      autofocus: true,
                                       minLines: 12,
                                       maxLines: 12,
                                       maxLength: 250,

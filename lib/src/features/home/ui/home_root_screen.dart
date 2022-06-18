@@ -24,7 +24,7 @@ class _HomeRootScreenState extends State<HomeRootScreen> {
   Widget build(BuildContext context) {
     final dimension = MediaQuery.of(context).size;
     return BlocListener<HomeRootBloc, HomeRootState>(
-      listenWhen: (prev, curr) => prev.isLoading != curr.isLoading,
+      listenWhen: (prev, curr) => prev.state != curr.state,
       listener: (context, state) {
         if (state.isLoading) {
           print('ISLOADING TRUE');

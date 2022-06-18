@@ -1,51 +1,3 @@
-class SectionsModel {
-  int? id;
-  String? title;
-  String? description;
-  String? type;
-  String? createdAt;
-  String? updatedAt;
-  List<ContentsModel>? contents;
-
-  SectionsModel(
-      {this.id,
-      this.title,
-      this.description,
-      this.type,
-      this.createdAt,
-      this.updatedAt,
-      this.contents});
-
-  SectionsModel.fromJson(Map<String, dynamic> json) {
-    id = json['id'];
-    title = json['title'];
-    description = json['description'];
-    type = json['type'];
-    createdAt = json['created_at'];
-    updatedAt = json['updated_at'];
-    if (json['contents'] != null) {
-      contents = <ContentsModel>[];
-      json['contents'].forEach((v) {
-        contents!.add(new ContentsModel.fromJson(v));
-      });
-    }
-  }
-
-  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['id'] = this.id;
-    data['title'] = this.title;
-    data['description'] = this.description;
-    data['type'] = this.type;
-    data['created_at'] = this.createdAt;
-    data['updated_at'] = this.updatedAt;
-    if (this.contents != null) {
-      data['contents'] = this.contents!.map((v) => v.toJson()).toList();
-    }
-    return data;
-  }
-}
-
 class ContentsModel {
   int? id;
   String? uuid;
@@ -53,6 +5,7 @@ class ContentsModel {
   String? content;
   String? thumbnail;
   int? categoryId;
+  String? category;
   int? sectionId;
   String? link;
   String? tags;
@@ -60,9 +13,10 @@ class ContentsModel {
   int? isVideo;
   int? isExternal;
   int? createdBy;
+  String? createdByName;
+  int? userVerified;
   String? createdAt;
   String? updatedAt;
-  String? category;
 
   ContentsModel(
       {this.id,
@@ -71,6 +25,7 @@ class ContentsModel {
       this.content,
       this.thumbnail,
       this.categoryId,
+      this.category,
       this.sectionId,
       this.link,
       this.tags,
@@ -78,9 +33,10 @@ class ContentsModel {
       this.isVideo,
       this.isExternal,
       this.createdBy,
+      this.createdByName,
+      this.userVerified,
       this.createdAt,
-      this.updatedAt,
-      this.category});
+      this.updatedAt,});
 
   ContentsModel.fromJson(Map<String, dynamic> json) {
     id = json['id'];
@@ -89,6 +45,7 @@ class ContentsModel {
     content = json['content'];
     thumbnail = json['thumbnail'];
     categoryId = json['category_id'];
+    category = json['category'];
     sectionId = json['section_id'];
     link = json['link'];
     tags = json['tags'];
@@ -96,9 +53,10 @@ class ContentsModel {
     isVideo = json['is_video'];
     isExternal = json['is_external'];
     createdBy = json['created_by'];
+    createdByName = json['created_by_name'];
+    userVerified = json['user_verified'];
     createdAt = json['created_at'];
     updatedAt = json['updated_at'];
-    category = json['category'];
   }
 
   Map<String, dynamic> toJson() {
@@ -109,6 +67,7 @@ class ContentsModel {
     data['content'] = this.content;
     data['thumbnail'] = this.thumbnail;
     data['category_id'] = this.categoryId;
+    data['category'] = this.category;
     data['section_id'] = this.sectionId;
     data['link'] = this.link;
     data['tags'] = this.tags;
@@ -116,9 +75,10 @@ class ContentsModel {
     data['is_video'] = this.isVideo;
     data['is_external'] = this.isExternal;
     data['created_by'] = this.createdBy;
+    data['created_by_name'] = this.createdByName;
+    data['user_verified'] = this.userVerified;
     data['created_at'] = this.createdAt;
     data['updated_at'] = this.updatedAt;
-    data['category'] = this.category;
     return data;
   }
 }

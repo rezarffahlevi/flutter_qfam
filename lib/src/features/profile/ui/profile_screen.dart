@@ -1,10 +1,13 @@
 import 'package:flutter_qfam/src/commons/spaces.dart';
+import 'package:flutter_qfam/src/features/home/bloc/home_root/home_root_bloc.dart';
 import 'package:flutter_qfam/src/features/profile/bloc/profile/profile_bloc.dart';
 import 'package:flutter_qfam/src/features/search/bloc/search/search_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_qfam/src/styles/my_colors.dart';
 import 'package:flutter_qfam/src/styles/my_font_weight.dart';
+import 'package:flutter_qfam/src/widgets/widgets.dart';
+import 'package:getwidget/getwidget.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 
 class ProfileScreen extends StatefulWidget {
@@ -39,41 +42,66 @@ class _ProfileScreenState extends State<ProfileScreen> {
     return BlocProvider(
       create: (BuildContext context) => ProfileBloc(),
       child: Scaffold(
-        body: CustomScrollView(
-          slivers: <Widget>[
-            SliverAppBar(
-              pinned: true,
-              snap: false,
-              floating: true,
-              expandedHeight: 300.0,
-              backgroundColor: MyColors.primary,
-              flexibleSpace: FlexibleSpaceBar(
-                title: Text(
-                  "Aku nama",
-                  style: TextStyle(
-                    color: MyColors.white,
-                    fontWeight: MyFontWeight.bold,
-                    fontSize: 18,
+        body: BlocConsumer<ProfileBloc, ProfileState>(
+            bloc: bloc,
+            listener: (context, state) {
+              _refreshController.refreshCompleted();
+              _refreshController.loadComplete();
+            },
+            builder: (context, state) {
+              return Wrapper(
+                state: state.state,
+                onLoading: GFShimmer(
+                  child: Column(
+                    children: [
+                      for (var i = 0; i < 12; i++)
+                        Column(
+                          children: [
+                            loadingBlock(dimension),
+                            Spaces.normalVertical()
+                          ],
+                        ),
+                    ],
                   ),
                 ),
-                background: Container(
-                  decoration: BoxDecoration(
-                    image: DecorationImage(
-                        image: NetworkImage(
-                            'https://weddingmarket.com/storage/images/artikelidea/c66afbcc39555a48c1ec3a7f4a300be3a3401b32.webp'),
-                        fit: BoxFit.cover),
-                  ),
+                onLoaded: CustomScrollView(
+                  slivers: <Widget>[
+                    SliverAppBar(
+                      pinned: true,
+                      snap: false,
+                      floating: true,
+                      expandedHeight: 300.0,
+                      backgroundColor: MyColors.primary,
+                      flexibleSpace: FlexibleSpaceBar(
+                        title: Text(
+                          "${state.currentUser?.name}",
+                          style: TextStyle(
+                            color: MyColors.white,
+                            fontWeight: MyFontWeight.bold,
+                            fontSize: 18,
+                          ),
+                        ),
+                        background: Container(
+                          decoration: BoxDecoration(
+                            image: DecorationImage(
+                                image: NetworkImage(
+                                    'https://weddingmarket.com/storage/images/artikelidea/c66afbcc39555a48c1ec3a7f4a300be3a3401b32.webp'),
+                                fit: BoxFit.cover),
+                          ),
+                        ),
+                      ),
+                    ),
+                    SliverToBoxAdapter(child: _body(context, state)),
+                  ],
                 ),
-              ),
-            ),
-            SliverToBoxAdapter(child: _body(context)),
-          ],
-        ),
+                onError: Text('${state.message}'),
+              );
+            }),
       ),
     );
   }
 
-  Widget _body(BuildContext context) {
+  Widget _body(BuildContext context, state) {
     final dimension = MediaQuery.of(context).size;
     return Container(
       child: Column(
@@ -97,9 +125,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       fontWeight: FontWeight.bold,
                       fontSize: 16),
                 ),
-                _itemWidget(value: 'bloc.user.email', key: 'Email', onTap: () {}),
                 _itemWidget(
-                    value: '0838912900067', key: 'No Telp', onTap: () {}),
+                    value: state.currentUser?.email, key: 'Email',),
+                _itemWidget(
+                    value: state.currentUser?.role, key: 'Role'),
                 Spaces.smallVertical(),
                 Text(
                   "Settings",
@@ -110,8 +139,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 ),
                 _menuWidget(
                     icon: Icons.lock_open, text: 'Ubah Password', onTap: () {}),
-                _menuWidget(
-                    icon: Icons.logout, text: 'Logout', onTap: (){}),
+                _menuWidget(icon: Icons.logout, text: 'Logout', onTap: () {}),
               ],
             ),
           ),

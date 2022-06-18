@@ -9,5 +9,5 @@ class AppSettings {
   
   // // DEVELOPMENT
   static String ENV = 'Development';
-  static const String BASE_URL = 'http://192.168.1.110:8000/api';
+  static const String BASE_URL = 'http://192.168.0.109:8000/api';
 }

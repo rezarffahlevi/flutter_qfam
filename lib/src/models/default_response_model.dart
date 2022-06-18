@@ -1,4 +1,3 @@
-import 'package:flutter_qfam/src/models/home/category_model.dart';
 
 class DefaultResponseModel {
   String? code;

@@ -1,7 +1,6 @@
 import 'package:flutter_qfam/src/commons/spaces.dart';
 import 'package:flutter_qfam/src/features/article/ui/detail_article_screen.dart';
 import 'package:flutter_qfam/src/features/home/bloc/home/home_bloc.dart';
-import 'package:flutter_qfam/src/features/home/ui/product_detail_screen.dart';
 import 'package:flutter_qfam/src/features/search/ui/search_screen.dart';
 import 'package:flutter_qfam/src/styles/my_colors.dart';
 import 'package:flutter/material.dart';
@@ -10,8 +9,6 @@ import 'package:flutter_qfam/src/styles/my_text_style.dart';
 import 'package:flutter_qfam/src/widgets/widgets.dart';
 import 'package:getwidget/getwidget.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
-import 'package:flutter_qfam/src/widgets/card/card_product_list.dart';
-import 'package:image_picker/image_picker.dart';
 
 class HomeScreen extends StatefulWidget {
   static const String routeName = '/home';
@@ -180,7 +177,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           ),
                           Spaces.smallVertical(),
                           Text(
-                            'By ${article?.createdBy}',
+                            'By ${article?.createdByName}',
                             style: MyTextStyle.contentDescription,
                           ),
                         ],
@@ -314,7 +311,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                           maxLines: 2,
                                           overflow: TextOverflow.ellipsis),
                                       Spaces.smallVertical(),
-                                      Text('${article?.createdBy}',
+                                      Text('${article?.content}',
                                           style: MyTextStyle.contentDescription,
                                           maxLines: 1,
                                           overflow: TextOverflow.ellipsis),

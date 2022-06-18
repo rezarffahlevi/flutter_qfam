@@ -4,7 +4,7 @@ class ThreadsModel {
   String? content;
   int? forumId;
   String? createdBy;
-  String? parentId;
+  int? parentId;
   int? countComments;
   String? createdAt;
   String? updatedAt;
