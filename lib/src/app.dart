@@ -1,5 +1,6 @@
 import 'package:flutter_qfam/src/commons/app_settings.dart';
 import 'package:flutter_qfam/src/features/article/ui/detail_article_screen.dart';
+import 'package:flutter_qfam/src/features/article/ui/post_article_screen.dart';
 import 'package:flutter_qfam/src/features/forum/ui/detail_forum_screen.dart';
 import 'package:flutter_qfam/src/features/forum/ui/post_thread_screen.dart';
 import 'package:flutter_qfam/src/features/home/bloc/home_root/home_root_bloc.dart';
@@ -36,6 +37,8 @@ class _AppState extends State<App> {
           HomeRootScreen.routeName: (context) => const HomeRootScreen(),
           SearchScreen.routeName: (context) => const SearchScreen(),
           PostThreadScreen.routeName: (context) => PostThreadScreen(
+              argument: ModalRoute.of(context)?.settings.arguments as int?),
+          PostArticleScreen.routeName: (context) => PostArticleScreen(
               argument: ModalRoute.of(context)?.settings.arguments as int?),
           DetailForumScreen.routeName: (context) => DetailForumScreen(
               argument:

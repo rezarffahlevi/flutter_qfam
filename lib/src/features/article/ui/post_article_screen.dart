@@ -10,16 +10,16 @@ import 'package:flutter_qfam/src/widgets/widgets.dart';
 import 'package:getwidget/getwidget.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 
-class PostThreadScreen extends StatefulWidget {
-  static const String routeName = '/post-thread';
+class PostArticleScreen extends StatefulWidget {
+  static const String routeName = '/post-article';
   final int? argument;
-  const PostThreadScreen({Key? key, this.argument}) : super(key: key);
+  const PostArticleScreen({Key? key, this.argument}) : super(key: key);
 
   @override
-  _PostThreadScreenState createState() => _PostThreadScreenState();
+  _PostArticleScreenState createState() => _PostArticleScreenState();
 }
 
-class _PostThreadScreenState extends State<PostThreadScreen> {
+class _PostArticleScreenState extends State<PostArticleScreen> {
   ForumBloc bloc = ForumBloc();
   final RefreshController _refreshController =
       RefreshController(initialRefresh: false);
@@ -51,7 +51,7 @@ class _PostThreadScreenState extends State<PostThreadScreen> {
             onTapBack: () {
               Navigator.pop(context);
             },
-            child: Container(),
+            child: 'Post Artikel',
             icon: Text('Simpan', style: MyTextStyle.h5.bold.copyWith(color: MyColors.background),),),
         body: SmartRefresher(
           enablePullDown: true,

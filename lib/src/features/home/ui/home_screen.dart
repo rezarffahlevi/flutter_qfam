@@ -2,6 +2,7 @@ import 'package:flutter_qfam/src/commons/spaces.dart';
 import 'package:flutter_qfam/src/features/article/ui/detail_article_screen.dart';
 import 'package:flutter_qfam/src/features/home/bloc/home/home_bloc.dart';
 import 'package:flutter_qfam/src/features/search/ui/search_screen.dart';
+import 'package:flutter_qfam/src/models/contents/banner_model.dart';
 import 'package:flutter_qfam/src/styles/my_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -59,11 +60,12 @@ class _HomeScreenState extends State<HomeScreen> {
                         _refreshController.loadComplete();
                       },
                       builder: (context, state) {
-                        final listCategory = state.listCategory;
+                        final bannerList = state.bannerList;
                         final sections = state.sections;
 
                         return Column(
                           children: [
+                            _renderBanner(bannerList, state.activeBanner),
                             Spaces.normalVertical(),
                             // Wrapper(
                             //   state: state.state,
@@ -186,6 +188,45 @@ class _HomeScreenState extends State<HomeScreen> {
                   },
                   separatorBuilder: (c, i) {
                     return Spaces.largeVertical();
+                  },
+                  itemCount: item.contents?.length ?? 0,
+                ),
+              ),
+            );
+
+          case "column-tile":
+            return sectionWidget(
+              item.title ?? '-',
+              onTapAll: onTapAll,
+              child: Container(
+                width: dimension.width,
+                child: ListView.separated(
+                  shrinkWrap: true,
+                  physics: const NeverScrollableScrollPhysics(),
+                  itemBuilder: (c, j) {
+                    final article = item.contents?[j];
+                    return GestureDetector(
+                      onTap: () {
+                        Navigator.of(context).pushNamed(
+                            DetailArticleScreen.routeName,
+                            arguments: article);
+                      },
+                      child: GFListTile(
+                        // margin: EdgeInsets.all(0),
+                        avatar: GFAvatar(
+                          shape: GFAvatarShape.square,
+                          size: 60,
+                          backgroundImage: NetworkImage(article.thumbnail),
+                        ),
+                        color: MyColors.background,
+                        titleText: item?.title,
+                        subTitleText: item?.description,
+                        // icon: Icon(Icons.favorite),
+                      ),
+                    );
+                  },
+                  separatorBuilder: (c, i) {
+                    return Container();
                   },
                   itemCount: item.contents?.length ?? 0,
                 ),
@@ -352,6 +393,60 @@ class _HomeScreenState extends State<HomeScreen> {
       },
       itemCount: sections.length,
     );
+  }
+
+  Widget _renderBanner(bannerList, activeBanner) {
+    if (bannerList.length > 0) {
+      return Column(
+        children: [
+          Spaces.normalVertical(),
+          GFCarousel(
+            items: bannerList.map<Widget>(
+              (item) {
+                return Container(
+                  margin: EdgeInsets.all(8.0),
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.all(Radius.circular(5.0)),
+                    child: Image.network(item.link ?? '',
+                        fit: BoxFit.cover, width: 1000.0),
+                  ),
+                );
+              },
+            ).toList(),
+            onPageChanged: (index) {
+              bloc.add(HomeEventSetActiveBanner(activeBanner: index));
+            },
+            aspectRatio: 3 / 1,
+            enlargeMainPage: true,
+            // autoPlay: true,
+          ),
+          Container(
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                for (var i = 0; i < bannerList.length; i++)
+                  Container(
+                    width: 8.0,
+                    height: 8.0,
+                    margin:
+                        const EdgeInsets.symmetric(vertical: 2, horizontal: 2),
+                    decoration: BoxDecoration(
+                      // border: activeBanner == i
+                      //     ? widget.activeDotBorder
+                      //     : widget.passiveDotBorder,
+                      shape: BoxShape.circle,
+                      color: activeBanner == i
+                          ? const Color.fromRGBO(0, 0, 0, 0.9)
+                          : const Color.fromRGBO(0, 0, 0, 0.4),
+                    ),
+                  ),
+              ],
+            ),
+          )
+        ],
+      );
+    }
+    return Container();
   }
 
   Widget _categorySection(listCategory, state) {

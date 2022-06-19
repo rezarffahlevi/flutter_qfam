@@ -1,5 +1,6 @@
 import 'package:flutter_qfam/src/commons/spaces.dart';
 import 'package:flutter_qfam/src/features/article/ui/detail_article_screen.dart';
+import 'package:flutter_qfam/src/features/article/ui/post_article_screen.dart';
 import 'package:flutter_qfam/src/features/home/bloc/home/home_bloc.dart';
 import 'package:flutter_qfam/src/features/search/bloc/search/search_bloc.dart';
 import 'package:flutter_qfam/src/styles/my_colors.dart';
@@ -81,7 +82,8 @@ class _SearchScreenState extends State<SearchScreen> {
                         onLoaded: ListView.separated(
                           shrinkWrap: true,
                           physics: const NeverScrollableScrollPhysics(),
-                          padding: EdgeInsets.only(left: 16, right: 16, top: 16, bottom: 16),
+                          padding: EdgeInsets.only(
+                              left: 16, right: 16, top: 16, bottom: 16),
                           itemBuilder: (c, i) {
                             final article = state.contentsList![i];
                             return GestureDetector(
@@ -134,8 +136,9 @@ class _SearchScreenState extends State<SearchScreen> {
           ),
         ),
         floatingActionButton: FloatingActionButton(
-          onPressed: () {
-            // Add your onPressed code here!
+          onPressed: () async {
+            var postThread = await Navigator.of(context)
+                .pushNamed(PostArticleScreen.routeName, arguments: 0);
           },
           backgroundColor: MyColors.primary,
           child: const Icon(

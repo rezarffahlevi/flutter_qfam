@@ -181,11 +181,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 ),
               ],
             ),
-            Icon(
+            onTap != null ? Icon(
               Icons.keyboard_arrow_right,
               color: MyColors.text,
               size: 30,
-            ),
+            ) : Container(),
           ],
         ),
       ),

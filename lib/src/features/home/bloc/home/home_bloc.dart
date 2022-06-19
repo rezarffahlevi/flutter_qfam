@@ -1,5 +1,8 @@
+import 'dart:io';
+
 import 'package:bloc/bloc.dart';
 import 'package:flutter/foundation.dart';
+import 'package:flutter_qfam/src/models/contents/banner_model.dart';
 import 'package:flutter_qfam/src/models/contents/sections_model.dart';
 import 'package:flutter_qfam/src/services/contents/content_service.dart';
 import 'package:equatable/equatable.dart';
@@ -13,8 +16,9 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
   HomeBloc() : super(const HomeState()) {
     // on<HomeEvent>((event, emit) {});
     on<HomeEventGetData>(_getHomeData);
+    on<HomeEventGetBanner>(_getBanner);
     on<HomeEventRefresh>(_onRefresh);
-    on<HomeEventSetPhoto>(_setPhoto);
+    on<HomeEventSetActiveBanner>(_setActiveBanner);
     on<HomeEventSelectedCategory>(_selectedCategory);
 
     add(HomeEventRefresh());
@@ -22,6 +26,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
   ContentService apiService = ContentService();
 
   _onRefresh(HomeEventRefresh event, Emitter<HomeState> emit) async {
+    add(HomeEventGetBanner());
     add(HomeEventGetData());
   }
 
@@ -37,12 +42,22 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
     }
   }
 
-  _setPhoto(HomeEventSetPhoto event, Emitter<HomeState> emit) async {
-    final prefs = await SharedPreferences.getInstance();
-    await prefs.setString('photo', event.photo ?? '');
-    emit(state.copyWith(state: NetworkStates.onLoading));
-    await Future.delayed(const Duration(seconds: 1));
-    emit(state.copyWith(photo: event.photo, state: NetworkStates.onLoaded));
+  _getBanner(HomeEventGetBanner event, Emitter<HomeState> emit) async {
+    try {
+      emit(state.copyWith(state: NetworkStates.onLoading));
+      var response = await apiService.getBannerList();
+      emit(state.copyWith(
+          bannerList: response?.data,
+          state: NetworkStates.onLoaded));
+    } catch (e) {
+      emit(state.copyWith(state: NetworkStates.onError, message: '${e}'));
+    }
+  }
+
+  _setActiveBanner(HomeEventSetActiveBanner event, Emitter<HomeState> emit) async {
+    // final prefs = await SharedPreferences.getInstance();
+    // await prefs.setString('photo', event.photo ?? '');
+    emit(state.copyWith(activeBanner: event.activeBanner));
   }
 
   _selectedCategory(

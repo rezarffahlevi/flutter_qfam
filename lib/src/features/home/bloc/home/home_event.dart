@@ -7,6 +7,8 @@ abstract class HomeEvent extends Equatable {
 
 class HomeEventGetData extends HomeEvent {}
 
+class HomeEventGetBanner extends HomeEvent {}
+
 class HomeEventRefresh extends HomeEvent {}
 
 class HomeEventSelectedCategory extends HomeEvent {
@@ -18,11 +20,11 @@ class HomeEventSelectedCategory extends HomeEvent {
   List<Object?> get props => [selectedCategory];
 }
 
-class HomeEventSetPhoto extends HomeEvent {
-  String? photo;
+class HomeEventSetActiveBanner extends HomeEvent {
+  int activeBanner;
 
-  HomeEventSetPhoto({this.photo});
+  HomeEventSetActiveBanner({this.activeBanner = 0});
 
   @override
-  List<Object?> get props => [photo];
+  List<Object?> get props => [activeBanner];
 }
