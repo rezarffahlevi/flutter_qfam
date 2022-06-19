@@ -6,17 +6,22 @@ import 'package:flutter/material.dart';
 import 'package:flutter_qfam/src/commons/app_settings.dart';
 
 class ApiHelper {
-  static const String BASE_URL = AppSettings.BASE_URL;
+
+  ConfigModel config = getConfig();
+
+  static ConfigModel getConfig() {
+    return AppSettings.getConfig;
+  }
 
   BaseOptions options = BaseOptions(
-    baseUrl: BASE_URL,
+    // baseUrl: config.BASE_URL,
     connectTimeout: 5000,
     receiveTimeout: 3000,
   );
   Dio dio = Dio();
 
   Future<dynamic> get(String url, {dynamic params, String? baseUrl}) async {
-    baseUrl = baseUrl ?? BASE_URL;
+    baseUrl = baseUrl ?? config.BASE_URL;
     options.baseUrl = baseUrl;
     options.headers = {
       'Authorization':
@@ -38,7 +43,7 @@ class ApiHelper {
   }
 
   Future<dynamic> post(String url, {dynamic params, String? baseUrl}) async {
-    baseUrl = baseUrl ?? BASE_URL;
+    baseUrl = baseUrl ?? config.BASE_URL;
     options.baseUrl = baseUrl;
     options.headers = {
       'Authorization':

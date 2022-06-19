@@ -44,8 +44,8 @@ class _PostThreadScreenState extends State<PostThreadScreen> {
       create: (BuildContext context) => ForumBloc(),
       child: Scaffold(
         appBar: appBar(
-            onTap: () {
-              bloc.add(ForumEventPostThread());
+            onTap: () async {
+              bloc.add(await ForumEventPostThread());
               Navigator.pop(context, true);
             },
             onTapBack: () {

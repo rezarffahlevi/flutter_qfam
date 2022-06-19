@@ -79,7 +79,7 @@ class _DetailForumScreenState extends State<DetailForumScreen> {
                     children: [
                       Threads(
                         isDetail: true,
-                        name: detail.createdBy,
+                        name: '${detail.createdBy}',
                         content: detail.content,
                         countComments: detail.countComments,
                       ),
@@ -95,7 +95,7 @@ class _DetailForumScreenState extends State<DetailForumScreen> {
                               onTap: () => Navigator.pushNamed(
                                   context, DetailForumScreen.routeName,
                                   arguments: item),
-                              name: item.createdBy,
+                              name: '${detail.createdBy}',
                               content: item.content,
                               countComments: item.countComments,
                             );

@@ -57,6 +57,7 @@ class _SearchScreenState extends State<SearchScreen> {
           onRefresh: () => bloc.add(SearchEventRefresh()),
           child: SingleChildScrollView(
             child: Column(children: [
+              Spaces.normalVertical(),
               BlocConsumer<SearchBloc, SearchState>(
                   bloc: bloc,
                   listener: (context, state) {
@@ -83,7 +84,7 @@ class _SearchScreenState extends State<SearchScreen> {
                           shrinkWrap: true,
                           physics: const NeverScrollableScrollPhysics(),
                           padding: EdgeInsets.only(
-                              left: 16, right: 16, top: 16, bottom: 16),
+                              left: 16, right: 16, bottom: 16),
                           itemBuilder: (c, i) {
                             final article = state.contentsList![i];
                             return GestureDetector(

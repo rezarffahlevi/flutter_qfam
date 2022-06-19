@@ -76,7 +76,7 @@ class _ForumScreenState extends State<ForumScreen> {
                               onTap: () => Navigator.pushNamed(
                                   context, DetailForumScreen.routeName,
                                   arguments: item),
-                              name: item?.createdBy,
+                              name: '${item?.createdBy}',
                               content: item?.content,
                               countComments: item?.countComments,
                             );

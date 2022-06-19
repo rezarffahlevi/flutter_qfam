@@ -2,6 +2,8 @@ class UserModel {
   int? id;
   String? uuid;
   String? name;
+  String? telp;
+  String? photo;
   String? gender;
   String? religion;
   String? role;
@@ -15,6 +17,8 @@ class UserModel {
       {this.id,
       this.uuid,
       this.name,
+      this.telp,
+      this.photo,
       this.gender,
       this.religion,
       this.role,
@@ -28,6 +32,8 @@ class UserModel {
     id = json['id'];
     uuid = json['uuid'];
     name = json['name'];
+    telp = json['telp'];
+    photo = json['photo'];
     gender = json['gender'];
     religion = json['religion'];
     role = json['role'];
@@ -43,6 +49,8 @@ class UserModel {
     data['id'] = this.id;
     data['uuid'] = this.uuid;
     data['name'] = this.name;
+    data['telp'] = this.telp;
+    data['photo'] = this.photo;
     data['gender'] = this.gender;
     data['religion'] = this.religion;
     data['role'] = this.role;

@@ -51,17 +51,22 @@ class _ProfileScreenState extends State<ProfileScreen> {
             builder: (context, state) {
               return Wrapper(
                 state: state.state,
-                onLoading: GFShimmer(
-                  child: Column(
-                    children: [
-                      for (var i = 0; i < 12; i++)
-                        Column(
-                          children: [
-                            loadingBlock(dimension),
-                            Spaces.normalVertical()
-                          ],
-                        ),
-                    ],
+                onLoading: SafeArea(
+                  child: Container(
+                    margin: EdgeInsets.symmetric(vertical: 10),
+                    child: GFShimmer(
+                      child: Column(
+                        children: [
+                          for (var i = 0; i < 5; i++)
+                            Column(
+                              children: [
+                                loadingBlock(dimension),
+                                Spaces.normalVertical()
+                              ],
+                            ),
+                        ],
+                      ),
+                    ),
                   ),
                 ),
                 onLoaded: CustomScrollView(
@@ -126,9 +131,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       fontSize: 16),
                 ),
                 _itemWidget(
-                    value: state.currentUser?.email, key: 'Email',),
-                _itemWidget(
-                    value: state.currentUser?.role, key: 'Role'),
+                  value: state.currentUser?.email,
+                  key: 'Email',
+                ),
+                _itemWidget(value: state.currentUser?.telp, key: 'Telp'),
                 Spaces.smallVertical(),
                 Text(
                   "Settings",
@@ -181,11 +187,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 ),
               ],
             ),
-            onTap != null ? Icon(
-              Icons.keyboard_arrow_right,
-              color: MyColors.text,
-              size: 30,
-            ) : Container(),
+            onTap != null
+                ? Icon(
+                    Icons.keyboard_arrow_right,
+                    color: MyColors.text,
+                    size: 30,
+                  )
+                : Container(),
           ],
         ),
       ),
