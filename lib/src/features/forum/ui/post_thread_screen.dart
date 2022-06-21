@@ -51,7 +51,7 @@ class _PostThreadScreenState extends State<PostThreadScreen> {
             onTapBack: () {
               Navigator.pop(context);
             },
-            child: Container(),
+            child: 'Post ${widget.argument == 0 ? 'Diskusi' : 'Balasan'}',
             icon: Text('Simpan', style: MyTextStyle.h5.bold.copyWith(color: MyColors.background),),),
         body: SmartRefresher(
           enablePullDown: true,

@@ -11,8 +11,6 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
   ProfileBloc() : super(const ProfileState()) {
     on<ProfileEventGetData>(_getData);
     on<ProfileEventRefresh>(_onRefresh);
-
-    add(ProfileEventGetData());
   }
   ProfileService apiService = ProfileService();
 

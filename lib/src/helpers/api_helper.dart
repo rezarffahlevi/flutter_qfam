@@ -25,7 +25,7 @@ class ApiHelper {
     options.baseUrl = baseUrl;
     options.headers = {
       'Authorization':
-          'bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vbG9jYWxob3N0OjgwMDAvYXBpL2xvZ2luIiwiaWF0IjoxNjU1MzYyMDY4LCJleHAiOjE2NTc5OTAwNjgsIm5iZiI6MTY1NTM2MjA2OCwianRpIjoia3lwNUZhdE92VGpmMFN4MiIsInN1YiI6IjEiLCJwcnYiOiJmNjRkNDhhNmNlYzdiZGZhN2ZiZjg5OTQ1NGI0ODhiM2U0NjI1MjBhIn0.YvNGAWhEjxhN1sumUAmH0X9EMcFTo7CrR6psVco06S4'
+          'bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwczovL3FmYW0ub25lcGVlcnN0ZWNoLmNvbS9hcGkvcmVnaXN0ZXIiLCJpYXQiOjE2NTU4MjMxNTYsImV4cCI6MTY1ODQ1MTE1NiwibmJmIjoxNjU1ODIzMTU2LCJqdGkiOiJUN0F0aFNXcFJvbGNTdjNHIiwic3ViIjoiMiIsInBydiI6ImY2NGQ0OGE2Y2VjN2JkZmE3ZmJmODk5NDU0YjQ4OGIzZTQ2MjUyMGEifQ.WIFNLs7yHJ7ZrZfcTnpH7k5nSf5d2tdhJtKkHKiIFxE'
     };
     dio.options = options;
 

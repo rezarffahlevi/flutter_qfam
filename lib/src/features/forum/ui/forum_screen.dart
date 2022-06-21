@@ -108,6 +108,7 @@ class _ForumScreenState extends State<ForumScreen> {
           ),
         ),
         floatingActionButton: FloatingActionButton(
+          heroTag: null,
           onPressed: () async {
             var postThread = await Navigator.of(context)
                 .pushNamed(PostThreadScreen.routeName, arguments: 0);

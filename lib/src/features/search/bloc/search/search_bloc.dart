@@ -1,4 +1,5 @@
 import 'package:bloc/bloc.dart';
+import 'package:flutter_qfam/src/features/home/bloc/home_root/home_root_bloc.dart';
 import 'package:flutter_qfam/src/models/contents/category_model.dart';
 import 'package:flutter_qfam/src/models/contents/contents_model.dart';
 import 'package:flutter_qfam/src/services/contents/content_service.dart';
@@ -19,7 +20,6 @@ class SearchBloc extends Bloc<SearchEvent, SearchState> {
 
     add(SearchEventRefresh());
   }
-
   ContentService apiService = ContentService();
 
   _onRefresh(SearchEventRefresh event, Emitter<SearchState> emit) async {

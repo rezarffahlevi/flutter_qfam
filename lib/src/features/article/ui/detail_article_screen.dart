@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_html/flutter_html.dart';
 import 'package:flutter_qfam/src/commons/spaces.dart';
@@ -9,6 +10,7 @@ import 'package:flutter_qfam/src/styles/my_text_style.dart';
 import 'package:flutter_qfam/src/widgets/widgets.dart';
 import 'package:getwidget/getwidget.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
+import 'package:youtube_player_iframe/youtube_player_iframe.dart';
 
 class DetailArticleScreen extends StatefulWidget {
   static const String routeName = '/detail-article';
@@ -22,8 +24,6 @@ class DetailArticleScreen extends StatefulWidget {
 
 class _DetailArticleScreenState extends State<DetailArticleScreen> {
   final DetailArticleBloc bloc = DetailArticleBloc();
-  final RefreshController _refreshController =
-      RefreshController(initialRefresh: false);
 
   @override
   void initState() {
@@ -34,6 +34,7 @@ class _DetailArticleScreenState extends State<DetailArticleScreen> {
   @override
   void dispose() {
     bloc.close();
+    if (widget.argument.isVideo == 1) bloc.ytController.close();
     super.dispose();
   }
 
@@ -52,15 +53,15 @@ class _DetailArticleScreenState extends State<DetailArticleScreen> {
         body: SmartRefresher(
           enablePullDown: true,
           enablePullUp: false,
-          controller: _refreshController,
+          controller: bloc.refreshController,
           // onRefresh: () => bloc.add(HomeEventRefresh()),
           child: SingleChildScrollView(
             child: Column(children: [
               BlocConsumer<DetailArticleBloc, DetailArticleState>(
                   bloc: bloc,
                   listener: (context, state) {
-                    _refreshController.refreshCompleted();
-                    _refreshController.loadComplete();
+                    bloc.refreshController.refreshCompleted();
+                    bloc.refreshController.loadComplete();
                   },
                   builder: (context, state) {
                     ContentsModel? detail = widget.argument;
@@ -84,10 +85,15 @@ class _DetailArticleScreenState extends State<DetailArticleScreen> {
                       onLoaded: Container(
                         child: Column(
                           children: [
-                            _renderBanner(bannerList, state.activeBanner),
+                            state.detail?.isVideo == 1
+                                ? YoutubePlayerIFrame(
+                                    controller: bloc.ytController,
+                                    aspectRatio: 16 / 9,
+                                  )
+                                : _renderBanner(bannerList, state.activeBanner),
                             Container(
-                              padding: EdgeInsets.symmetric(
-                                  horizontal: 16, vertical: 16),
+                              padding: EdgeInsets.only(
+                                  left: 16, right: 16, top: 16),
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
@@ -146,7 +152,6 @@ class _DetailArticleScreenState extends State<DetailArticleScreen> {
     if (bannerList.length > 0) {
       return Column(
         children: [
-          Spaces.normalVertical(),
           GFCarousel(
             items: bannerList.map<Widget>(
               (item) {
@@ -193,5 +198,22 @@ class _DetailArticleScreenState extends State<DetailArticleScreen> {
       );
     }
     return Container();
+  }
+}
+
+///
+class Controls extends StatelessWidget {
+  ///
+  const Controls();
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.all(16),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [],
+      ),
+    );
   }
 }

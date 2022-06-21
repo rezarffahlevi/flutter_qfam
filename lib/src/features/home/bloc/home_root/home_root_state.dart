@@ -9,10 +9,10 @@ class HomeRootState extends Equatable {
 
   const HomeRootState({
     this.state = NetworkStates.onLoading,
-    this.message = null,
+    this.message,
     this.isLoading = true,
     this.index = 0,
-    this.currentUser = null,
+    this.currentUser,
   });
 
   HomeRootState copyWith({

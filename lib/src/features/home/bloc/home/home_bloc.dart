@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:bloc/bloc.dart';
 import 'package:flutter/foundation.dart';
+import 'package:flutter_qfam/src/features/home/bloc/home_root/home_root_bloc.dart';
 import 'package:flutter_qfam/src/models/contents/banner_model.dart';
 import 'package:flutter_qfam/src/models/contents/sections_model.dart';
 import 'package:flutter_qfam/src/services/contents/content_service.dart';
@@ -24,10 +25,10 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
     add(HomeEventRefresh());
   }
   ContentService apiService = ContentService();
-
+  
   _onRefresh(HomeEventRefresh event, Emitter<HomeState> emit) async {
-    add(HomeEventGetBanner());
     add(HomeEventGetData());
+    add(HomeEventGetBanner());
   }
 
   _getHomeData(HomeEventGetData event, Emitter<HomeState> emit) async {

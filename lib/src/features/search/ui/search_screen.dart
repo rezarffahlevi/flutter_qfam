@@ -1,8 +1,10 @@
+import 'package:flutter_qfam/src/commons/constants.dart';
 import 'package:flutter_qfam/src/commons/spaces.dart';
 import 'package:flutter_qfam/src/features/article/ui/detail_article_screen.dart';
 import 'package:flutter_qfam/src/features/article/ui/post_article_screen.dart';
-import 'package:flutter_qfam/src/features/home/bloc/home/home_bloc.dart';
+import 'package:flutter_qfam/src/features/home/bloc/home_root/home_root_bloc.dart';
 import 'package:flutter_qfam/src/features/search/bloc/search/search_bloc.dart';
+import 'package:flutter_qfam/src/models/profile/user_model.dart';
 import 'package:flutter_qfam/src/styles/my_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -23,6 +25,7 @@ class SearchScreen extends StatefulWidget {
 }
 
 class _SearchScreenState extends State<SearchScreen> {
+  late HomeRootBloc blocHomeRoot;
   SearchBloc bloc = SearchBloc();
   final RefreshController _refreshController =
       RefreshController(initialRefresh: false);
@@ -30,6 +33,7 @@ class _SearchScreenState extends State<SearchScreen> {
   @override
   void initState() {
     super.initState();
+    blocHomeRoot = context.read<HomeRootBloc>();
   }
 
   @override
@@ -41,133 +45,171 @@ class _SearchScreenState extends State<SearchScreen> {
   @override
   Widget build(BuildContext context) {
     final dimension = MediaQuery.of(context).size;
-
     return BlocProvider(
       create: (BuildContext context) => SearchBloc(),
-      child: Scaffold(
-        appBar: appBar(
-            onTap: () {},
-            icon: Icons.filter_list,
-            child: "Edukasi",
-            fontFamily: 'GreatVibes'),
-        body: SmartRefresher(
-          enablePullDown: true,
-          enablePullUp: true,
-          controller: _refreshController,
-          onRefresh: () => bloc.add(SearchEventRefresh()),
-          child: SingleChildScrollView(
-            child: Column(children: [
-              Spaces.normalVertical(),
-              BlocConsumer<SearchBloc, SearchState>(
-                  bloc: bloc,
-                  listener: (context, state) {
-                    _refreshController.refreshCompleted();
-                    _refreshController.loadComplete();
-                  },
-                  builder: (context, state) {
-                    return Wrapper(
-                        state: state.state,
-                        onLoading: GFShimmer(
-                          child: Column(
-                            children: [
-                              for (var i = 0; i < 12; i++)
-                                Column(
-                                  children: [
-                                    loadingBlock(dimension),
-                                    Spaces.normalVertical()
-                                  ],
-                                ),
-                            ],
-                          ),
-                        ),
-                        onLoaded: Column(
-                          children: [
-                            Wrapper(
-                              state: state.state,
-                              onLoading: GFShimmer(
-                                child: _categoryBlock(dimension),
-                              ),
-                              onLoaded:
-                                  _categorySection(state.categoryList, state),
-                              onError: Align(
-                                alignment: Alignment.topLeft,
-                                child: Padding(
-                                    padding: const EdgeInsets.symmetric(
-                                        horizontal: 15.0),
-                                    child:
-                                        Text(state.message ?? 'Unknown Error')),
+      child: BlocBuilder<HomeRootBloc, HomeRootState>(
+        bloc: blocHomeRoot,
+        builder: (context, stateRoot) {
+          return Scaffold(
+            appBar: appBar(
+                onTap: () {},
+                icon: Icons.filter_list,
+                child: "Edukasi",
+                fontFamily: 'GreatVibes'),
+            body: SmartRefresher(
+              enablePullDown: true,
+              enablePullUp: true,
+              controller: _refreshController,
+              onRefresh: () => bloc.add(SearchEventRefresh()),
+              child: SingleChildScrollView(
+                child: Column(children: [
+                  Spaces.normalVertical(),
+                  BlocConsumer<SearchBloc, SearchState>(
+                      bloc: bloc,
+                      listener: (context, state) {
+                        _refreshController.refreshCompleted();
+                        _refreshController.loadComplete();
+                      },
+                      builder: (context, state) {
+                        return Wrapper(
+                            state: state.state,
+                            onLoading: GFShimmer(
+                              child: Column(
+                                children: [
+                                  for (var i = 0; i < 12; i++)
+                                    Column(
+                                      children: [
+                                        loadingBlock(dimension),
+                                        Spaces.normalVertical()
+                                      ],
+                                    ),
+                                ],
                               ),
                             ),
-                            Spaces.normalVertical(),
-                            ListView.separated(
-                              shrinkWrap: true,
-                              physics: const NeverScrollableScrollPhysics(),
-                              padding: EdgeInsets.only(
-                                  left: 16, right: 16, bottom: 16),
-                              itemBuilder: (c, i) {
-                                final article = state.contentsList![i];
-                                return GestureDetector(
-                                  onTap: () {
-                                    Navigator.of(context).pushNamed(
-                                        DetailArticleScreen.routeName,
-                                        arguments: article);
-                                  },
-                                  child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      GFImageOverlay(
-                                        color: MyColors.greyPlaceHolder,
-                                        height: 130,
-                                        borderRadius: BorderRadius.all(
-                                            Radius.circular(8)),
-                                        image: NetworkImage(
-                                            article.thumbnail ?? ''),
-                                        boxFit: BoxFit.fitWidth,
-                                        child: article.isVideo == 1
-                                            ? Icon(
-                                                Icons.play_circle,
-                                                size: 50,
-                                                color: Colors.white,
-                                              )
-                                            : Container(),
-                                      ),
-                                      Spaces.smallVertical(),
-                                      Text(
-                                        article.title ?? '-',
-                                        style: MyTextStyle.sessionTitle,
-                                      ),
-                                      Spaces.smallVertical(),
-                                      Text(
-                                        'By ${article.createdByName}',
-                                        style: MyTextStyle.contentDescription,
-                                      ),
-                                    ],
+                            onLoaded: Column(
+                              children: [
+                                Container(
+                                  height: 50,
+                                  margin: EdgeInsets.only(
+                                    left: 16,
+                                    right: 16,
+                                    bottom: 12,
                                   ),
-                                );
-                              },
-                              separatorBuilder: (c, i) {
-                                return Spaces.largeVertical();
-                              },
-                              itemCount: state.contentsList?.length ?? 0,
+                                  child: new TextField(
+                                    autofocus: false,
+                                    decoration: new InputDecoration(
+                                        contentPadding: EdgeInsets.all(0.1),
+                                        focusedBorder: OutlineInputBorder(
+                                          borderRadius: BorderRadius.all(
+                                              Radius.circular(4)),
+                                          borderSide: BorderSide(
+                                              width: 1, color: MyColors.text),
+                                        ),
+                                        border: OutlineInputBorder(
+                                          borderRadius:
+                                              BorderRadius.circular(12),
+                                        ),
+                                        prefixIcon: new Icon(Icons.search,
+                                            color: MyColors.text),
+                                        hintText: "Cari...",
+                                        focusColor: MyColors.text,
+                                        hintStyle: new TextStyle(
+                                            color: MyColors.text)),
+                                  ),
+                                ),
+                                Wrapper(
+                                  state: state.state,
+                                  onLoading: GFShimmer(
+                                    child: _categoryBlock(dimension),
+                                  ),
+                                  onLoaded: _categorySection(
+                                      state.categoryList, state),
+                                  onError: Align(
+                                    alignment: Alignment.topLeft,
+                                    child: Padding(
+                                        padding: const EdgeInsets.symmetric(
+                                            horizontal: 15.0),
+                                        child: Text(
+                                            state.message ?? 'Unknown Error')),
+                                  ),
+                                ),
+                                Spaces.normalVertical(),
+                                ListView.separated(
+                                  shrinkWrap: true,
+                                  physics: const NeverScrollableScrollPhysics(),
+                                  padding: EdgeInsets.only(
+                                      left: 16, right: 16, bottom: 16),
+                                  itemBuilder: (c, i) {
+                                    final article = state.contentsList![i];
+                                    return GestureDetector(
+                                      onTap: () {
+                                        Navigator.of(context).pushNamed(
+                                            DetailArticleScreen.routeName,
+                                            arguments: article);
+                                      },
+                                      child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          GFImageOverlay(
+                                            color: MyColors.greyPlaceHolder,
+                                            height: 130,
+                                            borderRadius: BorderRadius.all(
+                                                Radius.circular(8)),
+                                            image: NetworkImage(
+                                                article.thumbnail ?? ''),
+                                            boxFit: BoxFit.fitWidth,
+                                            child: article.isVideo == 1
+                                                ? Icon(
+                                                    Icons.play_circle,
+                                                    size: 50,
+                                                    color: Colors.white,
+                                                  )
+                                                : Container(),
+                                          ),
+                                          Spaces.smallVertical(),
+                                          Text(
+                                            article.title ?? '-',
+                                            style: MyTextStyle.sessionTitle,
+                                          ),
+                                          Spaces.smallVertical(),
+                                          Text(
+                                            'By ${article.createdByName}',
+                                            style:
+                                                MyTextStyle.contentDescription,
+                                          ),
+                                        ],
+                                      ),
+                                    );
+                                  },
+                                  separatorBuilder: (c, i) {
+                                    return Spaces.largeVertical();
+                                  },
+                                  itemCount: state.contentsList?.length ?? 0,
+                                ),
+                              ],
                             ),
-                          ],
-                        ),
-                        onError: Text(state.message ?? 'Unknown Error'));
-                  }),
-            ]),
-          ),
-        ),
-        floatingActionButton: FloatingActionButton(
-          onPressed: () async {
-            var postThread = await Navigator.of(context)
-                .pushNamed(PostArticleScreen.routeName, arguments: 0);
-          },
-          backgroundColor: MyColors.primary,
-          child: const Icon(
-            Icons.add,
-          ),
-        ),
+                            onError: Text(state.message ?? 'Unknown Error'));
+                      }),
+                ]),
+              ),
+            ),
+            floatingActionButton: stateRoot.currentUser?.role !=
+                    Constants.ROLES.USER
+                ? FloatingActionButton(
+                    heroTag: null,
+                    onPressed: () async {
+                      var postThread = await Navigator.of(context)
+                          .pushNamed(PostArticleScreen.routeName, arguments: 0);
+                    },
+                    backgroundColor: MyColors.primary,
+                    child: const Icon(
+                      Icons.add,
+                    ),
+                  )
+                : null,
+          );
+        },
       ),
     );
   }

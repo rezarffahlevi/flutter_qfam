@@ -1,9 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_qfam/src/features/forum/ui/forum_screen.dart';
 import 'package:flutter_qfam/src/features/home/bloc/home/home_bloc.dart';
 import 'package:flutter_qfam/src/features/home/bloc/home_root/home_root_bloc.dart';
+import 'package:flutter_qfam/src/features/home/ui/home_screen.dart';
+import 'package:flutter_qfam/src/features/profile/ui/profile_screen.dart';
+import 'package:flutter_qfam/src/features/search/bloc/search/search_bloc.dart';
+import 'package:flutter_qfam/src/features/search/ui/search_screen.dart';
 import 'package:flutter_qfam/src/styles/my_colors.dart';
 import 'package:flutter_qfam/src/styles/my_font_weight.dart';
+import 'package:flutter_qfam/src/widgets/widgets.dart';
+import 'package:getwidget/getwidget.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 
 class HomeRootScreen extends StatefulWidget {
@@ -16,31 +23,31 @@ class HomeRootScreen extends StatefulWidget {
 }
 
 class _HomeRootScreenState extends State<HomeRootScreen> {
-  HomeRootBloc bloc = HomeRootBloc();
+  late HomeRootBloc bloc;
   final RefreshController _refreshController =
       RefreshController(initialRefresh: false);
+
+  @override
+  void initState() {
+    bloc = context.read<HomeRootBloc>();
+    bloc.add(HomeRootEventGetCurrentUser());
+  }
 
   @override
   Widget build(BuildContext context) {
     final dimension = MediaQuery.of(context).size;
     return BlocListener<HomeRootBloc, HomeRootState>(
-      listenWhen: (prev, curr) => prev.state != curr.state,
-      listener: (context, state) {
-        if (state.isLoading) {
-          print('ISLOADING TRUE');
-        }
-      },
+      listener: (context, state) {},
       child: WillPopScope(
         onWillPop: null,
-        child: BlocConsumer<HomeRootBloc, HomeRootState>(
+        child: BlocBuilder<HomeRootBloc, HomeRootState>(
             bloc: bloc,
-            listener: (context, state) {
-              // TODO: implement listener
-            },
             builder: (context, state) {
               return Scaffold(
-                key: null,
-                body: bloc.children[state.index],
+                body: IndexedStack(
+                  children: bloc.children,
+                  index: state.index,
+                ),
                 bottomNavigationBar: BottomNavigationBar(
                   type: BottomNavigationBarType.fixed,
                   selectedItemColor: MyColors.primary,

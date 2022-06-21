@@ -20,6 +20,7 @@ class ProfileScreen extends StatefulWidget {
 }
 
 class _ProfileScreenState extends State<ProfileScreen> {
+  late HomeRootBloc blocHomeRoot;
   ProfileBloc bloc = ProfileBloc();
   final RefreshController _refreshController =
       RefreshController(initialRefresh: false);
@@ -27,6 +28,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
   @override
   void initState() {
     super.initState();
+    blocHomeRoot = context.read<HomeRootBloc>();
   }
 
   @override
@@ -43,65 +45,76 @@ class _ProfileScreenState extends State<ProfileScreen> {
       create: (BuildContext context) => ProfileBloc(),
       child: Scaffold(
         body: BlocConsumer<ProfileBloc, ProfileState>(
-            bloc: bloc,
-            listener: (context, state) {
-              _refreshController.refreshCompleted();
-              _refreshController.loadComplete();
-            },
-            builder: (context, state) {
-              return Wrapper(
-                state: state.state,
-                onLoading: SafeArea(
-                  child: Container(
-                    margin: EdgeInsets.symmetric(vertical: 10),
-                    child: GFShimmer(
-                      child: Column(
-                        children: [
-                          for (var i = 0; i < 5; i++)
-                            Column(
-                              children: [
-                                loadingBlock(dimension),
-                                Spaces.normalVertical()
-                              ],
-                            ),
-                        ],
+          bloc: bloc,
+          listener: (context, state) {
+            _refreshController.refreshCompleted();
+            _refreshController.loadComplete();
+          },
+          builder: (context, state) {
+            return BlocBuilder<HomeRootBloc, HomeRootState>(
+              bloc: blocHomeRoot,
+              builder: (context, stateRoot) {
+                return Wrapper(
+                  state: stateRoot.state,
+                  onLoading: SafeArea(
+                    child: Container(
+                      margin: EdgeInsets.symmetric(vertical: 10),
+                      child: GFShimmer(
+                        child: Column(
+                          children: [
+                            for (var i = 0; i < 5; i++)
+                              Column(
+                                children: [
+                                  loadingBlock(dimension),
+                                  Spaces.normalVertical()
+                                ],
+                              ),
+                          ],
+                        ),
                       ),
                     ),
                   ),
-                ),
-                onLoaded: CustomScrollView(
-                  slivers: <Widget>[
-                    SliverAppBar(
-                      pinned: true,
-                      snap: false,
-                      floating: true,
-                      expandedHeight: 300.0,
-                      backgroundColor: MyColors.primary,
-                      flexibleSpace: FlexibleSpaceBar(
-                        title: Text(
-                          "${state.currentUser?.name}",
-                          style: TextStyle(
-                            color: MyColors.white,
-                            fontWeight: MyFontWeight.bold,
-                            fontSize: 18,
+                  onLoaded: CustomScrollView(
+                    slivers: <Widget>[
+                      SliverAppBar(
+                        pinned: true,
+                        snap: false,
+                        floating: true,
+                        expandedHeight: 300.0,
+                        backgroundColor: MyColors.primary,
+                        flexibleSpace: FlexibleSpaceBar(
+                          title: Text(
+                            "${stateRoot.currentUser?.name}",
+                            style: TextStyle(
+                              color: MyColors.white,
+                              fontWeight: MyFontWeight.bold,
+                              fontSize: 18,
+                            ),
                           ),
-                        ),
-                        background: Container(
-                          decoration: BoxDecoration(
-                            image: DecorationImage(
-                                image: NetworkImage(
-                                    'https://weddingmarket.com/storage/images/artikelidea/c66afbcc39555a48c1ec3a7f4a300be3a3401b32.webp'),
-                                fit: BoxFit.cover),
+                          background: Container(
+                            decoration: BoxDecoration(
+                              image: DecorationImage(
+                                  image: NetworkImage(
+                                      'https://weddingmarket.com/storage/images/artikelidea/c66afbcc39555a48c1ec3a7f4a300be3a3401b32.webp'),
+                                  fit: BoxFit.cover),
+                            ),
                           ),
                         ),
                       ),
-                    ),
-                    SliverToBoxAdapter(child: _body(context, state)),
-                  ],
-                ),
-                onError: Text('${state.message}'),
-              );
-            }),
+                      SliverToBoxAdapter(child: _body(context, stateRoot)),
+                    ],
+                  ),
+                  onError: Align(
+                    alignment: Alignment.topLeft,
+                    child: Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 15.0),
+                        child: Text(state.message ?? 'Unknown Error')),
+                  ),
+                );
+              },
+            );
+          },
+        ),
       ),
     );
   }

@@ -1,6 +1,7 @@
 import 'package:flutter_qfam/src/commons/spaces.dart';
 import 'package:flutter_qfam/src/features/article/ui/detail_article_screen.dart';
 import 'package:flutter_qfam/src/features/home/bloc/home/home_bloc.dart';
+import 'package:flutter_qfam/src/features/home/bloc/home_root/home_root_bloc.dart';
 import 'package:flutter_qfam/src/features/search/ui/search_screen.dart';
 import 'package:flutter_qfam/src/models/contents/banner_model.dart';
 import 'package:flutter_qfam/src/models/contents/contents_model.dart';
@@ -29,7 +30,6 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   void initState() {
     super.initState();
-    // bloc = context.read<HomeBloc>();
   }
 
   @override
@@ -41,7 +41,6 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     final dimension = MediaQuery.of(context).size;
-
     return BlocProvider(
       create: (BuildContext context) => HomeBloc(),
       child: Scaffold(

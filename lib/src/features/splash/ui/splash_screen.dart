@@ -59,14 +59,14 @@ class _SplashScreenState extends State<SplashScreen> {
                   // child: SvgPicture.asset(Assets.logo),
                   child: Image.asset(Assets.logo),
                   ),
-              Spaces.normalVertical(),
-              GFLoader(type: GFLoaderType.circle),
+              // Spaces.normalVertical(),
+              // GFLoader(type: GFLoaderType.circle),
               Spaces.normalVertical(),
               Text(
                 AppSettings.name,
                 textAlign: TextAlign.center,
                 style: MyTextStyle.appBarTitle
-                    .copyWith(fontWeight: MyFontWeight.bold, fontFamily: 'GreatVibes'),
+                    .copyWith(fontWeight: MyFontWeight.bold, fontFamily: 'GreatVibes', color: MyColors.white),
               ),
             ],
           ),

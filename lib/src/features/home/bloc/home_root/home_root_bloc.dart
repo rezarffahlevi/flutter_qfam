@@ -26,10 +26,8 @@ class HomeRootBloc extends Bloc<HomeRootEvent, HomeRootState> {
       var response = await apiService.getCurrentUser();
       emit(state.copyWith(
           currentUser: response?.data, state: NetworkStates.onLoaded));
-      // return response!.data;
     } catch (e) {
       emit(state.copyWith(state: NetworkStates.onError, message: '${e}'));
-      return null;
     }
   }
 
@@ -38,7 +36,7 @@ class HomeRootBloc extends Bloc<HomeRootEvent, HomeRootState> {
     emit(state.copyWith(index: event.index));
   }
 
-  final List<Widget> children = [
+  List<Widget> children = [
     HomeScreen(),
     SearchScreen(),
     ForumScreen(),

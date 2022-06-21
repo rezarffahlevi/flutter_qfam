@@ -16,12 +16,12 @@ class Wrapper extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    if (state == NetworkStates.onLoading) {
-      return onLoading ?? Container();
-    } else if (state == NetworkStates.onLoaded) {
+    if (state == NetworkStates.onLoaded) {
       return onLoaded ?? Container();
-    } else {
+    } else if (state == NetworkStates.onError) {
       return onError ?? Container();
+    } else {
+      return onLoading ?? Container();
     }
   }
 }

@@ -11,6 +11,8 @@ import 'package:flutter_qfam/src/models/contents/contents_model.dart';
 import 'package:flutter_qfam/src/models/forum/threads_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_qfam/src/widgets/widgets.dart';
+import 'package:getwidget/components/toast/gf_toast.dart';
 
 class App extends StatefulWidget {
   const App({Key? key}) : super(key: key);
@@ -25,6 +27,7 @@ class _AppState extends State<App> {
     return MultiBlocProvider(
       providers: [
         BlocProvider<HomeRootBloc>(
+          lazy: false,
           create: (context) => HomeRootBloc(),
         ),
       ],
@@ -44,8 +47,8 @@ class _AppState extends State<App> {
               argument:
                   ModalRoute.of(context)?.settings.arguments as ThreadsModel),
           DetailArticleScreen.routeName: (context) => DetailArticleScreen(
-              argument:
-                  ModalRoute.of(context)?.settings.arguments as ContentsModel),
+              argument: ModalRoute.of(context)?.settings.arguments
+                  as ContentsModel),
         },
       ),
     );
