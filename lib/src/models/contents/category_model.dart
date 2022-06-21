@@ -1,20 +1,20 @@
 class CategoryModel {
   int? id;
-  String? title;
+  String? category;
   String? image;
 
-  CategoryModel({this.id, this.title, this.image});
+  CategoryModel({this.id, this.category, this.image});
 
   CategoryModel.fromJson(Map<String, dynamic> json) {
     id = json['id'];
-    title = json['title'];
+    category = json['category'];
     image = json['image'];
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['id'] = this.id;
-    data['title'] = this.title;
+    data['category'] = this.category;
     data['image'] = this.image;
     return data;
   }

@@ -3,6 +3,7 @@ import 'package:flutter_qfam/src/features/article/ui/detail_article_screen.dart'
 import 'package:flutter_qfam/src/features/home/bloc/home/home_bloc.dart';
 import 'package:flutter_qfam/src/features/search/ui/search_screen.dart';
 import 'package:flutter_qfam/src/models/contents/banner_model.dart';
+import 'package:flutter_qfam/src/models/contents/contents_model.dart';
 import 'package:flutter_qfam/src/styles/my_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -67,28 +68,6 @@ class _HomeScreenState extends State<HomeScreen> {
                           children: [
                             _renderBanner(bannerList, state.activeBanner),
                             Spaces.normalVertical(),
-                            // Wrapper(
-                            //   state: state.state,
-                            //   onLoading: GFShimmer(
-                            //     child: _categoryBlock(dimension),
-                            //   ),
-                            //   onLoaded: sectionWidget(
-                            //     'Kategori',
-                            //     child: _categorySection(listCategory, state),
-                            //     onTapAll: () {
-                            //       debugPrint('Hii');
-                            //     },
-                            //   ),
-                            //   onError: sectionWidget('Kategori',
-                            //       child: Align(
-                            //         alignment: Alignment.topLeft,
-                            //         child: Padding(
-                            //             padding: const EdgeInsets.symmetric(
-                            //                 horizontal: 15.0),
-                            //             child: Text(
-                            //                 state.message ?? 'Unknown Error')),
-                            //       )),
-                            // ),
                             Wrapper(
                               state: state.state,
                               onLoading: GFShimmer(
@@ -106,15 +85,14 @@ class _HomeScreenState extends State<HomeScreen> {
                               ),
                               onLoaded:
                                   _renderArticle(dimension, state, sections),
-                              onError: sectionWidget('Pranikah',
-                                  child: Align(
-                                    alignment: Alignment.topLeft,
-                                    child: Padding(
-                                        padding: const EdgeInsets.symmetric(
-                                            horizontal: 15.0),
-                                        child: Text(
-                                            state.message ?? 'Unknown Error')),
-                                  )),
+                              onError: Align(
+                                alignment: Alignment.center,
+                                child: Padding(
+                                    padding: const EdgeInsets.symmetric(
+                                        horizontal: 15.0),
+                                    child:
+                                        Text(state.message ?? 'Unknown Error')),
+                              ),
                             ),
                           ],
                         );
@@ -204,7 +182,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   shrinkWrap: true,
                   physics: const NeverScrollableScrollPhysics(),
                   itemBuilder: (c, j) {
-                    final article = item.contents?[j];
+                    ContentsModel article = item.contents?[j];
                     return GestureDetector(
                       onTap: () {
                         Navigator.of(context).pushNamed(
@@ -216,11 +194,11 @@ class _HomeScreenState extends State<HomeScreen> {
                         avatar: GFAvatar(
                           shape: GFAvatarShape.square,
                           size: 60,
-                          backgroundImage: NetworkImage(article.thumbnail),
+                          backgroundImage: NetworkImage('${article.thumbnail}'),
                         ),
                         color: MyColors.background,
-                        titleText: item?.title,
-                        subTitleText: item?.description,
+                        titleText: article.title,
+                        subTitleText: '${article.subtitle}',
                         // icon: Icon(Icons.favorite),
                       ),
                     );
@@ -267,17 +245,32 @@ class _HomeScreenState extends State<HomeScreen> {
                               children: [
                                 Padding(
                                   padding: EdgeInsets.only(top: 10),
-                                  child: Text(
-                                    article?.title ?? '-',
-                                    style: MyTextStyle.sessionTitle.copyWith(
-                                        color: MyColors.textReverse,
-                                        shadows: [
-                                          Shadow(
-                                            offset: Offset(2.0, 2.0),
-                                            blurRadius: 3.0,
-                                            color: Color.fromARGB(255, 0, 0, 0),
-                                          ),
-                                        ]),
+                                  child: Column(
+                                    children: [
+                                      Text(
+                                        article?.title ?? '-',
+                                        textAlign: TextAlign.center,
+                                        style:
+                                            MyTextStyle.sessionTitle.copyWith(
+                                          color: MyColors.textReverse,
+                                          shadows: [
+                                            Shadow(
+                                              offset: Offset(2.0, 2.0),
+                                              blurRadius: 3.0,
+                                              color:
+                                                  Color.fromARGB(255, 0, 0, 0),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                      Text('${article?.subtitle}',
+                                          style: MyTextStyle.contentDescription
+                                              .copyWith(
+                                                  color: MyColors.textReverse),
+                                          maxLines: 2,
+                                          textAlign: TextAlign.center,
+                                          overflow: TextOverflow.ellipsis),
+                                    ],
                                   ),
                                 ),
                                 Container(
@@ -350,11 +343,13 @@ class _HomeScreenState extends State<HomeScreen> {
                                       Text(article?.title ?? '-',
                                           style: MyTextStyle.h5.bold,
                                           maxLines: 2,
+                                          textAlign: TextAlign.center,
                                           overflow: TextOverflow.ellipsis),
                                       Spaces.smallVertical(),
-                                      Text('${article?.content}',
+                                      Text('${article?.subtitle}',
                                           style: MyTextStyle.contentDescription,
-                                          maxLines: 1,
+                                          maxLines: 2,
+                                          textAlign: TextAlign.center,
                                           overflow: TextOverflow.ellipsis),
                                     ],
                                   ),
@@ -418,7 +413,8 @@ class _HomeScreenState extends State<HomeScreen> {
             },
             aspectRatio: 3 / 1,
             enlargeMainPage: true,
-            // autoPlay: true,
+            autoPlay: true,
+            pauseAutoPlayOnTouch: Duration(seconds: 3),
           ),
           Container(
             child: Row(
@@ -447,84 +443,5 @@ class _HomeScreenState extends State<HomeScreen> {
       );
     }
     return Container();
-  }
-
-  Widget _categorySection(listCategory, state) {
-    return Container(
-      height: 40,
-      margin: EdgeInsets.symmetric(horizontal: 15),
-      child: ListView.separated(
-        shrinkWrap: true,
-        scrollDirection: Axis.horizontal,
-        physics: const AlwaysScrollableScrollPhysics(),
-        itemBuilder: (c, i) {
-          final item = listCategory[i];
-          return InkWell(
-              child: Container(
-                alignment: Alignment.center,
-                decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(20),
-                    border: Border.all(
-                        color: state.selectedCategory == item.id
-                            ? MyColors.primary
-                            : Colors.grey,
-                        width: 1.4)),
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 30, vertical: 2),
-                child: Text(
-                  item.name ?? '-',
-                  style: MyTextStyle.h7.copyWith(
-                      color: state.selectedCategory == item.id
-                          ? MyColors.primary
-                          : MyColors.text),
-                ),
-              ),
-              onTap: () {
-                bloc.add(HomeEventSelectedCategory(selectedCategory: item.id));
-              });
-        },
-        separatorBuilder: (c, i) {
-          return Spaces.normalHorizontal();
-        },
-        itemCount: listCategory.length,
-      ),
-    );
-  }
-
-  Widget _categoryBlock(dimension) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Container(
-            width: dimension.width / 3 - 20,
-            height: 38,
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(20),
-              color: Colors.white,
-            ),
-          ),
-          Spaces.normalHorizontal(),
-          Container(
-            width: dimension.width / 3 - 20,
-            height: 38,
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(20),
-              color: Colors.white,
-            ),
-          ),
-          Spaces.normalHorizontal(),
-          Container(
-            width: dimension.width / 3 - 20,
-            height: 38,
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(20),
-              color: Colors.white,
-            ),
-          ),
-        ],
-      ),
-    );
   }
 }

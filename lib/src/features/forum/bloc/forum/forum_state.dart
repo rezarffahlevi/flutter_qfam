@@ -19,11 +19,11 @@ class ForumState extends Equatable {
 
   ForumState copyWith({
     NetworkStates? state,
-    final dynamic message,
-    final List<ThreadsModel>? threadsList,
-    final ThreadsModel? threads,
-    final int? parentId,
-    final String? content,
+    dynamic message,
+    List<ThreadsModel>? threadsList,
+    ThreadsModel? threads,
+    int? parentId,
+    String? content,
   }) {
     return ForumState(
       state: state ?? this.state,
@@ -36,5 +36,6 @@ class ForumState extends Equatable {
   }
 
   @override
-  List<Object?> get props => [state, message, threadsList, threads, parentId, content];
+  List<Object?> get props =>
+      [state, message, threadsList, threads, parentId, content];
 }

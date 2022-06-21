@@ -44,11 +44,9 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
 
   _getBanner(HomeEventGetBanner event, Emitter<HomeState> emit) async {
     try {
-      emit(state.copyWith(state: NetworkStates.onLoading));
       var response = await apiService.getBannerList();
       emit(state.copyWith(
-          bannerList: response?.data,
-          state: NetworkStates.onLoaded));
+          bannerList: response?.data));
     } catch (e) {
       emit(state.copyWith(state: NetworkStates.onError, message: '${e}'));
     }

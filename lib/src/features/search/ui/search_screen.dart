@@ -80,56 +80,78 @@ class _SearchScreenState extends State<SearchScreen> {
                             ],
                           ),
                         ),
-                        onLoaded: ListView.separated(
-                          shrinkWrap: true,
-                          physics: const NeverScrollableScrollPhysics(),
-                          padding: EdgeInsets.only(
-                              left: 16, right: 16, bottom: 16),
-                          itemBuilder: (c, i) {
-                            final article = state.contentsList![i];
-                            return GestureDetector(
-                              onTap: () {
-                                Navigator.of(context).pushNamed(
-                                    DetailArticleScreen.routeName,
-                                    arguments: article);
-                              },
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  GFImageOverlay(
-                                    color: MyColors.greyPlaceHolder,
-                                    height: 130,
-                                    borderRadius:
-                                        BorderRadius.all(Radius.circular(8)),
-                                    image:
-                                        NetworkImage(article.thumbnail ?? ''),
-                                    boxFit: BoxFit.fitWidth,
-                                    child: article.isVideo == 1
-                                        ? Icon(
-                                            Icons.play_circle,
-                                            size: 50,
-                                            color: Colors.white,
-                                          )
-                                        : Container(),
-                                  ),
-                                  Spaces.smallVertical(),
-                                  Text(
-                                    article.title ?? '-',
-                                    style: MyTextStyle.sessionTitle,
-                                  ),
-                                  Spaces.smallVertical(),
-                                  Text(
-                                    'By ${article.createdByName}',
-                                    style: MyTextStyle.contentDescription,
-                                  ),
-                                ],
+                        onLoaded: Column(
+                          children: [
+                            Wrapper(
+                              state: state.state,
+                              onLoading: GFShimmer(
+                                child: _categoryBlock(dimension),
                               ),
-                            );
-                          },
-                          separatorBuilder: (c, i) {
-                            return Spaces.largeVertical();
-                          },
-                          itemCount: state.contentsList?.length ?? 0,
+                              onLoaded:
+                                  _categorySection(state.categoryList, state),
+                              onError: Align(
+                                alignment: Alignment.topLeft,
+                                child: Padding(
+                                    padding: const EdgeInsets.symmetric(
+                                        horizontal: 15.0),
+                                    child:
+                                        Text(state.message ?? 'Unknown Error')),
+                              ),
+                            ),
+                            Spaces.normalVertical(),
+                            ListView.separated(
+                              shrinkWrap: true,
+                              physics: const NeverScrollableScrollPhysics(),
+                              padding: EdgeInsets.only(
+                                  left: 16, right: 16, bottom: 16),
+                              itemBuilder: (c, i) {
+                                final article = state.contentsList![i];
+                                return GestureDetector(
+                                  onTap: () {
+                                    Navigator.of(context).pushNamed(
+                                        DetailArticleScreen.routeName,
+                                        arguments: article);
+                                  },
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      GFImageOverlay(
+                                        color: MyColors.greyPlaceHolder,
+                                        height: 130,
+                                        borderRadius: BorderRadius.all(
+                                            Radius.circular(8)),
+                                        image: NetworkImage(
+                                            article.thumbnail ?? ''),
+                                        boxFit: BoxFit.fitWidth,
+                                        child: article.isVideo == 1
+                                            ? Icon(
+                                                Icons.play_circle,
+                                                size: 50,
+                                                color: Colors.white,
+                                              )
+                                            : Container(),
+                                      ),
+                                      Spaces.smallVertical(),
+                                      Text(
+                                        article.title ?? '-',
+                                        style: MyTextStyle.sessionTitle,
+                                      ),
+                                      Spaces.smallVertical(),
+                                      Text(
+                                        'By ${article.createdByName}',
+                                        style: MyTextStyle.contentDescription,
+                                      ),
+                                    ],
+                                  ),
+                                );
+                              },
+                              separatorBuilder: (c, i) {
+                                return Spaces.largeVertical();
+                              },
+                              itemCount: state.contentsList?.length ?? 0,
+                            ),
+                          ],
                         ),
                         onError: Text(state.message ?? 'Unknown Error'));
                   }),
@@ -146,6 +168,86 @@ class _SearchScreenState extends State<SearchScreen> {
             Icons.add,
           ),
         ),
+      ),
+    );
+  }
+
+  Widget _categorySection(listCategory, state) {
+    return Container(
+      height: 40,
+      margin: EdgeInsets.symmetric(horizontal: 15),
+      child: ListView.separated(
+        shrinkWrap: true,
+        scrollDirection: Axis.horizontal,
+        physics: const AlwaysScrollableScrollPhysics(),
+        itemBuilder: (c, i) {
+          final item = listCategory[i];
+          return InkWell(
+              child: Container(
+                alignment: Alignment.center,
+                decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(20),
+                    border: Border.all(
+                        color: state.selectedCategory == item.id
+                            ? MyColors.primary
+                            : Colors.grey,
+                        width: 1.4)),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 30, vertical: 2),
+                child: Text(
+                  item.category ?? '-',
+                  style: MyTextStyle.h7.copyWith(
+                      color: state.selectedCategory == item.id
+                          ? MyColors.primary
+                          : MyColors.text),
+                ),
+              ),
+              onTap: () {
+                bloc.add(
+                    SearchEventSetSelectedCategory(selectedCategory: item.id));
+              });
+        },
+        separatorBuilder: (c, i) {
+          return Spaces.normalHorizontal();
+        },
+        itemCount: listCategory.length,
+      ),
+    );
+  }
+
+  Widget _categoryBlock(dimension) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Container(
+            width: dimension.width / 3 - 20,
+            height: 38,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(20),
+              color: Colors.white,
+            ),
+          ),
+          Spaces.normalHorizontal(),
+          Container(
+            width: dimension.width / 3 - 20,
+            height: 38,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(20),
+              color: Colors.white,
+            ),
+          ),
+          Spaces.normalHorizontal(),
+          Container(
+            width: dimension.width / 3 - 20,
+            height: 38,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(20),
+              color: Colors.white,
+            ),
+          ),
+        ],
       ),
     );
   }

@@ -1,21 +1,36 @@
 part of 'detail_article_bloc.dart';
 
 class DetailArticleState extends Equatable {
-  final bool isLoading;
+  final NetworkStates state;
+  final dynamic message;
+  final ContentsModel? detail;
+  final List<FilesModel> bannerList;
+  final int? activeBanner;
 
   const DetailArticleState({
-    this.isLoading = false,
+    this.state = NetworkStates.onLoaded,
+    this.message = '',
+    this.bannerList = const [],
+    this.activeBanner = 0,
+    this.detail,
   });
 
   DetailArticleState copyWith({
-    int? number,
-    bool? isLoading,
+    NetworkStates? state,
+    dynamic message,
+    List<FilesModel>? bannerList,
+    int? activeBanner,
+    ContentsModel? detail,
   }) {
     return DetailArticleState(
-      isLoading: isLoading ?? this.isLoading,
+      state: state ?? this.state,
+      message: message ?? this.message,
+      bannerList: bannerList ?? this.bannerList,
+      activeBanner: activeBanner ?? this.activeBanner,
+      detail: detail ?? this.detail,
     );
   }
-  
+
   @override
-  List<Object?> get props => [isLoading];
+  List<Object?> get props => [state, message, bannerList, activeBanner, detail];
 }

@@ -1,5 +1,6 @@
 import 'package:flutter_qfam/src/helpers/api_helper.dart';
 import 'package:flutter_qfam/src/models/contents/banner_model.dart';
+import 'package:flutter_qfam/src/models/contents/category_model.dart';
 import 'package:flutter_qfam/src/models/contents/contents_model.dart';
 import 'package:flutter_qfam/src/models/contents/sections_model.dart';
 import 'package:flutter_qfam/src/models/default_response_model.dart';
@@ -16,6 +17,16 @@ class ContentService {
       response['data']!.forEach((v) {
         data.add(new ContentsModel.fromJson(v));
       });
+      return DefaultResponseModel.fromJson(response, data);
+    } catch (e) {
+      throw e;
+    }
+  }
+
+  Future<DefaultResponseModel?> getDetailContent(dynamic params) async {
+    try {
+      var response = await apiHelper.get('/contents', params: params);
+      ContentsModel? data = ContentsModel.fromJson(response['data']);
       return DefaultResponseModel.fromJson(response, data);
     } catch (e) {
       throw e;
@@ -41,6 +52,23 @@ class ContentService {
       List<FilesModel>? data = <FilesModel>[];
       response['data']!.forEach((v) {
         data.add(new FilesModel.fromJson(v));
+      });
+      return DefaultResponseModel.fromJson(response, data);
+    } catch (e) {
+      throw e;
+    }
+  }
+
+  Future<DefaultResponseModel?> getCategoryList() async {
+    try {
+      var response = await apiHelper.get('/category');
+      List<CategoryModel>? data = <CategoryModel>[];
+      CategoryModel category = new CategoryModel();
+      category.id = 0;
+      category.category = 'Rekomendasi';
+      data.add(category);
+      response['data']!.forEach((v) {
+        data.add(new CategoryModel.fromJson(v));
       });
       return DefaultResponseModel.fromJson(response, data);
     } catch (e) {
