@@ -2,6 +2,7 @@ import 'package:flutter_qfam/src/commons/constants.dart';
 import 'package:flutter_qfam/src/commons/spaces.dart';
 import 'package:flutter_qfam/src/features/article/ui/detail_article_screen.dart';
 import 'package:flutter_qfam/src/features/article/ui/post_article_screen.dart';
+import 'package:flutter_qfam/src/features/auth/bloc/auth_bloc.dart';
 import 'package:flutter_qfam/src/features/home/bloc/home_root/home_root_bloc.dart';
 import 'package:flutter_qfam/src/features/search/bloc/search/search_bloc.dart';
 import 'package:flutter_qfam/src/models/profile/user_model.dart';
@@ -25,7 +26,7 @@ class SearchScreen extends StatefulWidget {
 }
 
 class _SearchScreenState extends State<SearchScreen> {
-  late HomeRootBloc blocHomeRoot;
+  late AuthBloc authBloc;
   SearchBloc bloc = SearchBloc();
   final RefreshController _refreshController =
       RefreshController(initialRefresh: false);
@@ -33,7 +34,7 @@ class _SearchScreenState extends State<SearchScreen> {
   @override
   void initState() {
     super.initState();
-    blocHomeRoot = context.read<HomeRootBloc>();
+    authBloc = context.read<AuthBloc>();
   }
 
   @override
@@ -47,9 +48,9 @@ class _SearchScreenState extends State<SearchScreen> {
     final dimension = MediaQuery.of(context).size;
     return BlocProvider(
       create: (BuildContext context) => SearchBloc(),
-      child: BlocBuilder<HomeRootBloc, HomeRootState>(
-        bloc: blocHomeRoot,
-        builder: (context, stateRoot) {
+      child: BlocBuilder<AuthBloc, AuthState>(
+        bloc: authBloc,
+        builder: (context, authState) {
           return Scaffold(
             appBar: appBar(
                 onTap: () {},
@@ -124,13 +125,11 @@ class _SearchScreenState extends State<SearchScreen> {
                                   ),
                                   onLoaded: _categorySection(
                                       state.categoryList, state),
-                                  onError: Align(
-                                    alignment: Alignment.topLeft,
-                                    child: Padding(
-                                        padding: const EdgeInsets.symmetric(
-                                            horizontal: 15.0),
-                                        child: Text(
-                                            state.message ?? 'Unknown Error')),
+                                  onError: Padding(
+                                    padding: const EdgeInsets.symmetric(
+                                        horizontal: 16.0, vertical: 16),
+                                    child:
+                                        Text(state.message ?? 'Unknown Error'),
                                   ),
                                 ),
                                 Spaces.normalVertical(),
@@ -189,13 +188,20 @@ class _SearchScreenState extends State<SearchScreen> {
                                 ),
                               ],
                             ),
-                            onError: Text(state.message ?? 'Unknown Error'));
+                            onError: Padding(
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: 16.0, vertical: 16),
+                              child: Text(
+                                state.message ?? 'Unknown Error',
+                              ),
+                            ));
                       }),
                 ]),
               ),
             ),
-            floatingActionButton: stateRoot.currentUser?.role !=
-                    Constants.ROLES.USER
+            floatingActionButton: (authState.currentUser?.role !=
+                        Constants.ROLES.USER &&
+                    authState.currentUser?.role != null)
                 ? FloatingActionButton(
                     heroTag: null,
                     onPressed: () async {

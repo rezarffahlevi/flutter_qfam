@@ -7,21 +7,24 @@ class Wrapper extends StatelessWidget {
     this.onLoading,
     this.onLoaded,
     this.onError,
+    this.isGlobalLoading = false,
   }) : super(key: key);
 
   final NetworkStates? state;
-  final Widget? onLoading;
+  final dynamic onLoading;
   final Widget? onLoaded;
   final Widget? onError;
+  final bool? isGlobalLoading;
 
   @override
   Widget build(BuildContext context) {
     if (state == NetworkStates.onLoaded) {
-      return onLoaded ?? Container();
+      return SafeArea(child: onLoaded ?? Container());
     } else if (state == NetworkStates.onError) {
-      return onError ?? Container();
+      return SafeArea(child: onError ?? Container());
     } else {
-      return onLoading ?? Container();
+      if (isGlobalLoading == true) return SafeArea(child: onLoaded ?? Container());
+      return SafeArea(child: onLoading ?? Container());
     }
   }
 }

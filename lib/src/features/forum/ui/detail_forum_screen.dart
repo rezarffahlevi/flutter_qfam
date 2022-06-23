@@ -1,6 +1,8 @@
 import 'package:flutter_qfam/src/commons/spaces.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_qfam/src/features/auth/bloc/auth_bloc.dart';
+import 'package:flutter_qfam/src/features/auth/ui/login_screen.dart';
 import 'package:flutter_qfam/src/features/forum/bloc/forum/forum_bloc.dart';
 import 'package:flutter_qfam/src/features/forum/ui/post_thread_screen.dart';
 import 'package:flutter_qfam/src/features/home/bloc/home/home_bloc.dart';
@@ -21,6 +23,7 @@ class DetailForumScreen extends StatefulWidget {
 }
 
 class _DetailForumScreenState extends State<DetailForumScreen> {
+  late AuthBloc authBloc;
   ForumBloc bloc = ForumBloc();
   final RefreshController _refreshController =
       RefreshController(initialRefresh: false);
@@ -29,6 +32,7 @@ class _DetailForumScreenState extends State<DetailForumScreen> {
   @override
   void initState() {
     super.initState();
+    authBloc = context.read<AuthBloc>();
     _scrollController = ScrollController();
     bloc.add(ForumEventGetData(uuid: widget.argument.uuid));
   }
@@ -95,7 +99,7 @@ class _DetailForumScreenState extends State<DetailForumScreen> {
                               onTap: () => Navigator.pushNamed(
                                   context, DetailForumScreen.routeName,
                                   arguments: item),
-                              name: '${detail.createdBy}',
+                              name: '${item.createdBy}',
                               content: item.content,
                               countComments: item.countComments,
                             );
@@ -127,11 +131,17 @@ class _DetailForumScreenState extends State<DetailForumScreen> {
         ),
         floatingActionButton: FloatingActionButton(
           onPressed: () async {
-            var postThread = await Navigator.of(context).pushNamed(
-                PostThreadScreen.routeName,
-                arguments: widget.argument.id);
-            if (postThread != null) {
-              bloc.add(ForumEventGetData(uuid: widget.argument.uuid));
+            if (authBloc.state.currentUser?.email != null) {
+              var postThread = await Navigator.of(context).pushNamed(
+                  PostThreadScreen.routeName,
+                  arguments: widget.argument.id);
+              if (postThread != null) {
+                bloc.add(ForumEventGetData(uuid: widget.argument.uuid));
+              }
+            } else {
+              Navigator.of(context).pushNamed(LoginScreen.routeName);
+              GFToast.showToast('Anda harus login terlebih dahulu.', context,
+                  toastPosition: GFToastPosition.BOTTOM);
             }
           },
           backgroundColor: MyColors.primary,

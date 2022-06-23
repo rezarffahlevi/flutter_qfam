@@ -8,6 +8,7 @@ class UserModel {
   String? religion;
   String? role;
   String? email;
+  String? password;
   int? isActive;
   int? isVerified;
   String? createdAt;
@@ -23,6 +24,7 @@ class UserModel {
       this.religion,
       this.role,
       this.email,
+      this.password,
       this.isActive,
       this.isVerified,
       this.createdAt,
@@ -38,6 +40,7 @@ class UserModel {
     religion = json['religion'];
     role = json['role'];
     email = json['email'];
+    password = json['password'];
     isActive = json['is_active'];
     isVerified = json['is_verified'];
     createdAt = json['created_at'];
@@ -55,10 +58,33 @@ class UserModel {
     data['religion'] = this.religion;
     data['role'] = this.role;
     data['email'] = this.email;
+    data['password'] = this.password;
     data['is_active'] = this.isActive;
     data['is_verified'] = this.isVerified;
     data['created_at'] = this.createdAt;
     data['updated_at'] = this.updatedAt;
+    return data;
+  }
+}
+
+class ResponseLoginModel {
+  String? token;
+  UserModel? user;
+  String? tokenType;
+
+  ResponseLoginModel.fromJson(Map<String, dynamic> json) {
+    token = json['token'];
+    user = json['user'] != null ? new UserModel.fromJson(json['user']) : null;
+    tokenType = json['token_type'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['token'] = this.token;
+    if (this.user != null) {
+      data['user'] = this.user!.toJson();
+    }
+    data['token_type'] = this.tokenType;
     return data;
   }
 }

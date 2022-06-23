@@ -4,9 +4,9 @@ import 'dart:io';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_qfam/src/commons/app_settings.dart';
+import 'package:flutter_qfam/src/commons/preferences_base.dart';
 
 class ApiHelper {
-
   ConfigModel config = getConfig();
 
   static ConfigModel getConfig() {
@@ -15,29 +15,35 @@ class ApiHelper {
 
   BaseOptions options = BaseOptions(
     // baseUrl: config.BASE_URL,
-    connectTimeout: 5000,
-    receiveTimeout: 3000,
+    connectTimeout: 10000,
+    receiveTimeout: 5000,
   );
   Dio dio = Dio();
+
+  _getHeaders() async {
+    // debugPrint('header ${await Prefs.token}');
+    return {
+      'Authorization': await Prefs.token,
+    };
+  }
 
   Future<dynamic> get(String url, {dynamic params, String? baseUrl}) async {
     baseUrl = baseUrl ?? config.BASE_URL;
     options.baseUrl = baseUrl;
-    options.headers = {
-      'Authorization':
-          'bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwczovL3FmYW0ub25lcGVlcnN0ZWNoLmNvbS9hcGkvcmVnaXN0ZXIiLCJpYXQiOjE2NTU4MjMxNTYsImV4cCI6MTY1ODQ1MTE1NiwibmJmIjoxNjU1ODIzMTU2LCJqdGkiOiJUN0F0aFNXcFJvbGNTdjNHIiwic3ViIjoiMiIsInBydiI6ImY2NGQ0OGE2Y2VjN2JkZmE3ZmJmODk5NDU0YjQ4OGIzZTQ2MjUyMGEifQ.WIFNLs7yHJ7ZrZfcTnpH7k5nSf5d2tdhJtKkHKiIFxE'
-    };
+    options.headers = await _getHeaders();
     dio.options = options;
 
     try {
       var response = await dio.get(url, queryParameters: params);
       debugPrint("======== GET API ${url} <> params: ${params} ========");
       if (response.data['code'] != '00') {
-        debugPrint('API ERROR CODE: ${response.data['code']} :: ${response.data['error']}');
+        debugPrint(
+            'API ERROR CODE: ${response.data['code']} :: ${response.data['error']}');
       }
       return json.decode(response.toString());
     } on DioError catch (e) {
-      debugPrint("======== ERROR GET API ${url} : ${e.message} ========");
+      debugPrint(
+          "======== ERROR GET API ${url} : ${e.message} ========\n PARAMS: ${params}\n HEADERS: ${options.headers}  \n===================================================");
       throw e.error;
     }
   }
@@ -45,22 +51,21 @@ class ApiHelper {
   Future<dynamic> post(String url, {dynamic params, String? baseUrl}) async {
     baseUrl = baseUrl ?? config.BASE_URL;
     options.baseUrl = baseUrl;
-    options.headers = {
-      'Authorization':
-          'bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vbG9jYWxob3N0OjgwMDAvYXBpL2xvZ2luIiwiaWF0IjoxNjU1MzYyMDY4LCJleHAiOjE2NTc5OTAwNjgsIm5iZiI6MTY1NTM2MjA2OCwianRpIjoia3lwNUZhdE92VGpmMFN4MiIsInN1YiI6IjEiLCJwcnYiOiJmNjRkNDhhNmNlYzdiZGZhN2ZiZjg5OTQ1NGI0ODhiM2U0NjI1MjBhIn0.YvNGAWhEjxhN1sumUAmH0X9EMcFTo7CrR6psVco06S4'
-    };
+    options.headers = await _getHeaders();
     dio.options = options;
 
     try {
       var response = await dio.post(url, data: params);
       debugPrint("======== POST API ${url} <> params: ${params} ========\n");
       if (response.data['code'] != '00') {
-        debugPrint('API ERROR CODE: ${response.data['code']} :: ${response.data['error']}');
+        debugPrint(
+            'API ERROR CODE: ${response.data['code']} - ${response.data['message']} :: ${response.data['error']}');
       }
+      // debugPrint('HEADERS: ${options.headers}');
       return json.decode(response.toString());
     } on DioError catch (e) {
       debugPrint(
-          "======== ERROR POST API ${url} : ${e.message} ========\n PARAMS: ${params}\n HEADERS: ${params}");
+          "======== ERROR POST API ${url} : ${e.message} ========\n PARAMS: ${params}\n HEADERS: ${options.headers}  \n===================================================");
       throw e.error;
     }
   }

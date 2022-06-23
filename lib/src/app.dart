@@ -1,6 +1,9 @@
 import 'package:flutter_qfam/src/commons/app_settings.dart';
 import 'package:flutter_qfam/src/features/article/ui/detail_article_screen.dart';
 import 'package:flutter_qfam/src/features/article/ui/post_article_screen.dart';
+import 'package:flutter_qfam/src/features/auth/bloc/auth_bloc.dart';
+import 'package:flutter_qfam/src/features/auth/ui/login_screen.dart';
+import 'package:flutter_qfam/src/features/auth/ui/register_screen.dart';
 import 'package:flutter_qfam/src/features/forum/ui/detail_forum_screen.dart';
 import 'package:flutter_qfam/src/features/forum/ui/post_thread_screen.dart';
 import 'package:flutter_qfam/src/features/home/bloc/home_root/home_root_bloc.dart';
@@ -26,8 +29,10 @@ class _AppState extends State<App> {
   Widget build(BuildContext context) {
     return MultiBlocProvider(
       providers: [
+        BlocProvider<AuthBloc>(
+          create: (context) => AuthBloc(),
+        ),
         BlocProvider<HomeRootBloc>(
-          lazy: false,
           create: (context) => HomeRootBloc(),
         ),
       ],
@@ -38,6 +43,8 @@ class _AppState extends State<App> {
         routes: {
           SplashScreen.routeName: (context) => const SplashScreen(),
           HomeRootScreen.routeName: (context) => const HomeRootScreen(),
+          LoginScreen.routeName: (context) => const LoginScreen(),
+          RegisterScreen.routeName: (context) => const RegisterScreen(),
           SearchScreen.routeName: (context) => const SearchScreen(),
           PostThreadScreen.routeName: (context) => PostThreadScreen(
               argument: ModalRoute.of(context)?.settings.arguments as int?),

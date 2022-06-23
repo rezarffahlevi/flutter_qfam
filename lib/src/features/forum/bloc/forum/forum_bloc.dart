@@ -1,9 +1,11 @@
 import 'package:bloc/bloc.dart';
+import 'package:flutter_qfam/src/commons/preferences_base.dart';
 import 'package:flutter_qfam/src/models/forum/threads_model.dart';
 import 'package:flutter_qfam/src/services/forum/forum_service.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_qfam/src/widgets/widgets.dart';
+import 'package:getwidget/getwidget.dart';
 
 part 'forum_event.dart';
 part 'forum_state.dart';
@@ -14,8 +16,8 @@ class ForumBloc extends Bloc<ForumEvent, ForumState> {
     on<ForumEventRefresh>(_onRefresh);
     on<ForumEventPostThread>(_postThread);
     on<ForumEventOnChangeThread>(_onChangeThread);
+    on<ForumEventInit>(_onInit);
 
-    // add(ForumEventGetData());
     _didMount();
   }
   ForumService apiService = ForumService();
@@ -35,6 +37,7 @@ class ForumBloc extends Bloc<ForumEvent, ForumState> {
     try {
       emit(state.copyWith(state: NetworkStates.onLoading));
       var response = await apiService.getList({'id': event.uuid});
+      // debugPrint('forum ${await Prefs.token}');
       emit(state.copyWith(
           state: NetworkStates.onLoaded, threadsList: response?.data));
     } catch (e) {
@@ -48,7 +51,9 @@ class ForumBloc extends Bloc<ForumEvent, ForumState> {
       var params = {'parent_id': state.parentId, 'content': state.content};
       var response = await apiService.postThread(params);
       emit(state.copyWith(
-          state: NetworkStates.onLoaded, threads: response?.data));
+          state: NetworkStates.onLoaded,
+          message: response?.message,
+          threads: response?.data));
     } catch (e) {
       emit(state.copyWith(state: NetworkStates.onError, message: '${e}'));
     }
@@ -58,6 +63,14 @@ class ForumBloc extends Bloc<ForumEvent, ForumState> {
       ForumEventOnChangeThread event, Emitter<ForumState> emit) async {
     try {
       emit(state.copyWith(parentId: event.parentId, content: event.content));
+    } catch (e) {
+      emit(state.copyWith(state: NetworkStates.onError, message: '${e}'));
+    }
+  }
+
+  _onInit(ForumEventInit event, Emitter<ForumState> emit) async {
+    try {
+      emit(state.copyWith(context: event.context));
     } catch (e) {
       emit(state.copyWith(state: NetworkStates.onError, message: '${e}'));
     }

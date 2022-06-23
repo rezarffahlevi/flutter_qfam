@@ -1,5 +1,6 @@
 import 'package:flutter_qfam/src/commons/spaces.dart';
 import 'package:flutter_qfam/src/features/article/ui/detail_article_screen.dart';
+import 'package:flutter_qfam/src/features/auth/bloc/auth_bloc.dart';
 import 'package:flutter_qfam/src/features/home/bloc/home/home_bloc.dart';
 import 'package:flutter_qfam/src/features/home/bloc/home_root/home_root_bloc.dart';
 import 'package:flutter_qfam/src/features/search/ui/search_screen.dart';
@@ -23,6 +24,7 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  late AuthBloc authBloc;
   HomeBloc bloc = HomeBloc();
   final RefreshController _refreshController =
       RefreshController(initialRefresh: false);
@@ -30,6 +32,7 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   void initState() {
     super.initState();
+    authBloc = context.read<AuthBloc>();
   }
 
   @override
@@ -49,7 +52,10 @@ class _HomeScreenState extends State<HomeScreen> {
             enablePullDown: true,
             enablePullUp: false,
             controller: _refreshController,
-            onRefresh: () => bloc.add(HomeEventRefresh()),
+            onRefresh: () {
+              bloc.add(HomeEventRefresh());
+              authBloc.add(AuthEventGetCurrentUser());
+            },
             child: SingleChildScrollView(
               child: Column(
                 children: [

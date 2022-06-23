@@ -25,6 +25,14 @@ class ForumEventPostThread extends ForumEvent {
   List<Object?> get props => [content];
 }
 
+class ForumEventInit extends ForumEvent {
+  final BuildContext? context;
+
+  ForumEventInit({this.context});
+
+  @override
+  List<Object?> get props => [context];
+}
 
 class ForumEventOnChangeThread extends ForumEvent {
   ThreadsModel? threads;

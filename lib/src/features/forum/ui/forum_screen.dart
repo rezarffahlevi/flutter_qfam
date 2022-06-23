@@ -1,9 +1,12 @@
 import 'package:flutter_qfam/src/commons/spaces.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_qfam/src/features/auth/bloc/auth_bloc.dart';
+import 'package:flutter_qfam/src/features/auth/ui/login_screen.dart';
 import 'package:flutter_qfam/src/features/forum/bloc/forum/forum_bloc.dart';
 import 'package:flutter_qfam/src/features/forum/ui/detail_forum_screen.dart';
 import 'package:flutter_qfam/src/features/forum/ui/post_thread_screen.dart';
+import 'package:flutter_qfam/src/features/home/bloc/home_root/home_root_bloc.dart';
 import 'package:flutter_qfam/src/styles/my_colors.dart';
 import 'package:flutter_qfam/src/styles/my_font_weight.dart';
 import 'package:flutter_qfam/src/styles/my_text_style.dart';
@@ -21,13 +24,15 @@ class ForumScreen extends StatefulWidget {
 }
 
 class _ForumScreenState extends State<ForumScreen> {
+  late AuthBloc authBloc;
   ForumBloc bloc = ForumBloc();
   final RefreshController _refreshController =
       RefreshController(initialRefresh: false);
+  bool isHaveAccess = false;
 
   @override
   void initState() {
-    super.initState();
+    authBloc = context.read<AuthBloc>();
     bloc.add(ForumEventGetData());
   }
 
@@ -100,7 +105,11 @@ class _ForumScreenState extends State<ForumScreen> {
                             ],
                           ),
                         ),
-                        onError: Text(state.message),
+                        onError: Padding(
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 16.0, vertical: 16),
+                          child: Text(state.message ?? 'Unknown Error'),
+                        ),
                       );
                     }),
               ],
@@ -110,10 +119,19 @@ class _ForumScreenState extends State<ForumScreen> {
         floatingActionButton: FloatingActionButton(
           heroTag: null,
           onPressed: () async {
-            var postThread = await Navigator.of(context)
-                .pushNamed(PostThreadScreen.routeName, arguments: 0);
-            if (postThread != null) {
-              bloc.add(ForumEventGetData());
+            if (authBloc.state.currentUser?.email != null) {
+              var postThread = await Navigator.of(context)
+                  .pushNamed(PostThreadScreen.routeName, arguments: 0);
+              if (postThread != null) {
+                bloc.add(ForumEventGetData());
+              }
+            } else {
+              Navigator.of(context).pushNamed(LoginScreen.routeName);
+              GFToast.showToast(
+                'Anda harus login terlebih dahulu.',
+                context,
+                toastPosition: GFToastPosition.BOTTOM
+              );
             }
           },
           backgroundColor: MyColors.primary,

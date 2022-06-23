@@ -34,7 +34,7 @@ class SearchBloc extends Bloc<SearchEvent, SearchState> {
       emit(state.copyWith(
           state: NetworkStates.onLoaded, contentsList: response?.data));
     } catch (e) {
-      emit(state.copyWith(state: NetworkStates.onError));
+      emit(state.copyWith(state: NetworkStates.onError, message: e.toString()));
     }
   }
 
@@ -45,7 +45,7 @@ class SearchBloc extends Bloc<SearchEvent, SearchState> {
       emit(state.copyWith(
           state: NetworkStates.onLoaded, categoryList: response?.data));
     } catch (e) {
-      emit(state.copyWith(state: NetworkStates.onError));
+      emit(state.copyWith(state: NetworkStates.onError, message: e.toString()));
     }
   }
 

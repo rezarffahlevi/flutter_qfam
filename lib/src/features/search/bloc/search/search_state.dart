@@ -17,6 +17,7 @@ class SearchState extends Equatable {
 
   SearchState copyWith({
     NetworkStates? state,
+    dynamic message,
     List<ContentsModel>? contentsList,
     List<CategoryModel>? categoryList,
     int? selectedCategory,
@@ -31,5 +32,6 @@ class SearchState extends Equatable {
   }
 
   @override
-  List<Object?> get props => [state, message, contentsList, categoryList, selectedCategory];
+  List<Object?> get props =>
+      [state, message, contentsList, categoryList, selectedCategory];
 }
