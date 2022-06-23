@@ -9,7 +9,10 @@ class Threads extends StatelessWidget {
     this.onTap,
     this.isDetail = false,
     this.isChild = false,
-    this.scrollToTop,
+    this.onTapParent,
+    this.onTapComment,
+    this.onTapLike,
+    this.onTapShare,
     this.onLoading,
     this.onLoaded,
     this.onError,
@@ -21,7 +24,10 @@ class Threads extends StatelessWidget {
   final bool isDetail;
   final bool isChild;
   final Function()? onTap;
-  final Function()? scrollToTop;
+  final Function()? onTapParent;
+  final Function()? onTapComment;
+  final Function()? onTapLike;
+  final Function()? onTapShare;
   final Widget? onLoading;
   final Widget? onLoaded;
   final Widget? onError;
@@ -81,13 +87,13 @@ class Threads extends StatelessWidget {
                   Row(
                     children: [
                       IconButton(
-                        onPressed: null,
+                        onPressed: onTapComment,
                         icon: Row(
                           children: [
                             Icon(Icons.mode_comment_outlined, size: 16),
                             Spaces.smallHorizontal(),
                             Text(
-                              '${countComments ?? ''}',
+                              '${countComments ?? '0'}',
                               style: MyTextStyle.contentDescription,
                             ),
                           ],
@@ -95,9 +101,7 @@ class Threads extends StatelessWidget {
                       ),
                       Spaces.normalHorizontal(),
                       IconButton(
-                        onPressed: () {
-                          debugPrint('Fav');
-                        },
+                        onPressed: onTapLike,
                         icon: Row(
                           children: [
                             Icon(
@@ -107,7 +111,7 @@ class Threads extends StatelessWidget {
                             ),
                             Spaces.smallHorizontal(),
                             Text(
-                              '',
+                              '0',
                               style: MyTextStyle.contentDescription,
                             ),
                           ],
@@ -115,9 +119,7 @@ class Threads extends StatelessWidget {
                       ),
                       Spaces.normalHorizontal(),
                       IconButton(
-                        onPressed: () {
-                          debugPrint('Share');
-                        },
+                        onPressed: onTapShare,
                         icon: Row(
                           children: [
                             Icon(
@@ -139,7 +141,7 @@ class Threads extends StatelessWidget {
                       ? Padding(
                           padding: const EdgeInsets.only(right: 8),
                           child: GestureDetector(
-                            onTap: scrollToTop,
+                            onTap: onTapParent,
                             child: Row(
                               children: [
                                 Icon(
@@ -218,28 +220,55 @@ class Threads extends StatelessWidget {
                   ),
                 ),
                 child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Row(
                       children: [
-                        Text(
-                          '${countComments ?? 0}',
-                          style: MyTextStyle.h7.bold,
+                        Row(
+                          children: [
+                            Text(
+                              '${countComments ?? 0}',
+                              style: MyTextStyle.h7.bold,
+                            ),
+                            Spaces.smallHorizontal(),
+                            Text('Komentar', style: MyTextStyle.h7),
+                          ],
                         ),
-                        Spaces.smallHorizontal(),
-                        Text('Komentar', style: MyTextStyle.h7),
+                        Spaces.normalHorizontal(),
+                        Row(
+                          children: [
+                            Text(
+                              '0',
+                              style: MyTextStyle.h7.bold,
+                            ),
+                            Spaces.smallHorizontal(),
+                            Text('Menyukai', style: MyTextStyle.h7),
+                          ],
+                        ),
                       ],
                     ),
-                    Spaces.normalHorizontal(),
-                    Row(
-                      children: [
-                        Text(
-                          '0',
-                          style: MyTextStyle.h7.bold,
-                        ),
-                        Spaces.smallHorizontal(),
-                        Text('Menyukai', style: MyTextStyle.h7),
-                      ],
-                    ),
+                    isChild
+                        ? Padding(
+                            padding: const EdgeInsets.only(right: 8),
+                            child: GestureDetector(
+                              onTap: onTapParent,
+                              child: Row(
+                                children: [
+                                  Icon(
+                                    Icons.arrow_upward_rounded,
+                                    size: 16,
+                                    color: MyColors.textContent,
+                                  ),
+                                  Spaces.smallHorizontal(),
+                                  Text(
+                                    'Lihat balasan',
+                                    style: MyTextStyle.h7,
+                                  ),
+                                ],
+                              ),
+                            ),
+                          )
+                        : Container(),
                   ],
                 ),
               ),
@@ -263,9 +292,7 @@ class Threads extends StatelessWidget {
                       ),
                       Spaces.normalHorizontal(),
                       IconButton(
-                        onPressed: () {
-                          debugPrint('Fav');
-                        },
+                        onPressed: onTapLike,
                         icon: Row(
                           children: [
                             Icon(
@@ -283,9 +310,7 @@ class Threads extends StatelessWidget {
                       ),
                       Spaces.normalHorizontal(),
                       IconButton(
-                        onPressed: () {
-                          debugPrint('Share');
-                        },
+                        onPressed: onTapShare,
                         icon: Row(
                           children: [
                             Icon(

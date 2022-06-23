@@ -45,7 +45,8 @@ class _AppState extends State<App> {
           HomeRootScreen.routeName: (context) => const HomeRootScreen(),
           LoginScreen.routeName: (context) => const LoginScreen(),
           RegisterScreen.routeName: (context) => const RegisterScreen(),
-          SearchScreen.routeName: (context) => const SearchScreen(),
+          SearchScreen.routeName: (context) => SearchScreen(
+              argument: ModalRoute.of(context)?.settings.arguments as String?),
           PostThreadScreen.routeName: (context) => PostThreadScreen(
               argument: ModalRoute.of(context)?.settings.arguments as int?),
           PostArticleScreen.routeName: (context) => PostArticleScreen(
@@ -54,8 +55,8 @@ class _AppState extends State<App> {
               argument:
                   ModalRoute.of(context)?.settings.arguments as ThreadsModel),
           DetailArticleScreen.routeName: (context) => DetailArticleScreen(
-              argument: ModalRoute.of(context)?.settings.arguments
-                  as ContentsModel),
+              argument:
+                  ModalRoute.of(context)?.settings.arguments as ContentsModel),
         },
       ),
     );

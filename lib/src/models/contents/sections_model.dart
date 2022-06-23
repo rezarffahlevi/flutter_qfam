@@ -1,5 +1,5 @@
-
 import 'package:flutter_qfam/src/models/contents/contents_model.dart';
+import 'package:flutter_qfam/src/models/contents/program_model.dart';
 
 class SectionsModel {
   int? id;
@@ -8,7 +8,7 @@ class SectionsModel {
   String? type;
   String? createdAt;
   String? updatedAt;
-  List<ContentsModel>? contents;
+  List<dynamic>? contents;
 
   SectionsModel(
       {this.id,
@@ -27,10 +27,17 @@ class SectionsModel {
     createdAt = json['created_at'];
     updatedAt = json['updated_at'];
     if (json['contents'] != null) {
-      contents = <ContentsModel>[];
-      json['contents'].forEach((v) {
-        contents!.add(new ContentsModel.fromJson(v));
-      });
+      if (title!.contains("Program Kami")) {
+        contents = <ProgramModel>[];
+        json['contents'].forEach((v) {
+          contents!.add(new ProgramModel.fromJson(v));
+        });
+      } else {
+        contents = <ContentsModel>[];
+        json['contents'].forEach((v) {
+          contents!.add(new ContentsModel.fromJson(v));
+        });
+      }
     }
   }
 
@@ -48,4 +55,3 @@ class SectionsModel {
     return data;
   }
 }
-

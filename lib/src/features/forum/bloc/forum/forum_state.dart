@@ -5,18 +5,22 @@ class ForumState extends Equatable {
   final dynamic message;
   final BuildContext? context;
   final List<ThreadsModel>? threadsList;
+  final List<ForumModel>? forumList;
   final ThreadsModel? threads;
   final int? parentId;
+  final String? uuid;
   final String? content;
 
   const ForumState({
     this.state = NetworkStates.onLoaded,
-    this.message = '',
+    this.message,
     this.context,
     this.threadsList = const [],
-    this.threads = null,
-    this.parentId = null,
-    this.content = null,
+    this.forumList = const [],
+    this.threads,
+    this.parentId,
+    this.uuid,
+    this.content,
   });
 
   ForumState copyWith({
@@ -24,8 +28,10 @@ class ForumState extends Equatable {
     dynamic message,
     BuildContext? context,
     List<ThreadsModel>? threadsList,
+    List<ForumModel>? forumList,
     ThreadsModel? threads,
     int? parentId,
+    String? uuid,
     String? content,
   }) {
     return ForumState(
@@ -33,8 +39,10 @@ class ForumState extends Equatable {
       message: message ?? this.message,
       context: context ?? this.context,
       threadsList: threadsList ?? this.threadsList,
+      forumList: forumList ?? this.forumList,
       threads: threads ?? this.threads,
       parentId: parentId ?? this.parentId,
+      uuid: uuid ?? this.uuid,
       content: content ?? this.content,
     );
   }

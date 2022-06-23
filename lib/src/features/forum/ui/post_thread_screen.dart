@@ -146,7 +146,7 @@ class _PostThreadScreenState extends State<PostThreadScreen> {
                               ],
                             ),
                           ),
-                          onError: Text(state.message),
+                          onError: Text('${state.message}'),
                         );
                       }),
                 ],

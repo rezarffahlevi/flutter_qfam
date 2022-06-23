@@ -1,5 +1,6 @@
 import 'package:bloc/bloc.dart';
 import 'package:flutter_qfam/src/commons/preferences_base.dart';
+import 'package:flutter_qfam/src/models/forum/forum_model.dart';
 import 'package:flutter_qfam/src/models/forum/threads_model.dart';
 import 'package:flutter_qfam/src/services/forum/forum_service.dart';
 import 'package:equatable/equatable.dart';
@@ -13,6 +14,7 @@ part 'forum_state.dart';
 class ForumBloc extends Bloc<ForumEvent, ForumState> {
   ForumBloc() : super(const ForumState()) {
     on<ForumEventGetData>(_getData);
+    on<ForumEventGetForumList>(_getForumList);
     on<ForumEventRefresh>(_onRefresh);
     on<ForumEventPostThread>(_postThread);
     on<ForumEventOnChangeThread>(_onChangeThread);
@@ -30,16 +32,32 @@ class ForumBloc extends Bloc<ForumEvent, ForumState> {
   }
 
   _onRefresh(ForumEventRefresh event, Emitter<ForumState> emit) async {
+    add(ForumEventGetForumList());
     add(ForumEventGetData());
   }
 
   _getData(ForumEventGetData event, Emitter<ForumState> emit) async {
     try {
       emit(state.copyWith(state: NetworkStates.onLoading));
-      var response = await apiService.getList({'id': event.uuid});
+      var response = await apiService
+          .getThreadsList({'id': event.uuid, 'parent_id': event.parentId});
       // debugPrint('forum ${await Prefs.token}');
       emit(state.copyWith(
-          state: NetworkStates.onLoaded, threadsList: response?.data));
+          state: NetworkStates.onLoaded,
+          threadsList: response?.data,
+          uuid: event.uuid,
+          parentId: event.parentId));
+    } catch (e) {
+      emit(state.copyWith(state: NetworkStates.onError, message: '${e}'));
+    }
+  }
+
+  _getForumList(ForumEventGetForumList event, Emitter<ForumState> emit) async {
+    try {
+      emit(state.copyWith(state: NetworkStates.onLoading));
+      var response = await apiService.getForumList();
+      emit(state.copyWith(
+          state: NetworkStates.onLoaded, forumList: response?.data));
     } catch (e) {
       emit(state.copyWith(state: NetworkStates.onError, message: '${e}'));
     }

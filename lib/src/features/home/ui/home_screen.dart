@@ -111,7 +111,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
   Widget _renderArticle(dimension, state, sections) {
     onTapAll() {
-      Navigator.of(context).pushNamed(SearchScreen.routeName);
+      Navigator.of(context).pushNamed(SearchScreen.routeName, arguments: 'HOME');
     }
 
     return ListView.separated(
@@ -187,7 +187,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   shrinkWrap: true,
                   physics: const NeverScrollableScrollPhysics(),
                   itemBuilder: (c, j) {
-                    ContentsModel article = item.contents?[j];
+                    var article = item.contents?[j];
                     return GestureDetector(
                       onTap: () {
                         Navigator.of(context).pushNamed(
@@ -309,7 +309,7 @@ class _HomeScreenState extends State<HomeScreen> {
               onTapAll: onTapAll,
               child: Container(
                 width: dimension.width,
-                height: 200,
+                height: 210,
                 child: ListView.separated(
                   shrinkWrap: true,
                   scrollDirection: Axis.horizontal,
@@ -327,7 +327,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Container(
-                            height: 200,
+                            height: 210,
                             width: 140,
                             decoration: BoxDecoration(
                                 color: MyColors.background,

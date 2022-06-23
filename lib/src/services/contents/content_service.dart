@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:flutter_qfam/src/helpers/api_helper.dart';
 import 'package:flutter_qfam/src/models/contents/banner_model.dart';
 import 'package:flutter_qfam/src/models/contents/category_model.dart';
@@ -64,9 +65,6 @@ class ContentService {
       var response = await apiHelper.get('/category');
       List<CategoryModel>? data = <CategoryModel>[];
       CategoryModel category = new CategoryModel();
-      category.id = 0;
-      category.category = 'Rekomendasi';
-      data.add(category);
       response['data']!.forEach((v) {
         data.add(new CategoryModel.fromJson(v));
       });

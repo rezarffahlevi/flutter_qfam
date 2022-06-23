@@ -23,16 +23,19 @@ class ForumScreen extends StatefulWidget {
   _ForumScreenState createState() => _ForumScreenState();
 }
 
-class _ForumScreenState extends State<ForumScreen> {
+class _ForumScreenState extends State<ForumScreen>
+    with SingleTickerProviderStateMixin {
   late AuthBloc authBloc;
   ForumBloc bloc = ForumBloc();
   final RefreshController _refreshController =
       RefreshController(initialRefresh: false);
+  TabController? tabController;
   bool isHaveAccess = false;
 
   @override
   void initState() {
     authBloc = context.read<AuthBloc>();
+    bloc.add(ForumEventGetForumList());
     bloc.add(ForumEventGetData());
   }
 
@@ -50,71 +53,128 @@ class _ForumScreenState extends State<ForumScreen> {
       create: (BuildContext context) => ForumBloc(),
       child: Scaffold(
         appBar: appBar(
-            onTap: () {},
-            icon: Icons.filter_list,
+            // onTap: () {},
+            // icon: Icons.filter_list,
             child: "Forum",
             fontFamily: 'GreatVibes'),
-        body: SmartRefresher(
-          enablePullDown: true,
-          enablePullUp: true,
-          controller: _refreshController,
-          onRefresh: () => bloc.add(ForumEventRefresh()),
-          child: SingleChildScrollView(
-            child: Column(
-              children: [
-                BlocConsumer<ForumBloc, ForumState>(
-                    bloc: bloc,
-                    listener: (context, state) {
-                      _refreshController.refreshCompleted();
-                      _refreshController.loadComplete();
-                    },
-                    builder: (context, state) {
-                      final list = state.threadsList;
-                      return Wrapper(
-                        state: state.state,
-                        onLoaded: ListView.separated(
-                          shrinkWrap: true,
-                          physics: const NeverScrollableScrollPhysics(),
-                          itemBuilder: (c, i) {
-                            final item = list?[i];
-                            return Threads(
-                              onTap: () => Navigator.pushNamed(
-                                  context, DetailForumScreen.routeName,
-                                  arguments: item),
-                              name: '${item?.createdBy}',
-                              content: item?.content,
-                              countComments: item?.countComments,
-                            );
-                          },
-                          separatorBuilder: (c, i) {
-                            return Spaces.normalHorizontal();
-                          },
-                          itemCount: list!.length,
-                        ),
-                        onLoading: GFShimmer(
-                          child: Column(
-                            children: [
-                              Spaces.normalVertical(),
-                              for (var i = 0; i < 12; i++)
-                                Column(
-                                  children: [
-                                    loadingBlock(dimension),
-                                    Spaces.normalVertical()
-                                  ],
+        body: BlocConsumer<ForumBloc, ForumState>(
+          bloc: bloc,
+          listener: (context, state) {
+            _refreshController.refreshCompleted();
+            _refreshController.loadComplete();
+            if (tabController == null && state.state == NetworkStates.onLoaded)
+              tabController =
+                  TabController(length: state.forumList!.length, vsync: this);
+          },
+          builder: (context, state) {
+            final list = state.threadsList;
+            final forumList = state.forumList;
+            return Wrapper(
+              state: state.state,
+              onLoaded: Stack(
+                children: <Widget>[
+                  Container(
+                    height: 48,
+                    width: MediaQuery.of(context).size.width,
+                    child: Material(
+                      elevation: 2,
+                      child: Center(
+                        child: TabBar(
+                          key: Key('TabBarArticle'),
+                          isScrollable: true,
+                          controller: tabController,
+                          indicatorSize: TabBarIndicatorSize.label,
+                          labelColor: MyColors.text,
+                          indicatorColor: Colors.transparent,
+                          unselectedLabelColor: MyColors.text.withOpacity(0.4),
+                          tabs: forumList!.map((item) {
+                            return Tab(
+                              key: Key('TabArticleCategory${item.name}'),
+                              child: Text(
+                                '${item.name}',
+                                style: TextStyle(
+                                  fontSize: 12,
+                                  fontWeight: MyFontWeight.semiBold,
                                 ),
-                            ],
+                                maxLines: 1,
+                              ),
+                            );
+                          }).toList(),
+                          onTap: (index) {
+                            debugPrint('TABS ${tabController?.index}');
+                            
+                          },
+                        ),
+                      ),
+                    ),
+                  ),
+                  Container(
+                    margin: EdgeInsets.only(top: 50),
+                    child: TabBarView(
+                      key: Key('TabBarViewArticle'),
+                      controller: tabController,
+                      children: forumList.map((item) {
+                        return SmartRefresher(
+                          enablePullDown: true,
+                          enablePullUp: true,
+                          controller: RefreshController(initialRefresh: false),
+                          onRefresh: () => bloc.add(ForumEventRefresh()),
+                          child: ListView.separated(
+                            shrinkWrap: true,
+                            // physics: const NeverScrollableScrollPhysics(),
+                            itemBuilder: (c, i) {
+                              final item = list?[i];
+                              return Threads(
+                                onTap: () => Navigator.pushNamed(
+                                    context, DetailForumScreen.routeName,
+                                    arguments: item),
+                                name: '${item?.createdBy}',
+                                content: item?.content,
+                                countComments: item?.countComments,
+                                onTapLike: () {
+                                  GFToast.showToast(
+                                      'Fitur belum tersedia', context,
+                                      toastPosition: GFToastPosition.BOTTOM);
+                                },
+                                onTapShare: () {
+                                  GFToast.showToast(
+                                      'Fitur belum tersedia', context,
+                                      toastPosition: GFToastPosition.BOTTOM);
+                                },
+                              );
+                            },
+                            separatorBuilder: (c, i) {
+                              return Spaces.normalHorizontal();
+                            },
+                            itemCount: list!.length,
                           ),
-                        ),
-                        onError: Padding(
-                          padding: const EdgeInsets.symmetric(
-                              horizontal: 16.0, vertical: 16),
-                          child: Text(state.message ?? 'Unknown Error'),
-                        ),
-                      );
-                    }),
-              ],
-            ),
-          ),
+                        );
+                      }).toList(),
+                    ),
+                  ),
+                ],
+              ),
+              onLoading: GFShimmer(
+                child: Column(
+                  children: [
+                    Spaces.normalVertical(),
+                    for (var i = 0; i < 5; i++)
+                      Column(
+                        children: [
+                          loadingBlock(dimension),
+                          Spaces.normalVertical()
+                        ],
+                      ),
+                  ],
+                ),
+              ),
+              onError: Padding(
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 16.0, vertical: 16),
+                child: Text(state.message ?? 'Unknown Error'),
+              ),
+            );
+          },
         ),
         floatingActionButton: FloatingActionButton(
           heroTag: null,
@@ -127,11 +187,8 @@ class _ForumScreenState extends State<ForumScreen> {
               }
             } else {
               Navigator.of(context).pushNamed(LoginScreen.routeName);
-              GFToast.showToast(
-                'Anda harus login terlebih dahulu.',
-                context,
-                toastPosition: GFToastPosition.BOTTOM
-              );
+              GFToast.showToast('Anda harus login terlebih dahulu.', context,
+                  toastPosition: GFToastPosition.BOTTOM);
             }
           },
           backgroundColor: MyColors.primary,

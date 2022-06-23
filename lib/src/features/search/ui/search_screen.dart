@@ -18,8 +18,9 @@ import 'package:image_picker/image_picker.dart';
 
 class SearchScreen extends StatefulWidget {
   static const String routeName = '/search';
+  final String? argument;
 
-  const SearchScreen({Key? key}) : super(key: key);
+  const SearchScreen({Key? key, this.argument}) : super(key: key);
 
   @override
   _SearchScreenState createState() => _SearchScreenState();
@@ -53,8 +54,11 @@ class _SearchScreenState extends State<SearchScreen> {
         builder: (context, authState) {
           return Scaffold(
             appBar: appBar(
-                onTap: () {},
-                icon: Icons.filter_list,
+                onTapBack: widget.argument != null
+                    ? () => Navigator.pop(context)
+                    : null,
+                // onTap: () {},
+                // icon: Icons.filter_list,
                 child: "Edukasi",
                 fontFamily: 'GreatVibes'),
             body: SmartRefresher(

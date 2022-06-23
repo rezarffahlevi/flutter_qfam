@@ -5,10 +5,12 @@ abstract class ForumEvent extends Equatable {
   List<Object?> get props => [];
 }
 
+class ForumEventGetForumList extends ForumEvent {}
 class ForumEventGetData extends ForumEvent {
   String? uuid;
+  int? parentId;
 
-  ForumEventGetData({this.uuid});
+  ForumEventGetData({this.uuid, this.parentId});
 
   @override
   List<Object?> get props => [uuid];

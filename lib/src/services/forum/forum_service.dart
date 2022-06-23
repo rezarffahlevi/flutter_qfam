@@ -1,12 +1,27 @@
 import 'package:flutter_qfam/src/helpers/api_helper.dart';
 import 'package:flutter_qfam/src/models/default_response_model.dart';
+import 'package:flutter_qfam/src/models/forum/forum_model.dart';
 import 'package:flutter_qfam/src/models/forum/threads_model.dart';
 class ForumService {
   ApiHelper apiHelper = ApiHelper();
 
   ForumService();
 
-  Future<DefaultResponseModel?> getList(dynamic params) async {
+
+  Future<DefaultResponseModel?> getForumList() async {
+    try {
+      var response = await apiHelper.get('/forum');
+      List<ForumModel>? data = <ForumModel>[];
+      response['data']!.forEach((v) {
+        data.add(new ForumModel.fromJson(v));
+      });
+      return DefaultResponseModel.fromJson(response, data);
+    } catch (e) {
+      throw e;
+    }
+  }
+
+  Future<DefaultResponseModel?> getThreadsList(dynamic params) async {
     try {
       var response = await apiHelper.get('/threads', params: params);
       List<ThreadsModel>? data = <ThreadsModel>[];

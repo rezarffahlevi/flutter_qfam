@@ -12,7 +12,7 @@ class SearchState extends Equatable {
     this.message = null,
     this.contentsList = const [],
     this.categoryList = const [],
-    this.selectedCategory = 0,
+    this.selectedCategory = 1,
   });
 
   SearchState copyWith({

@@ -61,31 +61,44 @@ class _DetailForumScreenState extends State<DetailForumScreen> {
             onTapBack: () {
               Navigator.pop(context);
             }),
-        body: SmartRefresher(
-          enablePullDown: true,
-          enablePullUp: true,
-          scrollController: _scrollController,
-          controller: _refreshController,
-          onRefresh: () =>
-              bloc.add(ForumEventGetData(uuid: widget.argument.uuid)),
-          child: SingleChildScrollView(
-            child: BlocConsumer<ForumBloc, ForumState>(
-                bloc: bloc,
-                listener: (context, state) {
-                  _refreshController.refreshCompleted();
-                  _refreshController.loadComplete();
-                },
-                builder: (context, state) {
-                  ThreadsModel detail = state.threadsList!.length > 0
-                      ? state.threadsList![0]
-                      : ThreadsModel();
-                  return Column(
+        body: BlocConsumer<ForumBloc, ForumState>(
+            bloc: bloc,
+            listener: (context, state) {
+              _refreshController.refreshCompleted();
+              _refreshController.loadComplete();
+            },
+            builder: (context, state) {
+              ThreadsModel detail = state.threadsList!.length > 0
+                  ? state.threadsList![0]
+                  : ThreadsModel();
+              return SmartRefresher(
+                enablePullDown: true,
+                enablePullUp: true,
+                scrollController: _scrollController,
+                controller: _refreshController,
+                onRefresh: () => bloc.add(ForumEventGetData(uuid: state.uuid)),
+                child: SingleChildScrollView(
+                  child: Column(
                     children: [
                       Threads(
                         isDetail: true,
                         name: '${detail.createdBy}',
                         content: detail.content,
                         countComments: detail.countComments,
+                        isChild: false,
+                        //  detail.parentId != 0,
+                        onTapParent: () {
+                          bloc.add(
+                              ForumEventGetData(parentId: detail.parentId));
+                        },
+                        onTapLike: () {
+                          GFToast.showToast('Fitur belum tersedia', context,
+                              toastPosition: GFToastPosition.BOTTOM);
+                        },
+                        onTapShare: () {
+                          GFToast.showToast('Fitur belum tersedia', context,
+                              toastPosition: GFToastPosition.BOTTOM);
+                        },
                       ),
                       Wrapper(
                         state: state.state,
@@ -102,6 +115,16 @@ class _DetailForumScreenState extends State<DetailForumScreen> {
                               name: '${item.createdBy}',
                               content: item.content,
                               countComments: item.countComments,
+                              onTapLike: () {
+                                GFToast.showToast(
+                                    'Fitur belum tersedia', context,
+                                    toastPosition: GFToastPosition.BOTTOM);
+                              },
+                              onTapShare: () {
+                                GFToast.showToast(
+                                    'Fitur belum tersedia', context,
+                                    toastPosition: GFToastPosition.BOTTOM);
+                              },
                             );
                           },
                           separatorBuilder: (c, i) {
@@ -125,18 +148,18 @@ class _DetailForumScreenState extends State<DetailForumScreen> {
                         ),
                       ),
                     ],
-                  );
-                }),
-          ),
-        ),
+                  ),
+                ),
+              );
+            }),
         floatingActionButton: FloatingActionButton(
           onPressed: () async {
             if (authBloc.state.currentUser?.email != null) {
               var postThread = await Navigator.of(context).pushNamed(
                   PostThreadScreen.routeName,
-                  arguments: widget.argument.id);
+                  arguments: widget.argument.id ?? bloc.state.threads?.id);
               if (postThread != null) {
-                bloc.add(ForumEventGetData(uuid: widget.argument.uuid));
+                bloc.add(ForumEventGetData(uuid: bloc.state.uuid));
               }
             } else {
               Navigator.of(context).pushNamed(LoginScreen.routeName);

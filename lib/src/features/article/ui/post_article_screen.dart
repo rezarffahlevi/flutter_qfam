@@ -7,6 +7,7 @@ import 'package:flutter_qfam/src/helpers/helpers.dart';
 import 'package:flutter_qfam/src/styles/my_colors.dart';
 import 'package:flutter_qfam/src/styles/my_font_weight.dart';
 import 'package:flutter_qfam/src/styles/my_text_style.dart';
+import 'package:flutter_qfam/src/widgets/card/textfield.dart';
 import 'package:flutter_qfam/src/widgets/widgets.dart';
 import 'package:getwidget/getwidget.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
@@ -49,18 +50,10 @@ class _PostArticleScreenState extends State<PostArticleScreen> {
         },
         child: Scaffold(
           appBar: appBar(
-            onTap: () {
-              bloc.add(ForumEventPostThread());
-              Navigator.pop(context, true);
-            },
             onTapBack: () {
               Navigator.pop(context);
             },
             child: 'Post Artikel',
-            icon: Text(
-              'Simpan',
-              style: MyTextStyle.h5.bold.copyWith(color: MyColors.background),
-            ),
           ),
           body: SmartRefresher(
             enablePullDown: true,
@@ -79,53 +72,189 @@ class _PostArticleScreenState extends State<PostArticleScreen> {
                       builder: (context, state) {
                         return Wrapper(
                           state: state.state,
-                          onLoaded: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Row(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Container(
-                                    margin: EdgeInsets.all(10),
-                                    child: GFAvatar(
-                                      backgroundImage: NetworkImage(
-                                          'https://i.pinimg.com/originals/7c/c7/a6/7cc7a630624d20f7797cb4c8e93c09c1.png'),
-                                      size: 25,
-                                      backgroundColor: MyColors.background,
+                          onLoaded: Container(
+                            // height: dimension.height - 88,
+                            padding: EdgeInsets.only(
+                                left: 20, right: 20, top: 30, bottom: 30),
+                            child: Form(
+                              // key: bloc.formKey,
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: <Widget>[
+                                  _entryField('Judul',
+                                      keyboardType: TextInputType.name),
+                                  Spaces.normalVertical(),
+                                  _entryField('Sub Judul',
+                                      keyboardType: TextInputType.phone),
+                                  Spaces.normalVertical(),
+                                  Align(
+                                    alignment: Alignment.centerLeft,
+                                    child: Text(
+                                      'Kategori',
+                                      style: MyTextStyle.h5.bold,
                                     ),
                                   ),
-                                  Expanded(
-                                    child: Container(
-                                      margin: EdgeInsets.only(right: 10),
-                                      child: TextField(
-                                        controller: bloc.txtContent,
-                                        autofocus: true,
-                                        minLines: 12,
-                                        maxLines: 12,
-                                        maxLength: 250,
-                                        decoration: InputDecoration(
-                                          border: InputBorder.none,
-                                          hintText:
-                                              'Bagikan atau tanyakan sesuatu',
-                                        ),
+                                  Spaces.smallVertical(),
+                                  Container(
+                                    height: 50,
+                                    width: MediaQuery.of(context).size.width,
+                                    child: DropdownButtonHideUnderline(
+                                      child: GFDropdown(
+                                        padding: const EdgeInsets.all(15),
+                                        borderRadius: BorderRadius.circular(5),
+                                        border: const BorderSide(
+                                            color: Colors.black12, width: 1),
+                                        dropdownButtonColor: Colors.white,
+                                        value: 'YA',
+                                        onChanged: (newValue) {},
+                                        items: [
+                                          'YA',
+                                          'TIDAK',
+                                        ]
+                                            .map((value) => DropdownMenuItem(
+                                                  value: value,
+                                                  child: Text(value),
+                                                ))
+                                            .toList(),
                                       ),
                                     ),
                                   ),
+                                  Spaces.normalVertical(),
+                                  Align(
+                                    alignment: Alignment.centerLeft,
+                                    child: Text(
+                                      'Konten Internal',
+                                      style: MyTextStyle.h5.bold,
+                                    ),
+                                  ),
+                                  Spaces.smallVertical(),
+                                  Container(
+                                    height: 50,
+                                    width: MediaQuery.of(context).size.width,
+                                    child: DropdownButtonHideUnderline(
+                                      child: GFDropdown(
+                                        padding: const EdgeInsets.all(15),
+                                        borderRadius: BorderRadius.circular(5),
+                                        border: const BorderSide(
+                                            color: Colors.black12, width: 1),
+                                        dropdownButtonColor: Colors.white,
+                                        value: 'YA',
+                                        onChanged: (newValue) {},
+                                        items: [
+                                          'YA',
+                                          'TIDAK',
+                                        ]
+                                            .map((value) => DropdownMenuItem(
+                                                  value: value,
+                                                  child: Text(value),
+                                                ))
+                                            .toList(),
+                                      ),
+                                    ),
+                                  ),
+                                  Spaces.normalVertical(),
+                                  Align(
+                                    alignment: Alignment.centerLeft,
+                                    child: Text(
+                                      'Konten Video',
+                                      style: MyTextStyle.h5.bold,
+                                    ),
+                                  ),
+                                  Spaces.smallVertical(),
+                                  Container(
+                                    height: 50,
+                                    width: MediaQuery.of(context).size.width,
+                                    child: DropdownButtonHideUnderline(
+                                      child: GFDropdown(
+                                        padding: const EdgeInsets.all(15),
+                                        borderRadius: BorderRadius.circular(5),
+                                        border: const BorderSide(
+                                            color: Colors.black12, width: 1),
+                                        dropdownButtonColor: Colors.white,
+                                        value: 'TIDAK',
+                                        onChanged: (newValue) {},
+                                        items: [
+                                          'YA',
+                                          'TIDAK',
+                                        ]
+                                            .map((value) => DropdownMenuItem(
+                                                  value: value,
+                                                  child: Text(value),
+                                                ))
+                                            .toList(),
+                                      ),
+                                    ),
+                                  ),
+                                  Spaces.normalVertical(),
+                                  _entryField('Link',
+                                      keyboardType: TextInputType.text),
+                                  Spaces.normalVertical(),
+                                  TextField(
+                                    controller: bloc.txtContent,
+                                    minLines: 3,
+                                    maxLines: 12,
+                                    decoration: InputDecoration(
+                                      labelText: 'Konten',
+                                      border: OutlineInputBorder(
+                                          borderRadius:
+                                              BorderRadius.circular(6)),
+                                      focusedBorder: OutlineInputBorder(
+                                        borderRadius: BorderRadius.all(
+                                          Radius.circular(6.0),
+                                        ),
+                                        borderSide:
+                                            BorderSide(color: Colors.blue),
+                                      ),
+                                    ),
+                                  ),
+                                  Spaces.normalVertical(),
+                                  _entryField(
+                                    'Tags',
+                                  ),
+                                  Spaces.normalVertical(),
+                                  Align(
+                                    alignment: Alignment.centerLeft,
+                                    child: Text(
+                                      'Status',
+                                      style: MyTextStyle.h5.bold,
+                                    ),
+                                  ),
+                                  Spaces.smallVertical(),
+                                  Container(
+                                    height: 50,
+                                    width: MediaQuery.of(context).size.width,
+                                    child: DropdownButtonHideUnderline(
+                                      child: GFDropdown(
+                                        padding: const EdgeInsets.all(15),
+                                        borderRadius: BorderRadius.circular(5),
+                                        border: const BorderSide(
+                                            color: Colors.black12, width: 1),
+                                        dropdownButtonColor: Colors.white,
+                                        value: 'Publish',
+                                        onChanged: (newValue) {},
+                                        items: [
+                                          'Publish',
+                                          'Unpublish',
+                                        ]
+                                            .map((value) => DropdownMenuItem(
+                                                  value: value,
+                                                  child: Text(value),
+                                                ))
+                                            .toList(),
+                                      ),
+                                    ),
+                                  ),
+                                  Spaces.normalVertical(),
+                                  GFButton(
+                                    onPressed: () {},
+                                    text: "Simpan",
+                                    shape: GFButtonShape.pills,
+                                    blockButton: true,
+                                  ),
                                 ],
                               ),
-                              InkWell(
-                                onTap: () {},
-                                child: Container(
-                                  margin: EdgeInsets.all(10),
-                                  child: Row(
-                                    children: [
-                                      Icon(Icons.add_photo_alternate),
-                                      Text('Upload gambar')
-                                    ],
-                                  ),
-                                ),
-                              )
-                            ],
+                            ),
                           ),
                           onLoading: GFShimmer(
                             child: Column(
@@ -140,7 +269,7 @@ class _PostArticleScreenState extends State<PostArticleScreen> {
                               ],
                             ),
                           ),
-                          onError: Text(state.message),
+                          onError: Text('${state.message}'),
                         );
                       }),
                 ],
@@ -149,6 +278,23 @@ class _PostArticleScreenState extends State<PostArticleScreen> {
           ),
         ),
       ),
+    );
+  }
+
+  Widget _entryField(
+    String labelText, {
+    TextEditingController? controller,
+    String? errorText,
+    bool obscureText = false,
+    TextInputType keyboardType = TextInputType.emailAddress,
+  }) {
+    return MyTextField(
+      labelText: labelText,
+      hintText: labelText,
+      controller: controller,
+      obscureText: obscureText,
+      errorText: errorText,
+      keyboardType: keyboardType,
     );
   }
 }
