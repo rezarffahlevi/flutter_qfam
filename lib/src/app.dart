@@ -48,9 +48,8 @@ class _AppState extends State<App> {
           SearchScreen.routeName: (context) => SearchScreen(
               argument: ModalRoute.of(context)?.settings.arguments as String?),
           PostThreadScreen.routeName: (context) => PostThreadScreen(
-              argument: ModalRoute.of(context)?.settings.arguments as int?),
-          PostArticleScreen.routeName: (context) => PostArticleScreen(
-              argument: ModalRoute.of(context)?.settings.arguments as int?),
+              argument: ModalRoute.of(context)?.settings.arguments as ThreadsModel?),
+          PostArticleScreen.routeName: (context) => PostArticleScreen(argument: ModalRoute.of(context)?.settings.arguments as ContentsModel?),
           DetailForumScreen.routeName: (context) => DetailForumScreen(
               argument:
                   ModalRoute.of(context)?.settings.arguments as ThreadsModel),

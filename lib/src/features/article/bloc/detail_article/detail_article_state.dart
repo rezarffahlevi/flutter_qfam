@@ -4,8 +4,10 @@ class DetailArticleState extends Equatable {
   final NetworkStates state;
   final dynamic message;
   final ContentsModel? detail;
+  final ContentsModel? formdata;
   final List<FilesModel> bannerList;
   final int? activeBanner;
+  final List<CategoryModel>? categoryList;
 
   const DetailArticleState({
     this.state = NetworkStates.onLoaded,
@@ -13,6 +15,8 @@ class DetailArticleState extends Equatable {
     this.bannerList = const [],
     this.activeBanner = 0,
     this.detail,
+    this.formdata,
+    this.categoryList,
   });
 
   DetailArticleState copyWith({
@@ -21,6 +25,8 @@ class DetailArticleState extends Equatable {
     List<FilesModel>? bannerList,
     int? activeBanner,
     ContentsModel? detail,
+    ContentsModel? formdata,
+    List<CategoryModel>? categoryList,
   }) {
     return DetailArticleState(
       state: state ?? this.state,
@@ -28,9 +34,12 @@ class DetailArticleState extends Equatable {
       bannerList: bannerList ?? this.bannerList,
       activeBanner: activeBanner ?? this.activeBanner,
       detail: detail ?? this.detail,
+      formdata: formdata ?? this.formdata,
+      categoryList: categoryList ?? this.categoryList,
     );
   }
 
   @override
-  List<Object?> get props => [state, message, bannerList, activeBanner, detail];
+  List<Object?> get props =>
+      [state, message, bannerList, activeBanner, detail, formdata, categoryList];
 }

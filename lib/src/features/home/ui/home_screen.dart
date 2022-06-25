@@ -10,6 +10,7 @@ import 'package:flutter_qfam/src/styles/my_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_qfam/src/styles/my_text_style.dart';
+import 'package:flutter_qfam/src/widgets/card/list_tile.dart';
 import 'package:flutter_qfam/src/widgets/widgets.dart';
 import 'package:getwidget/getwidget.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
@@ -25,6 +26,7 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   late AuthBloc authBloc;
+  late HomeRootBloc rootBloc;
   HomeBloc bloc = HomeBloc();
   final RefreshController _refreshController =
       RefreshController(initialRefresh: false);
@@ -33,6 +35,7 @@ class _HomeScreenState extends State<HomeScreen> {
   void initState() {
     super.initState();
     authBloc = context.read<AuthBloc>();
+    rootBloc = context.read<HomeRootBloc>();
   }
 
   @override
@@ -110,8 +113,23 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   Widget _renderArticle(dimension, state, sections) {
-    onTapAll() {
-      Navigator.of(context).pushNamed(SearchScreen.routeName, arguments: 'HOME');
+    onTapAll(item) {
+      if (item.title.contains('Program Kami')) {
+        debugPrint('asdsa');
+      } else {
+        // Navigator.of(context)
+        //     .pushNamed(SearchScreen.routeName, arguments: 'HOME');
+        rootBloc.add(HomeRootEventSelectedIndex(index: 1));
+      }
+    }
+
+    onTapCard({item, isProgram = false}) {
+      if (isProgram) {
+        debugPrint('asdsa');
+      } else {
+        Navigator.of(context)
+            .pushNamed(DetailArticleScreen.routeName, arguments: item);
+      }
     }
 
     return ListView.separated(
@@ -123,7 +141,7 @@ class _HomeScreenState extends State<HomeScreen> {
           case "column-list":
             return sectionWidget(
               item.title ?? '-',
-              onTapAll: onTapAll,
+              onTapAll: () => onTapAll(item),
               child: Container(
                 width: dimension.width,
                 child: ListView.separated(
@@ -134,16 +152,16 @@ class _HomeScreenState extends State<HomeScreen> {
                     final article = item.contents?[j];
                     return GestureDetector(
                       onTap: () {
-                        Navigator.of(context).pushNamed(
-                            DetailArticleScreen.routeName,
-                            arguments: article);
+                        onTapCard(
+                            item: article,
+                            isProgram: item.title.contains('Program Kami'));
                       },
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           GFImageOverlay(
                             color: MyColors.greyPlaceHolder,
-                            height: 130,
+                            height: 120,
                             borderRadius: BorderRadius.all(Radius.circular(8)),
                             image: NetworkImage(article?.thumbnail ?? ''),
                             boxFit: BoxFit.fitWidth,
@@ -180,7 +198,7 @@ class _HomeScreenState extends State<HomeScreen> {
           case "column-tile":
             return sectionWidget(
               item.title ?? '-',
-              onTapAll: onTapAll,
+              onTapAll: () => onTapAll(item),
               child: Container(
                 width: dimension.width,
                 child: ListView.separated(
@@ -190,15 +208,16 @@ class _HomeScreenState extends State<HomeScreen> {
                     var article = item.contents?[j];
                     return GestureDetector(
                       onTap: () {
-                        Navigator.of(context).pushNamed(
-                            DetailArticleScreen.routeName,
-                            arguments: article);
+                        onTapCard(
+                            item: article,
+                            isProgram: item.title.contains('Program Kami'));
                       },
-                      child: GFListTile(
+                      child: MyListTile(
                         // margin: EdgeInsets.all(0),
                         avatar: GFAvatar(
                           shape: GFAvatarShape.square,
                           size: 60,
+                          borderRadius: BorderRadius.circular(10),
                           backgroundImage: NetworkImage('${article.thumbnail}'),
                         ),
                         color: MyColors.background,
@@ -218,7 +237,7 @@ class _HomeScreenState extends State<HomeScreen> {
           case "row-list":
             return sectionWidget(
               item?.title ?? '-',
-              onTapAll: onTapAll,
+              onTapAll: () => onTapAll(item),
               child: Container(
                 width: dimension.width,
                 height: 180,
@@ -231,9 +250,9 @@ class _HomeScreenState extends State<HomeScreen> {
                     final article = item.contents?[j];
                     return GestureDetector(
                       onTap: () {
-                        Navigator.of(context).pushNamed(
-                            DetailArticleScreen.routeName,
-                            arguments: article);
+                        onTapCard(
+                            item: article,
+                            isProgram: item.title.contains('Program Kami'));
                       },
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
@@ -306,7 +325,7 @@ class _HomeScreenState extends State<HomeScreen> {
           case "row-list-profile":
             return sectionWidget(
               item.title ?? '-',
-              onTapAll: onTapAll,
+              onTapAll: () => onTapAll(item),
               child: Container(
                 width: dimension.width,
                 height: 210,
@@ -319,9 +338,9 @@ class _HomeScreenState extends State<HomeScreen> {
                     final article = item?.contents?[j];
                     return GestureDetector(
                       onTap: () {
-                        Navigator.of(context).pushNamed(
-                            DetailArticleScreen.routeName,
-                            arguments: article);
+                        onTapCard(
+                            item: article,
+                            isProgram: item.title.contains('Program Kami'));
                       },
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,

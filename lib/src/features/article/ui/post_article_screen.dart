@@ -1,9 +1,11 @@
 import 'package:flutter_qfam/src/commons/spaces.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_qfam/src/features/article/bloc/detail_article/detail_article_bloc.dart';
 import 'package:flutter_qfam/src/features/forum/bloc/forum/forum_bloc.dart';
 import 'package:flutter_qfam/src/features/forum/ui/detail_forum_screen.dart';
 import 'package:flutter_qfam/src/helpers/helpers.dart';
+import 'package:flutter_qfam/src/models/contents/contents_model.dart';
 import 'package:flutter_qfam/src/styles/my_colors.dart';
 import 'package:flutter_qfam/src/styles/my_font_weight.dart';
 import 'package:flutter_qfam/src/styles/my_text_style.dart';
@@ -14,22 +16,23 @@ import 'package:pull_to_refresh/pull_to_refresh.dart';
 
 class PostArticleScreen extends StatefulWidget {
   static const String routeName = '/post-article';
-  final int? argument;
-  const PostArticleScreen({Key? key, this.argument}) : super(key: key);
+  final ContentsModel? arguments; 
+  const PostArticleScreen({Key? key, this.arguments}) : super(key: key);
 
   @override
   _PostArticleScreenState createState() => _PostArticleScreenState();
 }
 
 class _PostArticleScreenState extends State<PostArticleScreen> {
-  ForumBloc bloc = ForumBloc();
+  DetailArticleBloc bloc = DetailArticleBloc();
   final RefreshController _refreshController =
       RefreshController(initialRefresh: false);
+  
 
   @override
   void initState() {
     super.initState();
-    bloc.add(ForumEventOnChangeThread(parentId: widget.argument));
+    bloc.add(DetailArticleEventInitPost());
   }
 
   @override
@@ -43,7 +46,7 @@ class _PostArticleScreenState extends State<PostArticleScreen> {
     final dimension = MediaQuery.of(context).size;
 
     return BlocProvider(
-      create: (BuildContext context) => ForumBloc(),
+      create: (BuildContext context) => bloc,
       child: GestureDetector(
         onTap: () {
           Helpers.dismissKeyboard(context);
@@ -59,15 +62,23 @@ class _PostArticleScreenState extends State<PostArticleScreen> {
             enablePullDown: true,
             enablePullUp: false,
             controller: _refreshController,
-            onRefresh: () => bloc.add(ForumEventRefresh()),
+            onRefresh: () => bloc.add(DetailArticleEventRefresh()),
             child: SingleChildScrollView(
               child: Column(
                 children: [
-                  BlocConsumer<ForumBloc, ForumState>(
+                  BlocConsumer<DetailArticleBloc, DetailArticleState>(
                       bloc: bloc,
                       listener: (context, state) {
                         _refreshController.refreshCompleted();
                         _refreshController.loadComplete();
+
+                        if (state.state == NetworkStates.onLoaded &&
+                            (state.message ?? '').contains('success')) {
+                          Helpers.dismissKeyboard(context);
+                          GFToast.showToast('${state.message}', context,
+                              toastPosition: GFToastPosition.BOTTOM);
+                          Navigator.pop(context, true);
+                        }
                       },
                       builder: (context, state) {
                         return Wrapper(
@@ -83,9 +94,11 @@ class _PostArticleScreenState extends State<PostArticleScreen> {
                                 crossAxisAlignment: CrossAxisAlignment.center,
                                 children: <Widget>[
                                   _entryField('Judul',
+                                      controller: bloc.txtTitle,
                                       keyboardType: TextInputType.name),
                                   Spaces.normalVertical(),
                                   _entryField('Sub Judul',
+                                      controller: bloc.txtSubtitle,
                                       keyboardType: TextInputType.phone),
                                   Spaces.normalVertical(),
                                   Align(
@@ -106,15 +119,17 @@ class _PostArticleScreenState extends State<PostArticleScreen> {
                                         border: const BorderSide(
                                             color: Colors.black12, width: 1),
                                         dropdownButtonColor: Colors.white,
-                                        value: 'YA',
-                                        onChanged: (newValue) {},
-                                        items: [
-                                          'YA',
-                                          'TIDAK',
-                                        ]
-                                            .map((value) => DropdownMenuItem(
-                                                  value: value,
-                                                  child: Text(value),
+                                        value: state.formdata?.categoryId,
+                                        onChanged: (newValue) {
+                                          bloc.add(DetailArticleEventOnChange(
+                                              categoryId: int.tryParse(
+                                                  newValue.toString())));
+                                        },
+                                        items: state.categoryList
+                                            ?.map((value) => DropdownMenuItem(
+                                                  value: value.id,
+                                                  child:
+                                                      Text('${value.category}'),
                                                 ))
                                             .toList(),
                                       ),
@@ -139,8 +154,14 @@ class _PostArticleScreenState extends State<PostArticleScreen> {
                                         border: const BorderSide(
                                             color: Colors.black12, width: 1),
                                         dropdownButtonColor: Colors.white,
-                                        value: 'YA',
-                                        onChanged: (newValue) {},
+                                        value: state.formdata?.isExternal == 0
+                                            ? 'YA'
+                                            : 'TIDAK',
+                                        onChanged: (newValue) {
+                                          bloc.add(DetailArticleEventOnChange(
+                                              isExternal:
+                                                  newValue == 'YA' ? 0 : 1));
+                                        },
                                         items: [
                                           'YA',
                                           'TIDAK',
@@ -154,64 +175,97 @@ class _PostArticleScreenState extends State<PostArticleScreen> {
                                     ),
                                   ),
                                   Spaces.normalVertical(),
-                                  Align(
-                                    alignment: Alignment.centerLeft,
-                                    child: Text(
-                                      'Konten Video',
-                                      style: MyTextStyle.h5.bold,
-                                    ),
-                                  ),
-                                  Spaces.smallVertical(),
-                                  Container(
-                                    height: 50,
-                                    width: MediaQuery.of(context).size.width,
-                                    child: DropdownButtonHideUnderline(
-                                      child: GFDropdown(
-                                        padding: const EdgeInsets.all(15),
-                                        borderRadius: BorderRadius.circular(5),
-                                        border: const BorderSide(
-                                            color: Colors.black12, width: 1),
-                                        dropdownButtonColor: Colors.white,
-                                        value: 'TIDAK',
-                                        onChanged: (newValue) {},
-                                        items: [
-                                          'YA',
-                                          'TIDAK',
-                                        ]
-                                            .map((value) => DropdownMenuItem(
-                                                  value: value,
-                                                  child: Text(value),
-                                                ))
-                                            .toList(),
-                                      ),
-                                    ),
-                                  ),
-                                  Spaces.normalVertical(),
-                                  _entryField('Link',
-                                      keyboardType: TextInputType.text),
-                                  Spaces.normalVertical(),
-                                  TextField(
-                                    controller: bloc.txtContent,
-                                    minLines: 3,
-                                    maxLines: 12,
-                                    decoration: InputDecoration(
-                                      labelText: 'Konten',
-                                      border: OutlineInputBorder(
-                                          borderRadius:
-                                              BorderRadius.circular(6)),
-                                      focusedBorder: OutlineInputBorder(
-                                        borderRadius: BorderRadius.all(
-                                          Radius.circular(6.0),
+                                  state.formdata?.isExternal == 1
+                                      ? Container()
+                                      : Column(
+                                          children: [
+                                            Align(
+                                              alignment: Alignment.centerLeft,
+                                              child: Text(
+                                                'Konten Video',
+                                                style: MyTextStyle.h5.bold,
+                                              ),
+                                            ),
+                                            Spaces.smallVertical(),
+                                            Container(
+                                              height: 50,
+                                              width: MediaQuery.of(context)
+                                                  .size
+                                                  .width,
+                                              child:
+                                                  DropdownButtonHideUnderline(
+                                                child: GFDropdown(
+                                                  padding:
+                                                      const EdgeInsets.all(15),
+                                                  borderRadius:
+                                                      BorderRadius.circular(5),
+                                                  border: const BorderSide(
+                                                      color: Colors.black12,
+                                                      width: 1),
+                                                  dropdownButtonColor:
+                                                      Colors.white,
+                                                  value:
+                                                      state.formdata?.isVideo ==
+                                                              1
+                                                          ? 'YA'
+                                                          : 'TIDAK',
+                                                  onChanged: (newValue) {
+                                                    bloc.add(
+                                                        DetailArticleEventOnChange(
+                                                            isVideo:
+                                                                newValue == 'YA'
+                                                                    ? 1
+                                                                    : 0));
+                                                  },
+                                                  items: [
+                                                    'YA',
+                                                    'TIDAK',
+                                                  ]
+                                                      .map((value) =>
+                                                          DropdownMenuItem(
+                                                            value: value,
+                                                            child: Text(value),
+                                                          ))
+                                                      .toList(),
+                                                ),
+                                              ),
+                                            ),
+                                            Spaces.normalVertical(),
+                                          ],
                                         ),
-                                        borderSide:
-                                            BorderSide(color: Colors.blue),
-                                      ),
-                                    ),
-                                  ),
+                                  state.formdata?.isExternal == 0 &&
+                                          state.formdata?.isVideo == 0
+                                      ? Container()
+                                      : _entryField(
+                                          state.formdata?.isVideo == 1
+                                              ? 'Link Video'
+                                              : 'Link Article',
+                                          controller: bloc.txtLink,
+                                          keyboardType: TextInputType.text),
                                   Spaces.normalVertical(),
-                                  _entryField(
-                                    'Tags',
-                                  ),
+                                  state.formdata?.isExternal == 1
+                                      ? Container()
+                                      : TextField(
+                                          controller: bloc.txtContent,
+                                          minLines: 3,
+                                          maxLines: 12,
+                                          decoration: InputDecoration(
+                                            labelText: 'Konten',
+                                            border: OutlineInputBorder(
+                                                borderRadius:
+                                                    BorderRadius.circular(6)),
+                                            focusedBorder: OutlineInputBorder(
+                                              borderRadius: BorderRadius.all(
+                                                Radius.circular(6.0),
+                                              ),
+                                              borderSide: BorderSide(
+                                                  color: Colors.blue),
+                                            ),
+                                          ),
+                                        ),
+                                  Spaces.normalVertical(),
+                                  _entryField('Thumbnail',
+                                      controller: bloc.txtThumbnail),
                                   Spaces.normalVertical(),
                                   Align(
                                     alignment: Alignment.centerLeft,
@@ -231,15 +285,20 @@ class _PostArticleScreenState extends State<PostArticleScreen> {
                                         border: const BorderSide(
                                             color: Colors.black12, width: 1),
                                         dropdownButtonColor: Colors.white,
-                                        value: 'Publish',
-                                        onChanged: (newValue) {},
+                                        value: state.formdata?.status,
+                                        onChanged: (newValue) {
+                                          bloc.add(DetailArticleEventOnChange(
+                                              status: newValue.toString()));
+                                        },
                                         items: [
-                                          'Publish',
-                                          'Unpublish',
+                                          'published',
+                                          'unpublish',
                                         ]
                                             .map((value) => DropdownMenuItem(
                                                   value: value,
-                                                  child: Text(value),
+                                                  child: Text(
+                                                    value.capitalize(),
+                                                  ),
                                                 ))
                                             .toList(),
                                       ),
@@ -247,7 +306,9 @@ class _PostArticleScreenState extends State<PostArticleScreen> {
                                   ),
                                   Spaces.normalVertical(),
                                   GFButton(
-                                    onPressed: () {},
+                                    onPressed: () {
+                                      bloc.add(DetailArticleEventOnPost());
+                                    },
                                     text: "Simpan",
                                     shape: GFButtonShape.pills,
                                     blockButton: true,

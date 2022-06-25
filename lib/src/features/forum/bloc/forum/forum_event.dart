@@ -5,15 +5,17 @@ abstract class ForumEvent extends Equatable {
   List<Object?> get props => [];
 }
 
+class ForumEventInitForumList extends ForumEvent {}
 class ForumEventGetForumList extends ForumEvent {}
 class ForumEventGetData extends ForumEvent {
   String? uuid;
   int? parentId;
+  int? forumId;
 
-  ForumEventGetData({this.uuid, this.parentId});
+  ForumEventGetData({this.uuid, this.parentId, this.forumId});
 
   @override
-  List<Object?> get props => [uuid];
+  List<Object?> get props => [uuid, parentId, forumId];
 }
 
 class ForumEventRefresh extends ForumEvent {}
@@ -27,10 +29,10 @@ class ForumEventPostThread extends ForumEvent {
   List<Object?> get props => [content];
 }
 
-class ForumEventInit extends ForumEvent {
+class ForumEventInitPostThread extends ForumEvent {
   final BuildContext? context;
 
-  ForumEventInit({this.context});
+  ForumEventInitPostThread({this.context});
 
   @override
   List<Object?> get props => [context];
@@ -40,9 +42,10 @@ class ForumEventOnChangeThread extends ForumEvent {
   ThreadsModel? threads;
   int? parentId;
   String? content;
+  int? forumId;
 
-  ForumEventOnChangeThread({this.threads, this.parentId, this.content});
+  ForumEventOnChangeThread({this.threads, this.parentId, this.content, this.forumId});
 
   @override
-  List<Object?> get props => [threads, parentId, content];
+  List<Object?> get props => [threads, parentId, content, forumId];
 }

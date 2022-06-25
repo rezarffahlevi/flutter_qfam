@@ -54,24 +54,24 @@ class _DetailForumScreenState extends State<DetailForumScreen> {
     final dimension = MediaQuery.of(context).size;
 
     return BlocProvider(
-      create: (BuildContext context) => ForumBloc(),
-      child: Scaffold(
-        appBar: appBar(
-            child: "Utas",
-            onTapBack: () {
-              Navigator.pop(context);
-            }),
-        body: BlocConsumer<ForumBloc, ForumState>(
-            bloc: bloc,
-            listener: (context, state) {
-              _refreshController.refreshCompleted();
-              _refreshController.loadComplete();
-            },
-            builder: (context, state) {
-              ThreadsModel detail = state.threadsList!.length > 0
-                  ? state.threadsList![0]
-                  : ThreadsModel();
-              return SmartRefresher(
+      create: (BuildContext context) => bloc,
+      child: BlocConsumer<ForumBloc, ForumState>(
+        bloc: bloc,
+        listener: (context, state) {
+          _refreshController.refreshCompleted();
+          _refreshController.loadComplete();
+        },
+        builder: (context, state) {
+          ThreadsModel detail = state.threadsList!.length > 0
+              ? state.threadsList![0]
+              : ThreadsModel();
+          return Scaffold(
+              appBar: appBar(
+                  child: "Utas",
+                  onTapBack: () {
+                    Navigator.pop(context);
+                  }),
+              body: SmartRefresher(
                 enablePullDown: true,
                 enablePullUp: true,
                 scrollController: _scrollController,
@@ -150,28 +150,32 @@ class _DetailForumScreenState extends State<DetailForumScreen> {
                     ],
                   ),
                 ),
-              );
-            }),
-        floatingActionButton: FloatingActionButton(
-          onPressed: () async {
-            if (authBloc.state.currentUser?.email != null) {
-              var postThread = await Navigator.of(context).pushNamed(
-                  PostThreadScreen.routeName,
-                  arguments: widget.argument.id ?? bloc.state.threads?.id);
-              if (postThread != null) {
-                bloc.add(ForumEventGetData(uuid: bloc.state.uuid));
-              }
-            } else {
-              Navigator.of(context).pushNamed(LoginScreen.routeName);
-              GFToast.showToast('Anda harus login terlebih dahulu.', context,
-                  toastPosition: GFToastPosition.BOTTOM);
-            }
-          },
-          backgroundColor: MyColors.primary,
-          child: const Icon(
-            Icons.add,
-          ),
-        ),
+              ),
+              floatingActionButton: FloatingActionButton(
+                onPressed: () async {
+                  if (authBloc.state.currentUser?.email != null) {
+                    var postThread = await Navigator.of(context).pushNamed(
+                        PostThreadScreen.routeName,
+                        arguments: ThreadsModel(
+                            parentId:
+                                widget.argument.id ?? bloc.state.threads?.id,
+                            forumId: state.forumId));
+                    if (postThread != null) {
+                      bloc.add(ForumEventGetData(uuid: bloc.state.uuid));
+                    }
+                  } else {
+                    Navigator.of(context).pushNamed(LoginScreen.routeName);
+                    GFToast.showToast(
+                        'Anda harus login terlebih dahulu.', context,
+                        toastPosition: GFToastPosition.BOTTOM);
+                  }
+                },
+                backgroundColor: MyColors.primary,
+                child: const Icon(
+                  Icons.add,
+                ),
+              ));
+        },
       ),
     );
   }

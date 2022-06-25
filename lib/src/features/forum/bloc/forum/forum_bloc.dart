@@ -18,35 +18,54 @@ class ForumBloc extends Bloc<ForumEvent, ForumState> {
     on<ForumEventRefresh>(_onRefresh);
     on<ForumEventPostThread>(_postThread);
     on<ForumEventOnChangeThread>(_onChangeThread);
-    on<ForumEventInit>(_onInit);
-
-    _didMount();
+    on<ForumEventInitPostThread>(_initPostThread);
+    on<ForumEventInitForumList>(_initForumList);
   }
   ForumService apiService = ForumService();
+  TabController? tabController;
   final txtContent = TextEditingController();
 
-  _didMount() {
-    txtContent.addListener(() {
-      add(ForumEventOnChangeThread(content: txtContent.text));
+  _initPostThread(
+      ForumEventInitPostThread event, Emitter<ForumState> emit) async {
+    try {
+      txtContent.addListener(() {
+        add(ForumEventOnChangeThread(content: txtContent.text));
+      });
+    } catch (e) {
+      emit(state.copyWith(state: NetworkStates.onError, message: '${e}'));
+    }
+  }
+
+  _initForumList(
+      ForumEventInitForumList event, Emitter<ForumState> emit) async {
+    tabController?.addListener(() {
+      var forumId = state.forumList![tabController!.index].id;
+      add(ForumEventGetData(forumId: forumId));
+      add(ForumEventOnChangeThread(forumId: forumId));
     });
   }
 
   _onRefresh(ForumEventRefresh event, Emitter<ForumState> emit) async {
     add(ForumEventGetForumList());
-    add(ForumEventGetData());
+    add(ForumEventGetData(
+        forumId: state.forumId, parentId: state.parentId, uuid: state.uuid));
   }
 
   _getData(ForumEventGetData event, Emitter<ForumState> emit) async {
     try {
       emit(state.copyWith(state: NetworkStates.onLoading));
-      var response = await apiService
-          .getThreadsList({'id': event.uuid, 'parent_id': event.parentId});
-      // debugPrint('forum ${await Prefs.token}');
+      var response = await apiService.getThreadsList({
+        'id': event.uuid,
+        'parent_id': event.parentId,
+        'forum_id': event.forumId
+      });
       emit(state.copyWith(
-          state: NetworkStates.onLoaded,
-          threadsList: response?.data,
-          uuid: event.uuid,
-          parentId: event.parentId));
+        state: NetworkStates.onLoaded,
+        threadsList: response?.data,
+        uuid: event.uuid,
+        parentId: event.parentId,
+        forumId: event.forumId,
+      ));
     } catch (e) {
       emit(state.copyWith(state: NetworkStates.onError, message: '${e}'));
     }
@@ -66,7 +85,11 @@ class ForumBloc extends Bloc<ForumEvent, ForumState> {
   _postThread(ForumEventPostThread event, Emitter<ForumState> emit) async {
     try {
       emit(state.copyWith(state: NetworkStates.onLoading));
-      var params = {'parent_id': state.parentId, 'content': state.content};
+      var params = {
+        'forum_id': state.forumId,
+        'parent_id': state.parentId,
+        'content': state.content
+      };
       var response = await apiService.postThread(params);
       emit(state.copyWith(
           state: NetworkStates.onLoaded,
@@ -80,15 +103,10 @@ class ForumBloc extends Bloc<ForumEvent, ForumState> {
   _onChangeThread(
       ForumEventOnChangeThread event, Emitter<ForumState> emit) async {
     try {
-      emit(state.copyWith(parentId: event.parentId, content: event.content));
-    } catch (e) {
-      emit(state.copyWith(state: NetworkStates.onError, message: '${e}'));
-    }
-  }
-
-  _onInit(ForumEventInit event, Emitter<ForumState> emit) async {
-    try {
-      emit(state.copyWith(context: event.context));
+      emit(state.copyWith(
+          parentId: event.parentId,
+          content: event.content,
+          forumId: event.forumId));
     } catch (e) {
       emit(state.copyWith(state: NetworkStates.onError, message: '${e}'));
     }

@@ -211,6 +211,9 @@ class _SearchScreenState extends State<SearchScreen> {
                     onPressed: () async {
                       var postThread = await Navigator.of(context)
                           .pushNamed(PostArticleScreen.routeName, arguments: 0);
+                      if (postThread != null) {
+                        bloc.add(SearchEventGetData());
+                      }
                     },
                     backgroundColor: MyColors.primary,
                     child: const Icon(

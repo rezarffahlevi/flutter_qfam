@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_qfam/src/features/forum/bloc/forum/forum_bloc.dart';
 import 'package:flutter_qfam/src/features/forum/ui/detail_forum_screen.dart';
 import 'package:flutter_qfam/src/helpers/helpers.dart';
+import 'package:flutter_qfam/src/models/forum/threads_model.dart';
 import 'package:flutter_qfam/src/styles/my_colors.dart';
 import 'package:flutter_qfam/src/styles/my_font_weight.dart';
 import 'package:flutter_qfam/src/styles/my_text_style.dart';
@@ -13,7 +14,7 @@ import 'package:pull_to_refresh/pull_to_refresh.dart';
 
 class PostThreadScreen extends StatefulWidget {
   static const String routeName = '/post-thread';
-  final int? argument;
+  final ThreadsModel? argument;
   const PostThreadScreen({Key? key, this.argument}) : super(key: key);
 
   @override
@@ -21,14 +22,15 @@ class PostThreadScreen extends StatefulWidget {
 }
 
 class _PostThreadScreenState extends State<PostThreadScreen> {
-  ForumBloc bloc = ForumBloc();
+ late ForumBloc bloc = ForumBloc();
   final RefreshController _refreshController =
       RefreshController(initialRefresh: false);
 
   @override
   void initState() {
     super.initState();
-    bloc.add(ForumEventOnChangeThread(parentId: widget.argument));
+    bloc.add(ForumEventInitPostThread(context: context));
+    bloc.add(ForumEventOnChangeThread(parentId: widget.argument?.parentId, forumId: widget.argument?.forumId));
   }
 
   @override
@@ -42,7 +44,7 @@ class _PostThreadScreenState extends State<PostThreadScreen> {
     final dimension = MediaQuery.of(context).size;
 
     return BlocProvider(
-      create: (BuildContext context) => ForumBloc(),
+      create: (BuildContext context) => bloc,
       child: GestureDetector(
         onTap: () {
           Helpers.dismissKeyboard(context);
@@ -75,7 +77,7 @@ class _PostThreadScreenState extends State<PostThreadScreen> {
                         _refreshController.refreshCompleted();
                         _refreshController.loadComplete();
                         if (state.state == NetworkStates.onLoaded &&
-                            state.message?.contains('success')) {
+                            (state.message ?? '').contains('success')) {
                           Helpers.dismissKeyboard(context);
                           GFToast.showToast('${state.message}', context,
                               toastPosition: GFToastPosition.BOTTOM);

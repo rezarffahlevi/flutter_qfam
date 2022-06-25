@@ -24,6 +24,16 @@ class ContentService {
     }
   }
 
+  Future<DefaultResponseModel?> postArticle({dynamic params}) async {
+    try {
+      var response = await apiHelper.post('/contents/save', params: params);
+      ContentsModel? data = ContentsModel.fromJson(response['data']);
+      return DefaultResponseModel.fromJson(response, data);
+    } catch (e) {
+      throw e;
+    }
+  }
+
   Future<DefaultResponseModel?> getDetailContent(dynamic params) async {
     try {
       var response = await apiHelper.get('/contents', params: params);
