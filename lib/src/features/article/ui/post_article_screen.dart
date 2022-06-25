@@ -16,8 +16,8 @@ import 'package:pull_to_refresh/pull_to_refresh.dart';
 
 class PostArticleScreen extends StatefulWidget {
   static const String routeName = '/post-article';
-  final ContentsModel? arguments; 
-  const PostArticleScreen({Key? key, this.arguments}) : super(key: key);
+  final ContentsModel? argument; 
+  const PostArticleScreen({Key? key, this.argument}) : super(key: key);
 
   @override
   _PostArticleScreenState createState() => _PostArticleScreenState();
