@@ -22,7 +22,7 @@ class PostThreadScreen extends StatefulWidget {
 }
 
 class _PostThreadScreenState extends State<PostThreadScreen> {
- late ForumBloc bloc = ForumBloc();
+  late ForumBloc bloc = ForumBloc();
   final RefreshController _refreshController =
       RefreshController(initialRefresh: false);
 
@@ -30,7 +30,10 @@ class _PostThreadScreenState extends State<PostThreadScreen> {
   void initState() {
     super.initState();
     bloc.add(ForumEventInitPostThread(context: context));
-    bloc.add(ForumEventOnChangeThread(parentId: widget.argument?.parentId, forumId: widget.argument?.forumId, contentId: widget.argument?.contentId));
+    bloc.add(ForumEventOnChangeThread(
+        parentId: widget.argument?.parentId,
+        forumId: widget.argument?.forumId,
+        contentId: widget.argument?.contentId));
   }
 
   @override
@@ -121,18 +124,61 @@ class _PostThreadScreenState extends State<PostThreadScreen> {
                                   ),
                                 ],
                               ),
-                              InkWell(
-                                onTap: () {},
-                                child: Container(
-                                  margin: EdgeInsets.all(10),
-                                  child: Row(
-                                    children: [
-                                      Icon(Icons.add_photo_alternate),
-                                      Text('Upload gambar')
-                                    ],
-                                  ),
+                              Container(
+                                margin: EdgeInsets.all(10),
+                                child: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Text("Post Sebagai Anonim: "),
+                                        Row(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.center,
+                                          children: [
+                                            GFToggle(
+                                              onChanged: (val) {
+                                                if (val == true) {
+                                                  bloc.add(
+                                                      ForumEventOnChangeThread(
+                                                          isAnonymous: 1));
+                                                } else {
+                                                  bloc.add(
+                                                      ForumEventOnChangeThread(
+                                                          isAnonymous: 0));
+                                                }
+                                              },
+                                              value: state.isAnonymous == 1,
+                                              type: GFToggleType.ios,
+                                              enabledTrackColor:
+                                                  MyColors.primary,
+                                            ),
+                                            Spaces.smallHorizontal(),
+                                            Text(state.isAnonymous == 1
+                                                ? "Ya"
+                                                : "Tidak"),
+                                          ],
+                                        ),
+                                      ],
+                                    ),
+                                    InkWell(
+                                      onTap: () {},
+                                      child: Container(
+                                        margin: EdgeInsets.all(10),
+                                        child: Row(
+                                          children: [
+                                            Icon(Icons.add_photo_alternate),
+                                            Text('Upload gambar')
+                                          ],
+                                        ),
+                                      ),
+                                    )
+                                  ],
                                 ),
-                              )
+                              ),
                             ],
                           ),
                           onLoading: GFShimmer(

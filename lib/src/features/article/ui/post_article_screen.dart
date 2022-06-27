@@ -33,6 +33,29 @@ class _PostArticleScreenState extends State<PostArticleScreen> {
   void initState() {
     super.initState();
     bloc.add(DetailArticleEventInitPost());
+    final bool isEdit = widget.argument?.id != null;
+    if(isEdit){
+      ContentsModel? data = widget.argument;
+      bloc.txtTitle.text = data?.title ?? '';
+      bloc.txtSubtitle.text = data?.subtitle ?? '';
+      bloc.txtContent.text = data?.content ?? '';
+      bloc.txtThumbnail.text = data?.thumbnail ?? '';
+      bloc.txtSourceBy.text = data?.sourceBy ?? '';
+      bloc.txtVerifiedBy.text = data?.verifiedBy ?? '';
+      bloc.add(DetailArticleEventOnChange(
+        id: data?.id,
+        title: data?.title,
+        subtitle: data?.subtitle,
+        categoryId: data?.categoryId,
+        isExternal: data?.isExternal,
+        isVideo: data?.isVideo,
+        content: data?.content,
+        thumbnail: data?.thumbnail,
+        sourceBy: data?.sourceBy,
+        verifiedBy: data?.verifiedBy,
+        status: data?.status,
+      ));
+    }
   }
 
   @override
@@ -44,6 +67,7 @@ class _PostArticleScreenState extends State<PostArticleScreen> {
   @override
   Widget build(BuildContext context) {
     final dimension = MediaQuery.of(context).size;
+    final bool isEdit = widget.argument?.id != null;
 
     return BlocProvider(
       create: (BuildContext context) => bloc,
@@ -56,7 +80,7 @@ class _PostArticleScreenState extends State<PostArticleScreen> {
             onTapBack: () {
               Navigator.pop(context);
             },
-            child: 'Post Artikel',
+            child: '${isEdit ? 'Ubah' : 'Post'} Artikel',
           ),
           body: SmartRefresher(
             enablePullDown: true,
@@ -266,6 +290,12 @@ class _PostArticleScreenState extends State<PostArticleScreen> {
                                   Spaces.normalVertical(),
                                   _entryField('Thumbnail',
                                       controller: bloc.txtThumbnail),
+                                  Spaces.normalVertical(),
+                                  _entryField('Sumber Dari',
+                                      controller: bloc.txtSourceBy),
+                                  Spaces.normalVertical(),
+                                  _entryField('Terverifikasi Oleh',
+                                      controller: bloc.txtVerifiedBy),
                                   Spaces.normalVertical(),
                                   Align(
                                     alignment: Alignment.centerLeft,

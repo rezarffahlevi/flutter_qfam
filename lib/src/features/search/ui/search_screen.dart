@@ -1,3 +1,4 @@
+import 'package:flutter/gestures.dart';
 import 'package:flutter_qfam/src/commons/constants.dart';
 import 'package:flutter_qfam/src/commons/spaces.dart';
 import 'package:flutter_qfam/src/features/article/ui/detail_article_screen.dart';
@@ -5,6 +6,7 @@ import 'package:flutter_qfam/src/features/article/ui/post_article_screen.dart';
 import 'package:flutter_qfam/src/features/auth/bloc/auth_bloc.dart';
 import 'package:flutter_qfam/src/features/home/bloc/home_root/home_root_bloc.dart';
 import 'package:flutter_qfam/src/features/search/bloc/search/search_bloc.dart';
+import 'package:flutter_qfam/src/models/contents/contents_model.dart';
 import 'package:flutter_qfam/src/models/profile/user_model.dart';
 import 'package:flutter_qfam/src/styles/my_colors.dart';
 import 'package:flutter/material.dart';
@@ -168,9 +170,31 @@ class _SearchScreenState extends State<SearchScreen> {
                                         style: MyTextStyle.sessionTitle,
                                       ),
                                       Spaces.smallVertical(),
-                                      Text(
-                                        'By ${article.createdByName}',
-                                        style: MyTextStyle.contentDescription,
+                                      Row(
+                                        children: [
+                                          RichText(
+                                            text: new TextSpan(
+                                              children: [
+                                                new TextSpan(
+                                                  text: article.sourceBy == null ? 'Dibuat oleh ' : 'Sumber dari ',
+                                                  style: MyTextStyle
+                                                      .contentDescription,
+                                                ),
+                                                new TextSpan(
+                                                  text: '${article.sourceBy ?? article.createdByName}',
+                                                  style: new TextStyle(
+                                                      color: MyColors.link),
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                          article.verifiedBy == null
+                                              ? Container()
+                                              : Icon(
+                                                  Icons.verified_outlined,
+                                                  color: MyColors.primary,
+                                                ),
+                                        ],
                                       ),
                                     ],
                                   ),
@@ -202,7 +226,7 @@ class _SearchScreenState extends State<SearchScreen> {
                             onPressed: () async {
                               var postThread = await Navigator.of(context)
                                   .pushNamed(PostArticleScreen.routeName,
-                                      arguments: 0);
+                                      arguments: ContentsModel());
                               if (postThread != null) {
                                 bloc.add(SearchEventGetData());
                               }

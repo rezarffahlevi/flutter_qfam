@@ -17,6 +17,8 @@ class ContentsModel {
   int? isExternal;
   int? createdBy;
   String? createdByName;
+  String? sourceBy;
+  String? verifiedBy;
   int? userVerified;
   String? createdAt;
   String? updatedAt;
@@ -39,6 +41,8 @@ class ContentsModel {
     this.isExternal,
     this.createdBy,
     this.createdByName,
+    this.sourceBy,
+    this.verifiedBy,
     this.userVerified,
     this.createdAt,
     this.updatedAt,
@@ -62,6 +66,8 @@ class ContentsModel {
     isExternal = json['is_external'];
     createdBy = json['created_by'];
     createdByName = json['created_by_name'];
+    sourceBy = json['source_by'];
+    verifiedBy = json['verified_by'];
     userVerified = json['user_verified'];
     createdAt = json['created_at'];
     updatedAt = json['updated_at'];
@@ -92,6 +98,8 @@ class ContentsModel {
     data['is_external'] = this.isExternal;
     data['created_by'] = this.createdBy;
     data['created_by_name'] = this.createdByName;
+    data['source_by'] = this.sourceBy;
+    data['verified_by'] = this.verifiedBy;
     data['user_verified'] = this.userVerified;
     data['created_at'] = this.createdAt;
     data['updated_at'] = this.updatedAt;

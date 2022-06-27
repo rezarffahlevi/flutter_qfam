@@ -38,7 +38,8 @@ class _DetailArticleScreenState extends State<DetailArticleScreen> {
     super.initState();
     authBloc = context.read<AuthBloc>();
     bloc.add(DetailArticleEventGetDetail(uuid: widget.argument.uuid));
-    blocForum.add(ForumEventGetData(contentId: widget.argument.id, parentId: 0));
+    blocForum
+        .add(ForumEventGetData(contentId: widget.argument.id, parentId: 0));
   }
 
   @override
@@ -107,8 +108,8 @@ class _DetailArticleScreenState extends State<DetailArticleScreen> {
                 onRefresh: () {
                   bloc.add(
                       DetailArticleEventGetDetail(uuid: widget.argument.uuid));
-                  blocForum
-                      .add(ForumEventGetData(contentId: widget.argument.id, parentId: 0));
+                  blocForum.add(ForumEventGetData(
+                      contentId: widget.argument.id, parentId: 0));
                 },
                 child: SingleChildScrollView(
                   child: Column(children: [
@@ -137,7 +138,8 @@ class _DetailArticleScreenState extends State<DetailArticleScreen> {
                                     controller: bloc.ytController,
                                     aspectRatio: 16 / 9,
                                   )
-                                : _renderBanner(bannerList, state.activeBanner),
+                                : _renderBanner(bannerList, state.activeBanner,
+                                    state.detail?.thumbnail),
                             Container(
                               padding:
                                   EdgeInsets.only(left: 16, right: 16, top: 16),
@@ -225,6 +227,8 @@ class _DetailArticleScreenState extends State<DetailArticleScreen> {
                                                           arguments: item),
                                                   name: '${item?.createdBy}',
                                                   content: item?.content,
+                                                  isAnonymous:
+                                                      item?.isAnonymous == 1,
                                                   countComments:
                                                       item?.countComments,
                                                   onTapLike: () {
@@ -297,10 +301,11 @@ class _DetailArticleScreenState extends State<DetailArticleScreen> {
                   if (authBloc.state.currentUser?.email != null) {
                     var postThread = await Navigator.of(context).pushNamed(
                         PostThreadScreen.routeName,
-                        arguments:
-                            ThreadsModel(parentId: 0, contentId: widget.argument.id));
+                        arguments: ThreadsModel(
+                            parentId: 0, contentId: widget.argument.id));
                     if (postThread != null) {
-                      blocForum.add(ForumEventGetData(contentId: widget.argument.id));
+                      blocForum.add(
+                          ForumEventGetData(contentId: widget.argument.id));
                     }
                   } else {
                     Navigator.of(context).pushNamed(LoginScreen.routeName);
@@ -321,8 +326,8 @@ class _DetailArticleScreenState extends State<DetailArticleScreen> {
     );
   }
 
-  Widget _renderBanner(bannerList, activeBanner) {
-    if (bannerList.length > 0) {
+  Widget _renderBanner(bannerList, activeBanner, thumbnail) {
+    if (bannerList.length > 1) {
       return Column(
         children: [
           GFCarousel(
@@ -369,8 +374,21 @@ class _DetailArticleScreenState extends State<DetailArticleScreen> {
           )
         ],
       );
+    } else if (bannerList.length == 1) {
+      return GFImageOverlay(
+        color: MyColors.greyPlaceHolder,
+        height: 220,
+        image: NetworkImage(bannerList[0]?.link ?? ''),
+        boxFit: BoxFit.fitWidth,
+      );
     }
-    return Container();
+    return GFImageOverlay(
+      color: MyColors.greyPlaceHolder,
+      height: 220,
+      image: NetworkImage(thumbnail ?? ''),
+      boxFit: BoxFit.fitWidth,
+    );
+    ;
   }
 }
 

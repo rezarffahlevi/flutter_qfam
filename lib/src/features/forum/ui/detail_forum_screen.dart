@@ -85,6 +85,7 @@ class _DetailForumScreenState extends State<DetailForumScreen> {
                         name: '${detail.createdBy}',
                         content: detail.content,
                         countComments: detail.countComments,
+                        isAnonymous: detail.isAnonymous == 1,
                         isChild: false,
                         //  detail.parentId != 0,
                         onTapParent: () {
@@ -114,6 +115,7 @@ class _DetailForumScreenState extends State<DetailForumScreen> {
                                   arguments: item),
                               name: '${item.createdBy}',
                               content: item.content,
+                              isAnonymous: item.isAnonymous == 1,
                               countComments: item.countComments,
                               onTapLike: () {
                                 GFToast.showToast(
@@ -160,8 +162,7 @@ class _DetailForumScreenState extends State<DetailForumScreen> {
                             parentId:
                                 widget.argument.id ?? bloc.state.threads?.id,
                             forumId: state.forumId,
-                            contentId: detail.contentId
-                            ));
+                            contentId: detail.contentId));
                     if (postThread != null) {
                       bloc.add(ForumEventGetData(uuid: bloc.state.uuid));
                     }

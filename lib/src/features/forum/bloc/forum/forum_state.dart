@@ -10,6 +10,7 @@ class ForumState extends Equatable {
   final int? forumId;
   final int? parentId;
   final int? contentId;
+  final int? isAnonymous;
   final String? uuid;
   final String? content;
 
@@ -23,6 +24,7 @@ class ForumState extends Equatable {
     this.forumId,
     this.parentId,
     this.contentId,
+    this.isAnonymous = 0,
     this.uuid,
     this.content,
   });
@@ -37,6 +39,7 @@ class ForumState extends Equatable {
     int? parentId,
     int? forumId,
     int? contentId,
+    int? isAnonymous,
     String? uuid,
     String? content,
   }) {
@@ -50,12 +53,25 @@ class ForumState extends Equatable {
       parentId: parentId ?? this.parentId,
       forumId: forumId ?? this.forumId,
       contentId: contentId ?? this.contentId,
+      isAnonymous: isAnonymous ?? this.isAnonymous,
       uuid: uuid ?? this.uuid,
       content: content ?? this.content,
     );
   }
 
   @override
-  List<Object?> get props =>
-      [state, message, context, threadsList, threads, forumId, parentId, contentId, content];
+  List<Object?> get props => [
+        state,
+        message,
+        context,
+        threadsList,
+        forumList,
+        threads,
+        forumId,
+        parentId,
+        contentId,
+        isAnonymous,
+        uuid,
+        content,
+      ];
 }

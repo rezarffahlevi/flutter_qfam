@@ -6,6 +6,7 @@ class ThreadsModel {
   int? contentId;
   String? createdBy;
   int? parentId;
+  int? isAnonymous;
   int? countComments;
   String? createdAt;
   String? updatedAt;
@@ -19,6 +20,7 @@ class ThreadsModel {
       this.contentId,
       this.createdBy,
       this.parentId,
+      this.isAnonymous,
       this.countComments,
       this.createdAt,
       this.updatedAt,
@@ -32,6 +34,7 @@ class ThreadsModel {
     contentId = json['content_id'];
     createdBy = json['created_by'];
     parentId = json['parent_id'];
+    isAnonymous = json['is_anonymous'];
     countComments = json['count_comments'];
     createdAt = json['created_at'];
     updatedAt = json['updated_at'];
@@ -52,6 +55,7 @@ class ThreadsModel {
     data['content_id'] = this.contentId;
     data['created_by'] = this.createdBy;
     data['parent_id'] = this.parentId;
+    data['is_anonymous'] = this.isAnonymous;
     data['count_comments'] = this.countComments;
     data['created_at'] = this.createdAt;
     data['updated_at'] = this.updatedAt;

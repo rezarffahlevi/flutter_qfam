@@ -179,9 +179,33 @@ class _HomeScreenState extends State<HomeScreen> {
                             style: MyTextStyle.sessionTitle,
                           ),
                           Spaces.smallVertical(),
-                          Text(
-                            'By ${article?.createdByName}',
-                            style: MyTextStyle.contentDescription,
+                          Row(
+                            children: [
+                              RichText(
+                                text: new TextSpan(
+                                  children: [
+                                    new TextSpan(
+                                      text: article.sourceBy == null
+                                          ? 'Dibuat oleh '
+                                          : 'Sumber dari ',
+                                      style: MyTextStyle.contentDescription,
+                                    ),
+                                    new TextSpan(
+                                      text:
+                                          '${article.sourceBy ?? article.createdByName}',
+                                      style:
+                                          new TextStyle(color: MyColors.link),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              article.verifiedBy == null
+                                  ? Container()
+                                  : Icon(
+                                      Icons.verified_outlined,
+                                      color: MyColors.primary,
+                                    ),
+                            ],
                           ),
                         ],
                       ),

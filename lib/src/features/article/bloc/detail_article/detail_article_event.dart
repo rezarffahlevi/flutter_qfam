@@ -37,6 +37,7 @@ class DetailArticleEventInitPost extends DetailArticleEvent {
 }
 
 class DetailArticleEventOnChange extends DetailArticleEvent {
+  int? id;
   String? title;
   String? subtitle;
   int? categoryId;
@@ -46,9 +47,11 @@ class DetailArticleEventOnChange extends DetailArticleEvent {
   String? content;
   String? thumbnail;
   String? status;
+  String? sourceBy;
+  String? verifiedBy;
 
-  DetailArticleEventOnChange({this.title, this.subtitle, this.categoryId, this.isExternal, this.isVideo, this.link, this.content, this.thumbnail, this.status});
+  DetailArticleEventOnChange({this.id, this.title, this.subtitle, this.categoryId, this.isExternal, this.isVideo, this.link, this.content, this.thumbnail, this.status, this.sourceBy, this.verifiedBy});
 
   @override
-  List<Object?> get props => [title, subtitle, categoryId, isExternal, isVideo, link, content, thumbnail, status];
+  List<Object?> get props => [this.id, title, subtitle, categoryId, isExternal, isVideo, link, content, thumbnail, status, this.sourceBy, this.verifiedBy];
 }

@@ -33,6 +33,8 @@ class DetailArticleBloc extends Bloc<DetailArticleEvent, DetailArticleState> {
   final txtLink = TextEditingController();
   final txtContent = TextEditingController();
   final txtThumbnail = TextEditingController();
+  final txtSourceBy = TextEditingController();
+  final txtVerifiedBy = TextEditingController();
 
   _initPostArticle(DetailArticleEventInitPost event,
       Emitter<DetailArticleState> emit) async {
@@ -53,6 +55,12 @@ class DetailArticleBloc extends Bloc<DetailArticleEvent, DetailArticleState> {
     });
     txtThumbnail.addListener(() {
       add(DetailArticleEventOnChange(thumbnail: txtThumbnail.text));
+    });
+    txtSourceBy.addListener(() {
+      add(DetailArticleEventOnChange(thumbnail: txtSourceBy.text));
+    });
+    txtVerifiedBy.addListener(() {
+      add(DetailArticleEventOnChange(thumbnail: txtVerifiedBy.text));
     });
   }
 
@@ -120,6 +128,7 @@ class DetailArticleBloc extends Bloc<DetailArticleEvent, DetailArticleState> {
       Emitter<DetailArticleState> emit) async {
     emit(state.copyWith(state: NetworkStates.onLoading));
     ContentsModel? formdata = ContentsModel(
+      id: state.formdata?.id,
       title: state.formdata?.title,
       subtitle: state.formdata?.subtitle,
       categoryId: state.formdata?.categoryId,
@@ -129,7 +138,10 @@ class DetailArticleBloc extends Bloc<DetailArticleEvent, DetailArticleState> {
       content: state.formdata?.content,
       thumbnail: state.formdata?.thumbnail,
       status: state.formdata?.status,
+      sourceBy: state.formdata?.sourceBy,
+      verifiedBy: state.formdata?.verifiedBy,
     );
+    if (event.id != null) formdata.id = event.id;
     if (event.title != null) formdata.title = event.title;
     if (event.subtitle != null) formdata.subtitle = event.subtitle;
     if (event.categoryId != null) formdata.categoryId = event.categoryId;
@@ -138,6 +150,8 @@ class DetailArticleBloc extends Bloc<DetailArticleEvent, DetailArticleState> {
     if (event.link != null) formdata.link = event.link;
     if (event.content != null) formdata.content = event.content;
     if (event.thumbnail != null) formdata.thumbnail = event.thumbnail;
+    if (event.sourceBy != null) formdata.sourceBy = event.sourceBy;
+    if (event.verifiedBy != null) formdata.verifiedBy = event.verifiedBy;
     if (event.status != null) formdata.status = event.status;
 
     emit(state.copyWith(formdata: formdata, state: NetworkStates.onLoaded));

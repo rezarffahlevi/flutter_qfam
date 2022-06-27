@@ -46,9 +46,10 @@ class ForumEventOnChangeThread extends ForumEvent {
   String? content;
   int? forumId;
   int? contentId;
+  int? isAnonymous;
 
-  ForumEventOnChangeThread({this.threads, this.parentId, this.content, this.forumId, this.contentId});
+  ForumEventOnChangeThread({this.threads, this.parentId, this.content, this.forumId, this.contentId, this.isAnonymous});
 
   @override
-  List<Object?> get props => [threads, parentId, content, forumId, contentId];
+  List<Object?> get props => [threads, parentId, content, forumId, contentId, isAnonymous];
 }

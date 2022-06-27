@@ -9,6 +9,7 @@ class Threads extends StatelessWidget {
     this.onTap,
     this.isDetail = false,
     this.isChild = false,
+    this.isAnonymous = false,
     this.onTapParent,
     this.onTapComment,
     this.onTapLike,
@@ -23,6 +24,7 @@ class Threads extends StatelessWidget {
   final int? countComments;
   final bool isDetail;
   final bool isChild;
+  final bool isAnonymous;
   final Function()? onTap;
   final Function()? onTapParent;
   final Function()? onTapComment;
@@ -66,10 +68,10 @@ class Threads extends StatelessWidget {
               Spaces.smallVertical(),
               Row(
                 children: [
-                  Text(name ?? '-', style: MyTextStyle.h5.bold),
+                  Text(isAnonymous ? 'Nama disamarkan' : name ?? '-', style: MyTextStyle.h5.bold.copyWith(decoration: isAnonymous ? TextDecoration.lineThrough : TextDecoration.none),),
                   Spaces.smallHorizontal(),
                   Text(
-                    '@${name} · 7h',
+                    '· 7h',
                     style: MyTextStyle.contentDescription,
                   ),
                 ],
@@ -185,11 +187,11 @@ class Threads extends StatelessWidget {
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(name ?? '-', style: MyTextStyle.h5.bold),
-                  Text(
-                    '@${name}',
-                    style: MyTextStyle.contentDescription,
-                  ),
+                  Text(isAnonymous ? 'Nama disamarkan' : name ?? '-', style: MyTextStyle.h5.bold.copyWith(decoration: isAnonymous ? TextDecoration.lineThrough : TextDecoration.none),),
+                  // Text(
+                  //   '@-',
+                  //   style: MyTextStyle.contentDescription,
+                  // ),
                 ],
               ),
             ],

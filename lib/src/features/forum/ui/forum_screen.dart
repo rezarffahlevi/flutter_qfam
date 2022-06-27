@@ -181,9 +181,10 @@ class _ForumScreenState extends State<ForumScreen>
                                         name: '${item?.createdBy}',
                                         content: item?.content,
                                         countComments: item?.countComments,
+                                        isAnonymous: item?.isAnonymous == 1,
                                         onTapLike: () {
                                           GFToast.showToast(
-                                              'Fitur belum tersedia', context,
+                                              'Fitur belum tersedia ${item?.isAnonymous}', context,
                                               toastPosition:
                                                   GFToastPosition.BOTTOM);
                                         },

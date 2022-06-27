@@ -28,6 +28,7 @@ class ForumBloc extends Bloc<ForumEvent, ForumState> {
   _initPostThread(
       ForumEventInitPostThread event, Emitter<ForumState> emit) async {
     try {
+      add(ForumEventOnChangeThread(isAnonymous: 0));
       txtContent.addListener(() {
         add(ForumEventOnChangeThread(content: txtContent.text));
       });
@@ -93,6 +94,7 @@ class ForumBloc extends Bloc<ForumEvent, ForumState> {
         'parent_id': state.parentId,
         'content': state.content,
         'content_id': state.contentId,
+        'is_anonymous': state.isAnonymous,
       };
       var response = await apiService.postThread(params);
       emit(state.copyWith(
@@ -113,8 +115,8 @@ class ForumBloc extends Bloc<ForumEvent, ForumState> {
         content: event.content,
         forumId: event.forumId,
         contentId: event.contentId,
+        isAnonymous: event.isAnonymous
       ));
-      debugPrint('why ${event.contentId}');
     } catch (e) {
       emit(state.copyWith(state: NetworkStates.onError, message: '${e}'));
     }
