@@ -30,7 +30,7 @@ class _PostThreadScreenState extends State<PostThreadScreen> {
   void initState() {
     super.initState();
     bloc.add(ForumEventInitPostThread(context: context));
-    bloc.add(ForumEventOnChangeThread(parentId: widget.argument?.parentId, forumId: widget.argument?.forumId));
+    bloc.add(ForumEventOnChangeThread(parentId: widget.argument?.parentId, forumId: widget.argument?.forumId, contentId: widget.argument?.contentId));
   }
 
   @override

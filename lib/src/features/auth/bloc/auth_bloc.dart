@@ -130,7 +130,8 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       emit(state.copyWith(
           currentUser: data?.user, state: NetworkStates.onLoaded));
     } catch (e) {
-      debugPrint('catch _onLogin ${e}');
+      GFToast.showToast('$e', state.context as BuildContext,
+          toastPosition: GFToastPosition.BOTTOM);
       emit(state.copyWith(state: NetworkStates.onError, message: '${e}'));
     }
   }
@@ -165,7 +166,8 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       emit(state.copyWith(
           currentUser: data?.user, state: NetworkStates.onLoaded));
     } catch (e) {
-      debugPrint('catch _onLogin ${e}');
+      GFToast.showToast('$e', state.context as BuildContext,
+          toastPosition: GFToastPosition.BOTTOM);
       emit(state.copyWith(state: NetworkStates.onError, message: '${e}'));
     }
   }

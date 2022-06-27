@@ -159,7 +159,9 @@ class _DetailForumScreenState extends State<DetailForumScreen> {
                         arguments: ThreadsModel(
                             parentId:
                                 widget.argument.id ?? bloc.state.threads?.id,
-                            forumId: state.forumId));
+                            forumId: state.forumId,
+                            contentId: detail.contentId
+                            ));
                     if (postThread != null) {
                       bloc.add(ForumEventGetData(uuid: bloc.state.uuid));
                     }

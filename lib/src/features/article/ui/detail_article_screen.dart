@@ -4,9 +4,13 @@ import 'package:flutter_html/flutter_html.dart';
 import 'package:flutter_qfam/src/commons/spaces.dart';
 import 'package:flutter_qfam/src/features/article/bloc/detail_article/detail_article_bloc.dart';
 import 'package:flutter_qfam/src/features/article/ui/post_article_screen.dart';
+import 'package:flutter_qfam/src/features/auth/bloc/auth_bloc.dart';
+import 'package:flutter_qfam/src/features/auth/ui/login_screen.dart';
 import 'package:flutter_qfam/src/features/forum/bloc/forum/forum_bloc.dart';
 import 'package:flutter_qfam/src/features/forum/ui/detail_forum_screen.dart';
+import 'package:flutter_qfam/src/features/forum/ui/post_thread_screen.dart';
 import 'package:flutter_qfam/src/models/contents/contents_model.dart';
+import 'package:flutter_qfam/src/models/forum/threads_model.dart';
 import 'package:flutter_qfam/src/styles/my_colors.dart';
 import 'package:flutter_qfam/src/styles/my_text_style.dart';
 import 'package:flutter_qfam/src/widgets/widgets.dart';
@@ -25,14 +29,16 @@ class DetailArticleScreen extends StatefulWidget {
 }
 
 class _DetailArticleScreenState extends State<DetailArticleScreen> {
+  late AuthBloc authBloc;
   final DetailArticleBloc bloc = DetailArticleBloc();
   final ForumBloc blocForum = ForumBloc();
 
   @override
   void initState() {
     super.initState();
+    authBloc = context.read<AuthBloc>();
     bloc.add(DetailArticleEventGetDetail(uuid: widget.argument.uuid));
-    blocForum.add(ForumEventGetData(contentId: widget.argument.id));
+    blocForum.add(ForumEventGetData(contentId: widget.argument.id, parentId: 0));
   }
 
   @override
@@ -102,7 +108,7 @@ class _DetailArticleScreenState extends State<DetailArticleScreen> {
                   bloc.add(
                       DetailArticleEventGetDetail(uuid: widget.argument.uuid));
                   blocForum
-                      .add(ForumEventGetData(contentId: widget.argument.id));
+                      .add(ForumEventGetData(contentId: widget.argument.id, parentId: 0));
                 },
                 child: SingleChildScrollView(
                   child: Column(children: [
@@ -199,7 +205,11 @@ class _DetailArticleScreenState extends State<DetailArticleScreen> {
                                     return Wrapper(
                                       state: state.state,
                                       onLoaded: state.threadsList!.length < 1
-                                          ? Center(child: Text('Belum ada diskusi', style: MyTextStyle.h4,))
+                                          ? Center(
+                                              child: Text(
+                                              'Belum ada diskusi',
+                                              style: MyTextStyle.h4,
+                                            ))
                                           : ListView.separated(
                                               shrinkWrap: true,
                                               physics:
@@ -279,6 +289,29 @@ class _DetailArticleScreenState extends State<DetailArticleScreen> {
                       ),
                     )
                   ]),
+                ),
+              ),
+              floatingActionButton: FloatingActionButton(
+                heroTag: null,
+                onPressed: () async {
+                  if (authBloc.state.currentUser?.email != null) {
+                    var postThread = await Navigator.of(context).pushNamed(
+                        PostThreadScreen.routeName,
+                        arguments:
+                            ThreadsModel(parentId: 0, contentId: widget.argument.id));
+                    if (postThread != null) {
+                      blocForum.add(ForumEventGetData(contentId: widget.argument.id));
+                    }
+                  } else {
+                    Navigator.of(context).pushNamed(LoginScreen.routeName);
+                    GFToast.showToast(
+                        'Anda harus login terlebih dahulu.', context,
+                        toastPosition: GFToastPosition.BOTTOM);
+                  }
+                },
+                backgroundColor: MyColors.primary,
+                child: const Icon(
+                  Icons.add,
                 ),
               ),
             );

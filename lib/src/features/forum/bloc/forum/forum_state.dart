@@ -49,7 +49,7 @@ class ForumState extends Equatable {
       threads: threads ?? this.threads,
       parentId: parentId ?? this.parentId,
       forumId: forumId ?? this.forumId,
-      contentId: forumId ?? this.contentId,
+      contentId: contentId ?? this.contentId,
       uuid: uuid ?? this.uuid,
       content: content ?? this.content,
     );

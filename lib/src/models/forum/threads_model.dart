@@ -3,6 +3,7 @@ class ThreadsModel {
   String? uuid;
   String? content;
   int? forumId;
+  int? contentId;
   String? createdBy;
   int? parentId;
   int? countComments;
@@ -15,6 +16,7 @@ class ThreadsModel {
       this.uuid,
       this.content,
       this.forumId,
+      this.contentId,
       this.createdBy,
       this.parentId,
       this.countComments,
@@ -27,6 +29,7 @@ class ThreadsModel {
     uuid = json['_id'];
     content = json['content'];
     forumId = json['forum_id'];
+    contentId = json['content_id'];
     createdBy = json['created_by'];
     parentId = json['parent_id'];
     countComments = json['count_comments'];
@@ -46,6 +49,7 @@ class ThreadsModel {
     data['_id'] = this.uuid;
     data['content'] = this.content;
     data['forum_id'] = this.forumId;
+    data['content_id'] = this.contentId;
     data['created_by'] = this.createdBy;
     data['parent_id'] = this.parentId;
     data['count_comments'] = this.countComments;

@@ -9,14 +9,15 @@ class ForumEventInitForumList extends ForumEvent {}
 class ForumEventGetForumList extends ForumEvent {}
 class ForumEventGetData extends ForumEvent {
   String? uuid;
+  int? id;
   int? parentId;
   int? forumId;
   int? contentId;
 
-  ForumEventGetData({this.uuid, this.parentId, this.forumId, this.contentId});
+  ForumEventGetData({this.uuid, this.id, this.parentId, this.forumId, this.contentId});
 
   @override
-  List<Object?> get props => [uuid, parentId, forumId, contentId];
+  List<Object?> get props => [uuid, id, parentId, forumId, contentId];
 }
 
 class ForumEventRefresh extends ForumEvent {}
@@ -44,9 +45,10 @@ class ForumEventOnChangeThread extends ForumEvent {
   int? parentId;
   String? content;
   int? forumId;
+  int? contentId;
 
-  ForumEventOnChangeThread({this.threads, this.parentId, this.content, this.forumId});
+  ForumEventOnChangeThread({this.threads, this.parentId, this.content, this.forumId, this.contentId});
 
   @override
-  List<Object?> get props => [threads, parentId, content, forumId];
+  List<Object?> get props => [threads, parentId, content, forumId, contentId];
 }

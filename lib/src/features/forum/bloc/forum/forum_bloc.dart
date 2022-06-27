@@ -55,7 +55,8 @@ class ForumBloc extends Bloc<ForumEvent, ForumState> {
     try {
       emit(state.copyWith(state: NetworkStates.onLoading));
       var response = await apiService.getThreadsList({
-        'id': event.uuid,
+        '_id': event.uuid,
+        'id': event.id,
         'parent_id': event.parentId,
         'forum_id': event.forumId,
         'content_id': event.contentId,
@@ -66,6 +67,7 @@ class ForumBloc extends Bloc<ForumEvent, ForumState> {
         uuid: event.uuid,
         parentId: event.parentId,
         forumId: event.forumId,
+        contentId: event.contentId
       ));
     } catch (e) {
       emit(state.copyWith(state: NetworkStates.onError, message: '${e}'));
@@ -89,13 +91,15 @@ class ForumBloc extends Bloc<ForumEvent, ForumState> {
       var params = {
         'forum_id': state.forumId,
         'parent_id': state.parentId,
-        'content': state.content
+        'content': state.content,
+        'content_id': state.contentId,
       };
       var response = await apiService.postThread(params);
       emit(state.copyWith(
-          state: NetworkStates.onLoaded,
-          message: response?.message,
-          threads: response?.data));
+        state: NetworkStates.onLoaded,
+        message: response?.message,
+        threads: response?.data,
+      ));
     } catch (e) {
       emit(state.copyWith(state: NetworkStates.onError, message: '${e}'));
     }
@@ -105,9 +109,12 @@ class ForumBloc extends Bloc<ForumEvent, ForumState> {
       ForumEventOnChangeThread event, Emitter<ForumState> emit) async {
     try {
       emit(state.copyWith(
-          parentId: event.parentId,
-          content: event.content,
-          forumId: event.forumId));
+        parentId: event.parentId,
+        content: event.content,
+        forumId: event.forumId,
+        contentId: event.contentId,
+      ));
+      debugPrint('why ${event.contentId}');
     } catch (e) {
       emit(state.copyWith(state: NetworkStates.onError, message: '${e}'));
     }
