@@ -1,5 +1,6 @@
 import 'package:bloc/bloc.dart';
 import 'package:flutter_qfam/src/commons/preferences_base.dart';
+import 'package:flutter_qfam/src/models/default_response_model.dart';
 import 'package:flutter_qfam/src/models/forum/forum_model.dart';
 import 'package:flutter_qfam/src/models/forum/threads_model.dart';
 import 'package:flutter_qfam/src/services/forum/forum_service.dart';
@@ -7,6 +8,7 @@ import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_qfam/src/widgets/widgets.dart';
 import 'package:getwidget/getwidget.dart';
+import 'package:pull_to_refresh/pull_to_refresh.dart';
 
 part 'forum_event.dart';
 part 'forum_state.dart';
@@ -23,6 +25,7 @@ class ForumBloc extends Bloc<ForumEvent, ForumState> {
   }
   ForumService apiService = ForumService();
   TabController? tabController;
+  List<RefreshController> refreshController = [RefreshController(initialRefresh: false)];
   final txtContent = TextEditingController();
 
   _initPostThread(
@@ -54,21 +57,33 @@ class ForumBloc extends Bloc<ForumEvent, ForumState> {
 
   _getData(ForumEventGetData event, Emitter<ForumState> emit) async {
     try {
-      emit(state.copyWith(state: NetworkStates.onLoading));
+      if (event.page < 2) {
+        emit(state.copyWith(state: NetworkStates.onLoading));
+      }
       var response = await apiService.getThreadsList({
         '_id': event.uuid,
         'id': event.id,
         'parent_id': event.parentId,
         'forum_id': event.forumId,
         'content_id': event.contentId,
+        'page': event.page,
       });
+      List<ThreadsModel>? threadsList = [];
+      if (event.page > 1) {
+        threadsList = state.threadsList;
+        threadsList?.addAll(response?.data);
+      } else {
+        threadsList = response?.data;
+      }
       emit(state.copyWith(
         state: NetworkStates.onLoaded,
-        threadsList: response?.data,
+        threadsList: threadsList,
         uuid: event.uuid,
         parentId: event.parentId,
         forumId: event.forumId,
-        contentId: event.contentId
+        contentId: event.contentId,
+        page: event.page,
+        response: response,
       ));
     } catch (e) {
       emit(state.copyWith(state: NetworkStates.onError, message: '${e}'));
@@ -79,6 +94,9 @@ class ForumBloc extends Bloc<ForumEvent, ForumState> {
     try {
       emit(state.copyWith(state: NetworkStates.onLoading));
       var response = await apiService.getForumList();
+      response?.data!.forEach((item) {
+        refreshController.add(RefreshController(initialRefresh: false));
+      });
       emit(state.copyWith(
           state: NetworkStates.onLoaded, forumList: response?.data));
     } catch (e) {
@@ -111,12 +129,11 @@ class ForumBloc extends Bloc<ForumEvent, ForumState> {
       ForumEventOnChangeThread event, Emitter<ForumState> emit) async {
     try {
       emit(state.copyWith(
-        parentId: event.parentId,
-        content: event.content,
-        forumId: event.forumId,
-        contentId: event.contentId,
-        isAnonymous: event.isAnonymous
-      ));
+          parentId: event.parentId,
+          content: event.content,
+          forumId: event.forumId,
+          contentId: event.contentId,
+          isAnonymous: event.isAnonymous));
     } catch (e) {
       emit(state.copyWith(state: NetworkStates.onError, message: '${e}'));
     }

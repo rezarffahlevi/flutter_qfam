@@ -6,18 +6,28 @@ abstract class ForumEvent extends Equatable {
 }
 
 class ForumEventInitForumList extends ForumEvent {}
+
 class ForumEventGetForumList extends ForumEvent {}
+
 class ForumEventGetData extends ForumEvent {
   String? uuid;
   int? id;
   int? parentId;
   int? forumId;
   int? contentId;
+  int page;
 
-  ForumEventGetData({this.uuid, this.id, this.parentId, this.forumId, this.contentId});
+  ForumEventGetData({
+    this.uuid,
+    this.id,
+    this.parentId,
+    this.forumId,
+    this.contentId,
+    this.page = 1,
+  });
 
   @override
-  List<Object?> get props => [uuid, id, parentId, forumId, contentId];
+  List<Object?> get props => [uuid, id, parentId, forumId, contentId, page];
 }
 
 class ForumEventRefresh extends ForumEvent {}
@@ -48,8 +58,15 @@ class ForumEventOnChangeThread extends ForumEvent {
   int? contentId;
   int? isAnonymous;
 
-  ForumEventOnChangeThread({this.threads, this.parentId, this.content, this.forumId, this.contentId, this.isAnonymous});
+  ForumEventOnChangeThread(
+      {this.threads,
+      this.parentId,
+      this.content,
+      this.forumId,
+      this.contentId,
+      this.isAnonymous});
 
   @override
-  List<Object?> get props => [threads, parentId, content, forumId, contentId, isAnonymous];
+  List<Object?> get props =>
+      [threads, parentId, content, forumId, contentId, isAnonymous];
 }

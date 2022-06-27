@@ -5,6 +5,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_qfam/src/models/contents/banner_model.dart';
 import 'package:flutter_qfam/src/models/contents/category_model.dart';
 import 'package:flutter_qfam/src/models/contents/contents_model.dart';
+import 'package:flutter_qfam/src/models/default_response_model.dart';
 import 'package:flutter_qfam/src/services/contents/content_service.dart';
 import 'package:flutter_qfam/src/widgets/widgets.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';

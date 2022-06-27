@@ -13,6 +13,8 @@ class ForumState extends Equatable {
   final int? isAnonymous;
   final String? uuid;
   final String? content;
+  final int page;
+  final DefaultResponseModel? response;
 
   const ForumState({
     this.state = NetworkStates.onLoaded,
@@ -27,6 +29,8 @@ class ForumState extends Equatable {
     this.isAnonymous = 0,
     this.uuid,
     this.content,
+    this.page = 1,
+    this.response,
   });
 
   ForumState copyWith({
@@ -42,6 +46,8 @@ class ForumState extends Equatable {
     int? isAnonymous,
     String? uuid,
     String? content,
+    int? page,
+    DefaultResponseModel? response,
   }) {
     return ForumState(
       state: state ?? this.state,
@@ -56,6 +62,8 @@ class ForumState extends Equatable {
       isAnonymous: isAnonymous ?? this.isAnonymous,
       uuid: uuid ?? this.uuid,
       content: content ?? this.content,
+      page: page ?? this.page,
+      response: response ?? this.response,
     );
   }
 
@@ -73,5 +81,7 @@ class ForumState extends Equatable {
         isAnonymous,
         uuid,
         content,
+        page,
+        response,
       ];
 }

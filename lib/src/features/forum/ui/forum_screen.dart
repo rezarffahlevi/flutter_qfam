@@ -29,8 +29,6 @@ class _ForumScreenState extends State<ForumScreen>
     with SingleTickerProviderStateMixin {
   late AuthBloc authBloc;
   ForumBloc bloc = ForumBloc();
-  final RefreshController _refreshController =
-      RefreshController(initialRefresh: false);
   bool isHaveAccess = false;
 
   @override
@@ -55,8 +53,8 @@ class _ForumScreenState extends State<ForumScreen>
       child: BlocConsumer<ForumBloc, ForumState>(
           bloc: bloc,
           listener: (context, state) {
-            _refreshController.refreshCompleted();
-            _refreshController.loadComplete();
+            bloc.refreshController[0].refreshCompleted();
+            bloc.refreshController[0].loadComplete();
             if (bloc.tabController == null &&
                 state.state == NetworkStates.onLoaded &&
                 state.forumList!.length > 0) {
@@ -138,6 +136,7 @@ class _ForumScreenState extends State<ForumScreen>
                         enablePullUp: true,
                         controller: RefreshController(initialRefresh: false),
                         onRefresh: () => bloc.add(ForumEventRefresh()),
+                        onLoading: () {},
                         child: Padding(
                           padding: const EdgeInsets.symmetric(
                               horizontal: 16.0, vertical: 16),
@@ -145,32 +144,35 @@ class _ForumScreenState extends State<ForumScreen>
                         ),
                       ),
                       onLoaded: bloc.tabController == null
-                          ? SmartRefresher(
-                              enablePullDown: true,
-                              enablePullUp: true,
-                              controller:
-                                  RefreshController(initialRefresh: false),
-                              onRefresh: () => bloc.add(ForumEventRefresh()),
-                              child: Padding(
-                                padding: const EdgeInsets.symmetric(
-                                    horizontal: 16.0, vertical: 16),
-                                child: Text(state.message ?? 'Unknown Error'),
-                              ),
-                            )
+                          ? Container()
                           : TabBarView(
                               key: Key('TabBarViewArticle'),
                               controller: bloc.tabController,
                               children: forumList!.map((item) {
+                                var i = forumList.indexOf(item);
                                 return SmartRefresher(
                                   enablePullDown: true,
                                   enablePullUp: true,
-                                  controller:
-                                      RefreshController(initialRefresh: false),
-                                  onRefresh: () =>
-                                      bloc.add(ForumEventRefresh()),
+                                  controller: bloc.refreshController[i],
+                                  onRefresh: () {
+                                    bloc.refreshController[i].resetNoData();
+                                    bloc.add(ForumEventRefresh());
+                                  },
+                                  onLoading: () {
+                                    if (state.page <
+                                        (state.response?.pagination!.lastPage ??
+                                            1)) {
+                                      bloc.add(ForumEventGetData(
+                                        page: state.page + 1,
+                                        forumId: state.forumId,
+                                      ));
+                                    } else {
+                                      bloc.refreshController[i].loadNoData();
+                                    }
+                                  },
                                   child: ListView.separated(
                                     shrinkWrap: true,
-                                    // physics: const NeverScrollableScrollPhysics(),
+                                    // physics: NeverScrollableScrollPhysics(),
                                     itemBuilder: (c, i) {
                                       final item = list?[i];
                                       return Threads(
@@ -184,7 +186,8 @@ class _ForumScreenState extends State<ForumScreen>
                                         isAnonymous: item?.isAnonymous == 1,
                                         onTapLike: () {
                                           GFToast.showToast(
-                                              'Fitur belum tersedia ${item?.isAnonymous}', context,
+                                              'Fitur belum tersedia ${item?.isAnonymous}',
+                                              context,
                                               toastPosition:
                                                   GFToastPosition.BOTTOM);
                                         },

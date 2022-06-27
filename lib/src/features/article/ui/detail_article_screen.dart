@@ -38,8 +38,8 @@ class _DetailArticleScreenState extends State<DetailArticleScreen> {
     super.initState();
     authBloc = context.read<AuthBloc>();
     bloc.add(DetailArticleEventGetDetail(uuid: widget.argument.uuid));
-    blocForum
-        .add(ForumEventGetData(contentId: widget.argument.id, parentId: 0));
+    blocForum.add(
+        ForumEventGetData(contentId: widget.argument.id, parentId: 0, page: 1));
   }
 
   @override
@@ -68,7 +68,10 @@ class _DetailArticleScreenState extends State<DetailArticleScreen> {
             listener: (context, state) {},
           ),
           BlocListener<ForumBloc, ForumState>(
-            listener: (context, state) {},
+            listener: (context, state) {
+              bloc.refreshController.refreshCompleted();
+              bloc.refreshController.loadComplete();
+            },
           ),
         ],
         child: BlocConsumer<DetailArticleBloc, DetailArticleState>(
@@ -106,10 +109,23 @@ class _DetailArticleScreenState extends State<DetailArticleScreen> {
                 enablePullUp: true,
                 controller: bloc.refreshController,
                 onRefresh: () {
+                  bloc.refreshController.resetNoData();
                   bloc.add(
                       DetailArticleEventGetDetail(uuid: widget.argument.uuid));
                   blocForum.add(ForumEventGetData(
-                      contentId: widget.argument.id, parentId: 0));
+                      contentId: widget.argument.id, parentId: 0, page: 1));
+                },
+                onLoading: () {
+                  if (blocForum.state.page <
+                      (blocForum.state.response?.pagination?.lastPage ?? 1)) {
+                    blocForum.add(ForumEventGetData(
+                      contentId: widget.argument.id,
+                      parentId: 0,
+                      page: blocForum.state.page + 1,
+                    ));
+                  } else {
+                    bloc.refreshController.loadNoData();
+                  }
                 },
                 child: SingleChildScrollView(
                   child: Column(children: [

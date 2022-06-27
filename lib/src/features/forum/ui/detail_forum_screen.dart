@@ -34,7 +34,7 @@ class _DetailForumScreenState extends State<DetailForumScreen> {
     super.initState();
     authBloc = context.read<AuthBloc>();
     _scrollController = ScrollController();
-    bloc.add(ForumEventGetData(uuid: widget.argument.uuid));
+    bloc.add(ForumEventGetData(uuid: widget.argument.uuid, page: 1));
   }
 
   @override
@@ -62,9 +62,7 @@ class _DetailForumScreenState extends State<DetailForumScreen> {
           _refreshController.loadComplete();
         },
         builder: (context, state) {
-          ThreadsModel detail = state.threadsList!.length > 0
-              ? state.threadsList![0]
-              : ThreadsModel();
+          ThreadsModel detail = widget.argument;
           return Scaffold(
               appBar: appBar(
                   child: "Utas",
@@ -76,7 +74,21 @@ class _DetailForumScreenState extends State<DetailForumScreen> {
                 enablePullUp: true,
                 scrollController: _scrollController,
                 controller: _refreshController,
-                onRefresh: () => bloc.add(ForumEventGetData(uuid: state.uuid)),
+                onRefresh: () {
+                  _refreshController.resetNoData();
+                  bloc.add(ForumEventGetData(uuid: state.uuid, page: 1));
+                },
+                onLoading: () {
+                  if (state.page <
+                      (state.response?.pagination?.lastPage ?? 1)) {
+                    bloc.add(ForumEventGetData(
+                      uuid: state.uuid,
+                      page: bloc.state.page + 1,
+                    ));
+                  } else {
+                    _refreshController.loadNoData();
+                  }
+                },
                 child: SingleChildScrollView(
                   child: Column(
                     children: [
@@ -108,7 +120,7 @@ class _DetailForumScreenState extends State<DetailForumScreen> {
                           shrinkWrap: true,
                           physics: const NeverScrollableScrollPhysics(),
                           itemBuilder: (c, i) {
-                            ThreadsModel item = detail.child![i];
+                            ThreadsModel? item = state.threadsList![i];
                             return Threads(
                               onTap: () => Navigator.pushNamed(
                                   context, DetailForumScreen.routeName,
@@ -132,7 +144,7 @@ class _DetailForumScreenState extends State<DetailForumScreen> {
                           separatorBuilder: (c, i) {
                             return Spaces.normalHorizontal();
                           },
-                          itemCount: detail.child?.length ?? 0,
+                          itemCount: state.threadsList?.length ?? 0,
                         ),
                         onLoading: GFShimmer(
                           child: Column(
@@ -164,7 +176,8 @@ class _DetailForumScreenState extends State<DetailForumScreen> {
                             forumId: state.forumId,
                             contentId: detail.contentId));
                     if (postThread != null) {
-                      bloc.add(ForumEventGetData(uuid: bloc.state.uuid));
+                      bloc.add(
+                          ForumEventGetData(uuid: bloc.state.uuid, page: 1));
                     }
                   } else {
                     Navigator.of(context).pushNamed(LoginScreen.routeName);
