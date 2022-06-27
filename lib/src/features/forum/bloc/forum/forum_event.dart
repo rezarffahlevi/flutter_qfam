@@ -11,11 +11,12 @@ class ForumEventGetData extends ForumEvent {
   String? uuid;
   int? parentId;
   int? forumId;
+  int? contentId;
 
-  ForumEventGetData({this.uuid, this.parentId, this.forumId});
+  ForumEventGetData({this.uuid, this.parentId, this.forumId, this.contentId});
 
   @override
-  List<Object?> get props => [uuid, parentId, forumId];
+  List<Object?> get props => [uuid, parentId, forumId, contentId];
 }
 
 class ForumEventRefresh extends ForumEvent {}

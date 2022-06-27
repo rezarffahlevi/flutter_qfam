@@ -15,8 +15,10 @@ Widget sectionWidget(text, {child, showAll = true, onTapAll}) {
           onTap: onTapAll,
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            crossAxisAlignment: CrossAxisAlignment.center,
             children: <Widget>[
-              Text(text, style: MyTextStyle.contentTitle),
+              Expanded(child: Text(text, style: MyTextStyle.contentTitle)),
+              Spaces.smallHorizontal(),
               showAll
                   ? Row(
                       children: [

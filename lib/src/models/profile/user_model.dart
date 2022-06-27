@@ -32,7 +32,7 @@ class UserModel {
 
   UserModel.fromJson(Map<String, dynamic> json) {
     id = json['id'];
-    uuid = json['uuid'];
+    uuid = json['_id'];
     name = json['name'];
     telp = json['telp'];
     photo = json['photo'];
@@ -50,7 +50,7 @@ class UserModel {
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['id'] = this.id;
-    data['uuid'] = this.uuid;
+    data['_id'] = this.uuid;
     data['name'] = this.name;
     data['telp'] = this.telp;
     data['photo'] = this.photo;

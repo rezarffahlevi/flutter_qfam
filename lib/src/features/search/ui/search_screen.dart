@@ -52,175 +52,169 @@ class _SearchScreenState extends State<SearchScreen> {
       child: BlocBuilder<AuthBloc, AuthState>(
         bloc: authBloc,
         builder: (context, authState) {
-          return Scaffold(
-            appBar: appBar(
-                onTapBack: widget.argument != null
-                    ? () => Navigator.pop(context)
-                    : null,
-                // onTap: () {},
-                // icon: Icons.filter_list,
-                child: "Edukasi",
-                fontFamily: 'GreatVibes'),
-            body: SmartRefresher(
-              enablePullDown: true,
-              enablePullUp: true,
-              controller: _refreshController,
-              onRefresh: () => bloc.add(SearchEventRefresh()),
-              child: SingleChildScrollView(
-                child: Column(children: [
-                  Spaces.normalVertical(),
-                  BlocConsumer<SearchBloc, SearchState>(
-                      bloc: bloc,
-                      listener: (context, state) {
-                        _refreshController.refreshCompleted();
-                        _refreshController.loadComplete();
-                      },
-                      builder: (context, state) {
-                        return Wrapper(
-                            state: state.state,
-                            onLoading: GFShimmer(
-                              child: Column(
-                                children: [
-                                  for (var i = 0; i < 12; i++)
-                                    Column(
-                                      children: [
-                                        loadingBlock(dimension),
-                                        Spaces.normalVertical()
-                                      ],
-                                    ),
-                                ],
-                              ),
-                            ),
-                            onLoaded: Column(
-                              children: [
-                                Container(
-                                  height: 50,
-                                  margin: EdgeInsets.only(
-                                    left: 16,
-                                    right: 16,
-                                    bottom: 12,
-                                  ),
-                                  child: new TextField(
-                                    autofocus: false,
-                                    decoration: new InputDecoration(
-                                        contentPadding: EdgeInsets.all(0.1),
-                                        focusedBorder: OutlineInputBorder(
-                                          borderRadius: BorderRadius.all(
-                                              Radius.circular(4)),
-                                          borderSide: BorderSide(
-                                              width: 1, color: MyColors.text),
-                                        ),
-                                        border: OutlineInputBorder(
-                                          borderRadius:
-                                              BorderRadius.circular(12),
-                                        ),
-                                        prefixIcon: new Icon(Icons.search,
-                                            color: MyColors.text),
-                                        hintText: "Cari...",
-                                        focusColor: MyColors.text,
-                                        hintStyle: new TextStyle(
-                                            color: MyColors.text)),
-                                  ),
-                                ),
-                                Wrapper(
-                                  state: state.state,
-                                  onLoading: GFShimmer(
-                                    child: _categoryBlock(dimension),
-                                  ),
-                                  onLoaded: _categorySection(
-                                      state.categoryList, state),
-                                  onError: Padding(
-                                    padding: const EdgeInsets.symmetric(
-                                        horizontal: 16.0, vertical: 16),
-                                    child:
-                                        Text(state.message ?? 'Unknown Error'),
-                                  ),
-                                ),
-                                Spaces.normalVertical(),
-                                ListView.separated(
-                                  shrinkWrap: true,
-                                  physics: const NeverScrollableScrollPhysics(),
-                                  padding: EdgeInsets.only(
-                                      left: 16, right: 16, bottom: 16),
-                                  itemBuilder: (c, i) {
-                                    final article = state.contentsList![i];
-                                    return GestureDetector(
-                                      onTap: () {
-                                        Navigator.of(context).pushNamed(
-                                            DetailArticleScreen.routeName,
-                                            arguments: article);
-                                      },
-                                      child: Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: [
-                                          GFImageOverlay(
-                                            color: MyColors.greyPlaceHolder,
-                                            height: 130,
-                                            borderRadius: BorderRadius.all(
-                                                Radius.circular(8)),
-                                            image: NetworkImage(
-                                                article.thumbnail ?? ''),
-                                            boxFit: BoxFit.fitWidth,
-                                            child: article.isVideo == 1
-                                                ? Icon(
-                                                    Icons.play_circle,
-                                                    size: 50,
-                                                    color: Colors.white,
-                                                  )
-                                                : Container(),
-                                          ),
-                                          Spaces.smallVertical(),
-                                          Text(
-                                            article.title ?? '-',
-                                            style: MyTextStyle.sessionTitle,
-                                          ),
-                                          Spaces.smallVertical(),
-                                          Text(
-                                            'By ${article.createdByName}',
-                                            style:
-                                                MyTextStyle.contentDescription,
-                                          ),
-                                        ],
-                                      ),
-                                    );
-                                  },
-                                  separatorBuilder: (c, i) {
-                                    return Spaces.largeVertical();
-                                  },
-                                  itemCount: state.contentsList?.length ?? 0,
-                                ),
-                              ],
-                            ),
-                            onError: Padding(
-                              padding: const EdgeInsets.symmetric(
-                                  horizontal: 16.0, vertical: 16),
-                              child: Text(
-                                state.message ?? 'Unknown Error',
-                              ),
-                            ));
-                      }),
-                ]),
-              ),
-            ),
-            floatingActionButton: (authState.currentUser?.role !=
-                        Constants.ROLES.USER &&
-                    authState.currentUser?.role != null)
-                ? FloatingActionButton(
-                    heroTag: null,
-                    onPressed: () async {
-                      var postThread = await Navigator.of(context)
-                          .pushNamed(PostArticleScreen.routeName, arguments: 0);
-                      if (postThread != null) {
-                        bloc.add(SearchEventGetData());
-                      }
-                    },
-                    backgroundColor: MyColors.primary,
-                    child: const Icon(
-                      Icons.add,
+          return BlocConsumer<SearchBloc, SearchState>(
+            bloc: bloc,
+            listener: (context, state) {
+              _refreshController.refreshCompleted();
+              _refreshController.loadComplete();
+            },
+            builder: (context, state) {
+              return Scaffold(
+                appBar: appBar(
+                  onTapBack: widget.argument != null
+                      ? () => Navigator.pop(context)
+                      : null,
+                  // onTap: () {},
+                  // icon: Icons.filter_list,
+                  child: Container(
+                    height: 35,
+                    width: dimension.width - 120,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(12),
+                      color: MyColors.greyPlaceHolder,
                     ),
-                  )
-                : null,
+                    child: new TextField(
+                      autofocus: false,
+                      decoration: new InputDecoration(
+                          contentPadding: EdgeInsets.all(0.1),
+                          focusedBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                          prefixIcon:
+                              new Icon(Icons.search, color: MyColors.text),
+                          hintText: "Cari...",
+                          focusColor: MyColors.text,
+                          hintStyle: new TextStyle(color: MyColors.text)),
+                    ),
+                  ),
+                ),
+                body: SmartRefresher(
+                  enablePullDown: true,
+                  enablePullUp: true,
+                  controller: _refreshController,
+                  onRefresh: () => bloc.add(SearchEventRefresh()),
+                  child: SingleChildScrollView(
+                    child: Column(children: [
+                      Spaces.normalVertical(),
+                      Wrapper(
+                        state: state.state,
+                        onLoading: GFShimmer(
+                          child: _categoryBlock(dimension),
+                        ),
+                        onLoaded: _categorySection(state.categoryList, state),
+                        onError: Padding(
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 16.0, vertical: 16),
+                          child: Text(state.message ?? 'Unknown Error'),
+                        ),
+                      ),
+                      Spaces.normalVertical(),
+                      Wrapper(
+                        state: state.state,
+                        onLoading: GFShimmer(
+                          child: Column(
+                            children: [
+                              for (var i = 0; i < 12; i++)
+                                Column(
+                                  children: [
+                                    loadingBlock(dimension),
+                                    Spaces.normalVertical()
+                                  ],
+                                ),
+                            ],
+                          ),
+                        ),
+                        onLoaded: Column(
+                          children: [
+                            ListView.separated(
+                              shrinkWrap: true,
+                              physics: const NeverScrollableScrollPhysics(),
+                              padding: EdgeInsets.only(
+                                  left: 16, right: 16, bottom: 16),
+                              itemBuilder: (c, i) {
+                                final article = state.contentsList![i];
+                                return GestureDetector(
+                                  onTap: () {
+                                    Navigator.of(context).pushNamed(
+                                        DetailArticleScreen.routeName,
+                                        arguments: article);
+                                  },
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      GFImageOverlay(
+                                        color: MyColors.greyPlaceHolder,
+                                        height: 130,
+                                        borderRadius: BorderRadius.all(
+                                            Radius.circular(8)),
+                                        image: NetworkImage(
+                                            article.thumbnail ?? ''),
+                                        boxFit: BoxFit.fitWidth,
+                                        child: article.isVideo == 1
+                                            ? Icon(
+                                                Icons.play_circle,
+                                                size: 50,
+                                                color: Colors.white,
+                                              )
+                                            : Container(),
+                                      ),
+                                      Spaces.smallVertical(),
+                                      Text(
+                                        article.title ?? '-',
+                                        style: MyTextStyle.sessionTitle,
+                                      ),
+                                      Spaces.smallVertical(),
+                                      Text(
+                                        'By ${article.createdByName}',
+                                        style: MyTextStyle.contentDescription,
+                                      ),
+                                    ],
+                                  ),
+                                );
+                              },
+                              separatorBuilder: (c, i) {
+                                return Spaces.largeVertical();
+                              },
+                              itemCount: state.contentsList?.length ?? 0,
+                            ),
+                          ],
+                        ),
+                        onError: Padding(
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 16.0, vertical: 16),
+                          child: Text(
+                            state.message ?? 'Unknown Error',
+                          ),
+                        ),
+                      ),
+                    ]),
+                  ),
+                ),
+                floatingActionButton:
+                    (authState.currentUser?.role != Constants.ROLES.USER &&
+                            authState.currentUser?.role != null)
+                        ? FloatingActionButton(
+                            heroTag: null,
+                            onPressed: () async {
+                              var postThread = await Navigator.of(context)
+                                  .pushNamed(PostArticleScreen.routeName,
+                                      arguments: 0);
+                              if (postThread != null) {
+                                bloc.add(SearchEventGetData());
+                              }
+                            },
+                            backgroundColor: MyColors.primary,
+                            child: const Icon(
+                              Icons.add,
+                            ),
+                          )
+                        : null,
+              );
+            },
           );
         },
       ),

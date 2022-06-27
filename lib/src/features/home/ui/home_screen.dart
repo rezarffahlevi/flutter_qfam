@@ -234,6 +234,45 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
               ),
             );
+          case "row-tile":
+            return sectionWidget(
+              item.title ?? '-',
+              onTapAll: () => onTapAll(item),
+              child: Container(
+                width: dimension.width,
+                child: ListView.separated(
+                  shrinkWrap: true,
+                  physics: const NeverScrollableScrollPhysics(),
+                  itemBuilder: (c, j) {
+                    var article = item.contents?[j];
+                    return GestureDetector(
+                      onTap: () {
+                        onTapCard(
+                            item: article,
+                            isProgram: item.title.contains('Program Kami'));
+                      },
+                      child: MyListTile(
+                        // margin: EdgeInsets.all(0),
+                        avatar: GFAvatar(
+                          shape: GFAvatarShape.square,
+                          size: 60,
+                          borderRadius: BorderRadius.circular(10),
+                          backgroundImage: NetworkImage('${article.thumbnail}'),
+                        ),
+                        color: MyColors.background,
+                        titleText: article.title,
+                        subTitleText: '${article.subtitle}',
+                        // icon: Icon(Icons.favorite),
+                      ),
+                    );
+                  },
+                  separatorBuilder: (c, i) {
+                    return Container();
+                  },
+                  itemCount: item.contents?.length ?? 0,
+                ),
+              ),
+            );
           case "row-list":
             return sectionWidget(
               item?.title ?? '-',

@@ -9,6 +9,7 @@ class ForumState extends Equatable {
   final ThreadsModel? threads;
   final int? forumId;
   final int? parentId;
+  final int? contentId;
   final String? uuid;
   final String? content;
 
@@ -21,6 +22,7 @@ class ForumState extends Equatable {
     this.threads,
     this.forumId,
     this.parentId,
+    this.contentId,
     this.uuid,
     this.content,
   });
@@ -34,6 +36,7 @@ class ForumState extends Equatable {
     ThreadsModel? threads,
     int? parentId,
     int? forumId,
+    int? contentId,
     String? uuid,
     String? content,
   }) {
@@ -46,6 +49,7 @@ class ForumState extends Equatable {
       threads: threads ?? this.threads,
       parentId: parentId ?? this.parentId,
       forumId: forumId ?? this.forumId,
+      contentId: forumId ?? this.contentId,
       uuid: uuid ?? this.uuid,
       content: content ?? this.content,
     );
@@ -53,5 +57,5 @@ class ForumState extends Equatable {
 
   @override
   List<Object?> get props =>
-      [state, message, context, threadsList, threads, forumId, parentId, content];
+      [state, message, context, threadsList, threads, forumId, parentId, contentId, content];
 }

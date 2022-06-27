@@ -24,7 +24,7 @@ class ThreadsModel {
 
   ThreadsModel.fromJson(Map<String, dynamic> json) {
     id = json['id'];
-    uuid = json['uuid'];
+    uuid = json['_id'];
     content = json['content'];
     forumId = json['forum_id'];
     createdBy = json['created_by'];
@@ -43,7 +43,7 @@ class ThreadsModel {
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['id'] = this.id;
-    data['uuid'] = this.uuid;
+    data['_id'] = this.uuid;
     data['content'] = this.content;
     data['forum_id'] = this.forumId;
     data['created_by'] = this.createdBy;

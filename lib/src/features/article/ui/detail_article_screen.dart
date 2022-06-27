@@ -1,12 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_html/flutter_html.dart';
 import 'package:flutter_qfam/src/commons/spaces.dart';
 import 'package:flutter_qfam/src/features/article/bloc/detail_article/detail_article_bloc.dart';
 import 'package:flutter_qfam/src/features/article/ui/post_article_screen.dart';
-import 'package:flutter_qfam/src/features/search/bloc/search/search_bloc.dart';
-import 'package:flutter_qfam/src/models/contents/banner_model.dart';
+import 'package:flutter_qfam/src/features/forum/bloc/forum/forum_bloc.dart';
+import 'package:flutter_qfam/src/features/forum/ui/detail_forum_screen.dart';
 import 'package:flutter_qfam/src/models/contents/contents_model.dart';
 import 'package:flutter_qfam/src/styles/my_colors.dart';
 import 'package:flutter_qfam/src/styles/my_text_style.dart';
@@ -27,11 +26,13 @@ class DetailArticleScreen extends StatefulWidget {
 
 class _DetailArticleScreenState extends State<DetailArticleScreen> {
   final DetailArticleBloc bloc = DetailArticleBloc();
+  final ForumBloc blocForum = ForumBloc();
 
   @override
   void initState() {
     super.initState();
     bloc.add(DetailArticleEventGetDetail(uuid: widget.argument.uuid));
+    blocForum.add(ForumEventGetData(contentId: widget.argument.id));
   }
 
   @override
@@ -45,133 +46,244 @@ class _DetailArticleScreenState extends State<DetailArticleScreen> {
   Widget build(BuildContext context) {
     final dimension = MediaQuery.of(context).size;
 
-    return BlocProvider(
-      create: (BuildContext context) => DetailArticleBloc(),
-      child: BlocConsumer<DetailArticleBloc, DetailArticleState>(
-        bloc: bloc,
-        listener: (context, state) {
-          bloc.refreshController.refreshCompleted();
-          bloc.refreshController.loadComplete();
-        },
-        builder: (context, state) {
-          ContentsModel? detail = widget.argument;
-          final bannerList = state.bannerList;
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider<DetailArticleBloc>(
+          create: (context) => bloc,
+        ),
+        BlocProvider<ForumBloc>(
+          create: (context) => blocForum,
+        ),
+      ],
+      child: MultiBlocListener(
+        listeners: [
+          BlocListener<DetailArticleBloc, DetailArticleState>(
+            listener: (context, state) {},
+          ),
+          BlocListener<ForumBloc, ForumState>(
+            listener: (context, state) {},
+          ),
+        ],
+        child: BlocConsumer<DetailArticleBloc, DetailArticleState>(
+          bloc: bloc,
+          listener: (context, state) {
+            bloc.refreshController.refreshCompleted();
+            bloc.refreshController.loadComplete();
+          },
+          builder: (context, state) {
+            ContentsModel? detail = widget.argument;
+            final bannerList = state.bannerList;
 
-          return Scaffold(
-            appBar: appBar(
-                child: widget.argument.title ?? "Detail",
-                onTapBack: () {
-                  Navigator.pop(context);
+            return Scaffold(
+              appBar: appBar(
+                  child: widget.argument.title ?? "Detail",
+                  onTapBack: () {
+                    Navigator.pop(context);
+                  },
+                  icon: Text(
+                    'Ubah',
+                    style: MyTextStyle.h5.bold
+                        .copyWith(color: MyColors.background),
+                  ),
+                  onTap: () async {
+                    var postThread = await Navigator.of(context).pushNamed(
+                        PostArticleScreen.routeName,
+                        arguments: detail);
+                    if (postThread != null) {
+                      bloc.add(DetailArticleEventGetDetail(
+                          uuid: widget.argument.uuid));
+                    }
+                  }),
+              body: SmartRefresher(
+                enablePullDown: true,
+                enablePullUp: true,
+                controller: bloc.refreshController,
+                onRefresh: () {
+                  bloc.add(
+                      DetailArticleEventGetDetail(uuid: widget.argument.uuid));
+                  blocForum
+                      .add(ForumEventGetData(contentId: widget.argument.id));
                 },
-                icon: Text(
-                  'Ubah',
-                  style:
-                      MyTextStyle.h5.bold.copyWith(color: MyColors.background),
+                child: SingleChildScrollView(
+                  child: Column(children: [
+                    Wrapper(
+                      state: state.state,
+                      onLoading: GFShimmer(
+                        child: Column(
+                          children: [
+                            Spaces.normalVertical(),
+                            for (var i = 0; i < 12; i++)
+                              Column(
+                                children: [
+                                  loadingBlock(dimension),
+                                  Spaces.normalVertical()
+                                ],
+                              ),
+                          ],
+                        ),
+                      ),
+                      onLoaded: Container(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            state.detail?.isVideo == 1
+                                ? YoutubePlayerIFrame(
+                                    controller: bloc.ytController,
+                                    aspectRatio: 16 / 9,
+                                  )
+                                : _renderBanner(bannerList, state.activeBanner),
+                            Container(
+                              padding:
+                                  EdgeInsets.only(left: 16, right: 16, top: 16),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    '${detail.title}',
+                                    style: MyTextStyle.contentTitle,
+                                  ),
+                                  Spaces.smallVertical(),
+                                  Text(
+                                    '${detail.subtitle}',
+                                    style: MyTextStyle.sessionTitle,
+                                  ),
+                                  Spaces.normalVertical(),
+                                ],
+                              ),
+                            ),
+                            Container(
+                              padding: EdgeInsets.only(
+                                left: 8,
+                                right: 8,
+                              ),
+                              child: Html(
+                                data: detail.content,
+                                onLinkTap: (url, _, __, ___) {
+                                  print("Opening $url...");
+                                },
+                                onImageTap: (src, _, __, ___) {
+                                  print(src);
+                                },
+                                onImageError: (exception, stackTrace) {
+                                  print(exception);
+                                },
+                                onCssParseError: (css, messages) {
+                                  print("css that errored: $css");
+                                  print("error messages:");
+                                  messages.forEach((element) {
+                                    print(element);
+                                  });
+                                },
+                              ),
+                            ),
+                            Spaces.largeVertical(),
+                            Divider(),
+                            Container(
+                              margin: EdgeInsets.symmetric(horizontal: 8),
+                              child: Text(
+                                'Komentar atau Diskusi: ',
+                                style: MyTextStyle.sessionTitle,
+                              ),
+                            ),
+                            Divider(),
+                            Container(
+                              margin: EdgeInsets.symmetric(horizontal: 8),
+                              child: BlocConsumer<ForumBloc, ForumState>(
+                                  bloc: blocForum,
+                                  listener: (context, state) {
+                                    bloc.refreshController.refreshCompleted();
+                                    bloc.refreshController.loadComplete();
+                                  },
+                                  builder: (context, state) {
+                                    final list = state.threadsList;
+                                    return Wrapper(
+                                      state: state.state,
+                                      onLoaded: state.threadsList!.length < 1
+                                          ? Center(child: Text('Belum ada diskusi', style: MyTextStyle.h4,))
+                                          : ListView.separated(
+                                              shrinkWrap: true,
+                                              physics:
+                                                  NeverScrollableScrollPhysics(),
+                                              itemBuilder: (c, i) {
+                                                final item = list?[i];
+                                                return Threads(
+                                                  onTap: () =>
+                                                      Navigator.pushNamed(
+                                                          context,
+                                                          DetailForumScreen
+                                                              .routeName,
+                                                          arguments: item),
+                                                  name: '${item?.createdBy}',
+                                                  content: item?.content,
+                                                  countComments:
+                                                      item?.countComments,
+                                                  onTapLike: () {
+                                                    GFToast.showToast(
+                                                        'Fitur belum tersedia',
+                                                        context,
+                                                        toastPosition:
+                                                            GFToastPosition
+                                                                .BOTTOM);
+                                                  },
+                                                  onTapShare: () {
+                                                    GFToast.showToast(
+                                                        'Fitur belum tersedia',
+                                                        context,
+                                                        toastPosition:
+                                                            GFToastPosition
+                                                                .BOTTOM);
+                                                  },
+                                                );
+                                              },
+                                              separatorBuilder: (c, i) {
+                                                return Spaces
+                                                    .normalHorizontal();
+                                              },
+                                              itemCount: list!.length,
+                                            ),
+                                      onLoading: GFShimmer(
+                                        child: Column(
+                                          children: [
+                                            Spaces.normalVertical(),
+                                            for (var i = 0; i < 2; i++)
+                                              Column(
+                                                children: [
+                                                  loadingBlock(dimension),
+                                                  Spaces.normalVertical()
+                                                ],
+                                              ),
+                                          ],
+                                        ),
+                                      ),
+                                      onError: Align(
+                                        alignment: Alignment.center,
+                                        child: Padding(
+                                          padding: const EdgeInsets.symmetric(
+                                              horizontal: 15.0),
+                                          child: Text(
+                                              state.message ?? 'Unknown Error'),
+                                        ),
+                                      ),
+                                    );
+                                  }),
+                            ),
+                          ],
+                        ),
+                      ),
+                      onError: Align(
+                        alignment: Alignment.center,
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 15.0),
+                          child: Text(state.message ?? 'Unknown Error'),
+                        ),
+                      ),
+                    )
+                  ]),
                 ),
-                onTap: () async {
-                  var postThread = await Navigator.of(context)
-                      .pushNamed(PostArticleScreen.routeName, arguments: detail);
-                  if (postThread != null) {
-                    bloc.add(DetailArticleEventGetDetail(
-                        uuid: widget.argument.uuid));
-                  }
-                }),
-            body: SmartRefresher(
-              enablePullDown: true,
-              enablePullUp: false,
-              controller: bloc.refreshController,
-              onRefresh: () {
-                bloc.add(
-                    DetailArticleEventGetDetail(uuid: widget.argument.uuid));
-              },
-              child: SingleChildScrollView(
-                child: Column(children: [
-                  Wrapper(
-                    state: state.state,
-                    onLoading: GFShimmer(
-                      child: Column(
-                        children: [
-                          Spaces.normalVertical(),
-                          for (var i = 0; i < 12; i++)
-                            Column(
-                              children: [
-                                loadingBlock(dimension),
-                                Spaces.normalVertical()
-                              ],
-                            ),
-                        ],
-                      ),
-                    ),
-                    onLoaded: Container(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          state.detail?.isVideo == 1
-                              ? YoutubePlayerIFrame(
-                                  controller: bloc.ytController,
-                                  aspectRatio: 16 / 9,
-                                )
-                              : _renderBanner(bannerList, state.activeBanner),
-                          Container(
-                            padding:
-                                EdgeInsets.only(left: 16, right: 16, top: 16),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  '${detail.title}',
-                                  style: MyTextStyle.contentTitle,
-                                ),
-                                Spaces.smallVertical(),
-                                Text(
-                                  '${detail.subtitle}',
-                                  style: MyTextStyle.sessionTitle,
-                                ),
-                                Spaces.normalVertical(),
-                              ],
-                            ),
-                          ),
-                          Container(
-                            padding: EdgeInsets.only(
-                              left: 8,
-                              right: 8,
-                            ),
-                            child: Html(
-                              data: detail.content,
-                              onLinkTap: (url, _, __, ___) {
-                                print("Opening $url...");
-                              },
-                              onImageTap: (src, _, __, ___) {
-                                print(src);
-                              },
-                              onImageError: (exception, stackTrace) {
-                                print(exception);
-                              },
-                              onCssParseError: (css, messages) {
-                                print("css that errored: $css");
-                                print("error messages:");
-                                messages.forEach((element) {
-                                  print(element);
-                                });
-                              },
-                            ),
-                          )
-                        ],
-                      ),
-                    ),
-                    onError: Align(
-                      alignment: Alignment.center,
-                      child: Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 15.0),
-                        child: Text(state.message ?? 'Unknown Error'),
-                      ),
-                    ),
-                  )
-                ]),
               ),
-            ),
-          );
-        },
+            );
+          },
+        ),
       ),
     );
   }

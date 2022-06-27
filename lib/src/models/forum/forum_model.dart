@@ -20,7 +20,7 @@ class ForumModel {
 
   ForumModel.fromJson(Map<String, dynamic> json) {
     id = json['id'];
-    uuid = json['uuid'];
+    uuid = json['_id'];
     name = json['name'];
     title = json['title'];
     description = json['description'];
@@ -32,7 +32,7 @@ class ForumModel {
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['id'] = this.id;
-    data['uuid'] = this.uuid;
+    data['_id'] = this.uuid;
     data['name'] = this.name;
     data['title'] = this.title;
     data['description'] = this.description;

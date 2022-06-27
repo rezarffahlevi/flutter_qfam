@@ -57,7 +57,8 @@ class ForumBloc extends Bloc<ForumEvent, ForumState> {
       var response = await apiService.getThreadsList({
         'id': event.uuid,
         'parent_id': event.parentId,
-        'forum_id': event.forumId
+        'forum_id': event.forumId,
+        'content_id': event.contentId,
       });
       emit(state.copyWith(
         state: NetworkStates.onLoaded,
