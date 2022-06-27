@@ -11,9 +11,9 @@ class ContentService {
 
   ContentService();
 
-  Future<DefaultResponseModel?> getList() async {
+  Future<DefaultResponseModel?> getList({dynamic params}) async {
     try {
-      var response = await apiHelper.get('/contents');
+      var response = await apiHelper.get('/contents', params: params);
       List<ContentsModel>? data = <ContentsModel>[];
       response['data']!.forEach((v) {
         data.add(new ContentsModel.fromJson(v));

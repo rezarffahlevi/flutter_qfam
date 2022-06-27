@@ -77,6 +77,7 @@ class _SearchScreenState extends State<SearchScreen> {
                     ),
                     child: new TextField(
                       autofocus: false,
+                      controller: bloc.txtSearch,
                       decoration: new InputDecoration(
                           contentPadding: EdgeInsets.all(0.1),
                           focusedBorder: OutlineInputBorder(
@@ -97,7 +98,18 @@ class _SearchScreenState extends State<SearchScreen> {
                   enablePullDown: true,
                   enablePullUp: true,
                   controller: _refreshController,
-                  onRefresh: () => bloc.add(SearchEventRefresh()),
+                  onRefresh: () {
+                    _refreshController.resetNoData();
+                    bloc.add(SearchEventRefresh());
+                  },
+                  onLoading: () {
+                    if (state.page <
+                        (state.response?.pagination?.lastPage ?? 1)) {
+                      bloc.add(SearchEventGetData(page: state.page + 1, categoryId: state.selectedCategory, search: state.search));
+                    } else {
+                      _refreshController.loadNoData();
+                    }
+                  },
                   child: SingleChildScrollView(
                     child: Column(children: [
                       Spaces.normalVertical(),
@@ -176,12 +188,15 @@ class _SearchScreenState extends State<SearchScreen> {
                                             text: new TextSpan(
                                               children: [
                                                 new TextSpan(
-                                                  text: article.sourceBy == null ? 'Dibuat oleh ' : 'Sumber dari ',
+                                                  text: article.sourceBy == null
+                                                      ? 'Dibuat oleh '
+                                                      : 'Sumber dari ',
                                                   style: MyTextStyle
                                                       .contentDescription,
                                                 ),
                                                 new TextSpan(
-                                                  text: '${article.sourceBy ?? article.createdByName}',
+                                                  text:
+                                                      '${article.sourceBy ?? article.createdByName}',
                                                   style: new TextStyle(
                                                       color: MyColors.link),
                                                 ),
@@ -228,7 +243,7 @@ class _SearchScreenState extends State<SearchScreen> {
                                   .pushNamed(PostArticleScreen.routeName,
                                       arguments: ContentsModel());
                               if (postThread != null) {
-                                bloc.add(SearchEventGetData());
+                                bloc.add(SearchEventGetData(page: 1, categoryId: state.selectedCategory, search: state.search));
                               }
                             },
                             backgroundColor: MyColors.primary,

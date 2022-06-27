@@ -6,6 +6,9 @@ class SearchState extends Equatable {
   final List<ContentsModel>? contentsList;
   final List<CategoryModel>? categoryList;
   final int? selectedCategory;
+  final String? search;
+  final int page;
+  final DefaultResponseModel? response;
 
   const SearchState({
     this.state = NetworkStates.onLoading,
@@ -13,6 +16,9 @@ class SearchState extends Equatable {
     this.contentsList = const [],
     this.categoryList = const [],
     this.selectedCategory = 1,
+    this.search,
+    this.page = 1,
+    this.response,
   });
 
   SearchState copyWith({
@@ -21,6 +27,9 @@ class SearchState extends Equatable {
     List<ContentsModel>? contentsList,
     List<CategoryModel>? categoryList,
     int? selectedCategory,
+    String? search,
+    int? page = 1,
+    DefaultResponseModel? response,
   }) {
     return SearchState(
       state: state ?? this.state,
@@ -28,10 +37,21 @@ class SearchState extends Equatable {
       contentsList: contentsList ?? this.contentsList,
       categoryList: categoryList ?? this.categoryList,
       selectedCategory: selectedCategory ?? this.selectedCategory,
+      search: search ?? this.search,
+      page: page ?? this.page,
+      response: response ?? this.response,
     );
   }
 
   @override
-  List<Object?> get props =>
-      [state, message, contentsList, categoryList, selectedCategory];
+  List<Object?> get props => [
+        state,
+        message,
+        contentsList,
+        categoryList,
+        selectedCategory,
+        search,
+        page,
+        response
+      ];
 }

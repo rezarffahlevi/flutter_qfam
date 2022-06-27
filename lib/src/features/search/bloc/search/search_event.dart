@@ -5,7 +5,21 @@ abstract class SearchEvent extends Equatable {
   List<Object?> get props => [];
 }
 
-class SearchEventGetData extends SearchEvent {}
+class SearchEventGetData extends SearchEvent {
+  int page;
+  int? categoryId;
+  String? search;
+
+  SearchEventGetData({
+    this.page = 1,
+    this.categoryId,
+    this.search,
+  });
+
+  @override
+  List<Object?> get props => [page, categoryId, search];
+}
+
 class SearchEventGetCategory extends SearchEvent {}
 
 class SearchEventSetSelectedCategory extends SearchEvent {

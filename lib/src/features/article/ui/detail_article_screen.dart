@@ -81,7 +81,7 @@ class _DetailArticleScreenState extends State<DetailArticleScreen> {
             bloc.refreshController.loadComplete();
           },
           builder: (context, state) {
-            ContentsModel? detail = widget.argument;
+            ContentsModel? detail = state.detail;
             final bannerList = state.bannerList;
 
             return Scaffold(
@@ -163,12 +163,12 @@ class _DetailArticleScreenState extends State<DetailArticleScreen> {
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Text(
-                                    '${detail.title}',
+                                    '${detail?.title}',
                                     style: MyTextStyle.contentTitle,
                                   ),
                                   Spaces.smallVertical(),
                                   Text(
-                                    '${detail.subtitle}',
+                                    '${detail?.subtitle}',
                                     style: MyTextStyle.sessionTitle,
                                   ),
                                   Spaces.normalVertical(),
@@ -181,7 +181,7 @@ class _DetailArticleScreenState extends State<DetailArticleScreen> {
                                 right: 8,
                               ),
                               child: Html(
-                                data: detail.content,
+                                data: detail?.content ?? '',
                                 onLinkTap: (url, _, __, ___) {
                                   print("Opening $url...");
                                 },
