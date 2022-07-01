@@ -29,6 +29,8 @@ class ForumScreen extends StatefulWidget {
 
 class _ForumScreenState extends State<ForumScreen>
     with SingleTickerProviderStateMixin {
+  final RefreshController _refreshController =
+      RefreshController(initialRefresh: false);
   late AuthBloc authBloc;
   ForumBloc bloc = ForumBloc();
   bool isHaveAccess = false;
@@ -146,7 +148,22 @@ class _ForumScreenState extends State<ForumScreen>
                         ),
                       ),
                       onLoaded: bloc.tabController == null
-                          ? Container()
+                          ? SmartRefresher(
+                              enablePullDown: true,
+                              enablePullUp: true,
+                              controller: _refreshController,
+                              onRefresh: () {
+                                bloc.add(ForumEventRefresh());
+                                _refreshController.loadComplete();
+                                _refreshController.refreshCompleted();
+                              },
+                              onLoading: () {},
+                              child: Padding(
+                                padding: const EdgeInsets.symmetric(
+                                    horizontal: 16.0, vertical: 16),
+                                child: Text(state.message ?? 'Unknown Error'),
+                              ),
+                            )
                           : TabBarView(
                               key: Key('TabBarViewArticle'),
                               controller: bloc.tabController,

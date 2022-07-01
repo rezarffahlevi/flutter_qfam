@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:dio/adapter.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_qfam/src/commons/app_settings.dart';
@@ -18,7 +19,7 @@ class ApiHelper {
     connectTimeout: 10000,
     receiveTimeout: 5000,
   );
-  Dio dio = Dio();
+  Dio dio = new Dio();
 
   _getHeaders() async {
     // debugPrint('header ${await Prefs.token}');
@@ -32,7 +33,12 @@ class ApiHelper {
     options.baseUrl = baseUrl;
     options.headers = await _getHeaders();
     dio.options = options;
-
+    (dio.httpClientAdapter as DefaultHttpClientAdapter).onHttpClientCreate =
+        (HttpClient client) {
+      client.badCertificateCallback =
+          (X509Certificate cert, String host, int port) => true;
+      return client;
+    };
     try {
       var response = await dio.get(url, queryParameters: params);
       debugPrint("======== GET API ${url} <> params: ${params} ========");
@@ -53,7 +59,12 @@ class ApiHelper {
     options.baseUrl = baseUrl;
     options.headers = await _getHeaders();
     dio.options = options;
-
+    (dio.httpClientAdapter as DefaultHttpClientAdapter).onHttpClientCreate =
+        (HttpClient client) {
+      client.badCertificateCallback =
+          (X509Certificate cert, String host, int port) => true;
+      return client;
+    };
     try {
       var response = await dio.post(url, data: params);
       debugPrint("======== POST API ${url} <> params: ${params} ========\n");
