@@ -6,10 +6,12 @@ class Threads extends StatelessWidget {
     this.name,
     this.content,
     this.countComments,
+    this.countLikes,
     this.onTap,
     this.isDetail = false,
     this.isChild = false,
     this.isAnonymous = false,
+    this.isLiked = false,
     this.onTapParent,
     this.onTapComment,
     this.onTapLike,
@@ -22,9 +24,11 @@ class Threads extends StatelessWidget {
   final String? name;
   final String? content;
   final int? countComments;
+  final int? countLikes;
   final bool isDetail;
   final bool isChild;
   final bool isAnonymous;
+  final bool isLiked;
   final Function()? onTap;
   final Function()? onTapParent;
   final Function()? onTapComment;
@@ -107,13 +111,13 @@ class Threads extends StatelessWidget {
                         icon: Row(
                           children: [
                             Icon(
-                              Icons.favorite_border,
+                              isLiked ?  Icons.favorite : Icons.favorite_border,
                               size: 16,
-                              color: Colors.black38,
+                              color: isLiked ? MyColors.primary : Colors.black38,
                             ),
                             Spaces.smallHorizontal(),
                             Text(
-                              '0',
+                              '${countLikes ?? '0'}',
                               style: MyTextStyle.contentDescription,
                             ),
                           ],
@@ -240,7 +244,7 @@ class Threads extends StatelessWidget {
                         Row(
                           children: [
                             Text(
-                              '0',
+                              '${countLikes ?? 0}',
                               style: MyTextStyle.h7.bold,
                             ),
                             Spaces.smallHorizontal(),

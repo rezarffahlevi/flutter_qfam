@@ -11,6 +11,7 @@ import 'package:getwidget/getwidget.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 
 part 'forum_event.dart';
+
 part 'forum_state.dart';
 
 class ForumBloc extends Bloc<ForumEvent, ForumState> {
@@ -22,10 +23,14 @@ class ForumBloc extends Bloc<ForumEvent, ForumState> {
     on<ForumEventOnChangeThread>(_onChangeThread);
     on<ForumEventInitPostThread>(_initPostThread);
     on<ForumEventInitForumList>(_initForumList);
+    on<ForumEventOnLiked>(_toggleLike);
   }
+
   ForumService apiService = ForumService();
   TabController? tabController;
-  List<RefreshController> refreshController = [RefreshController(initialRefresh: false)];
+  List<RefreshController> refreshController = [
+    RefreshController(initialRefresh: false)
+  ];
   final txtContent = TextEditingController();
 
   _initPostThread(
@@ -61,7 +66,7 @@ class ForumBloc extends Bloc<ForumEvent, ForumState> {
         emit(state.copyWith(state: NetworkStates.onLoading));
       }
       var response = await apiService.getThreadsList({
-        '_id': event.uuid,
+        'uuid': event.uuid,
         'id': event.id,
         'parent_id': event.parentId,
         'forum_id': event.forumId,
@@ -120,6 +125,28 @@ class ForumBloc extends Bloc<ForumEvent, ForumState> {
         message: response?.message,
         threads: response?.data,
       ));
+    } catch (e) {
+      emit(state.copyWith(state: NetworkStates.onError, message: '${e}'));
+    }
+  }
+
+  _toggleLike(ForumEventOnLiked event, Emitter<ForumState> emit) async {
+    try {
+      emit(state.copyWith(state: NetworkStates.onLoading));
+      var response =
+          await apiService.likeThread({"thread_id": event.thread_id});
+      int index = state.threadsList
+              ?.indexWhere((element) => element.id == event.thread_id) ??
+          0;
+      List<ThreadsModel>? threadsList = state.threadsList;
+      var isLike = threadsList![index].isLiked == 1;
+      threadsList[index].isLiked = isLike ? 0 : 1;
+      threadsList[index].countLikes = isLike
+          ? (threadsList[index].countLikes ?? 1) - 1
+          : (threadsList[index].countLikes ?? 0) + 1;
+      debugPrint('LIKE ${threadsList[index].isLiked} ${index}');
+      emit(state.copyWith(
+          threadsList: threadsList, state: NetworkStates.onLoaded));
     } catch (e) {
       emit(state.copyWith(state: NetworkStates.onError, message: '${e}'));
     }

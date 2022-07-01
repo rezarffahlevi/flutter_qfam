@@ -1,0 +1,46 @@
+{
+  "project_info": {
+    "project_number": "809322518585",
+    "project_id": "quality-family",
+    "storage_bucket": "quality-family.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:809322518585:android:0b8483978ada2a18b795e8",
+        "android_client_info": {
+          "package_name": "com.qfam.android"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "809322518585-3b44hte7g6j3bsbv242idl7m58k405pp.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAP8MoQXYApIF7qz5NVc9s_XJ1BktWmCUg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "809322518585-3b44hte7g6j3bsbv242idl7m58k405pp.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "809322518585-6ofcl4vdif9n44ugn4om471miie8ctff.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.qfam.ios"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

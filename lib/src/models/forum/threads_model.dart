@@ -8,6 +8,8 @@ class ThreadsModel {
   int? parentId;
   int? isAnonymous;
   int? countComments;
+  int? countLikes;
+  int? isLiked;
   String? createdAt;
   String? updatedAt;
   List<ThreadsModel>? child;
@@ -22,13 +24,15 @@ class ThreadsModel {
       this.parentId,
       this.isAnonymous,
       this.countComments,
+      this.countLikes,
+      this.isLiked,
       this.createdAt,
       this.updatedAt,
       this.child});
 
   ThreadsModel.fromJson(Map<String, dynamic> json) {
     id = json['id'];
-    uuid = json['_id'];
+    uuid = json['uuid'];
     content = json['content'];
     forumId = json['forum_id'];
     contentId = json['content_id'];
@@ -36,6 +40,8 @@ class ThreadsModel {
     parentId = json['parent_id'];
     isAnonymous = json['is_anonymous'];
     countComments = json['count_comments'];
+    countLikes = json['count_likes'];
+    isLiked = json['is_liked'];
     createdAt = json['created_at'];
     updatedAt = json['updated_at'];
     if (json['child'] != null) {
@@ -49,7 +55,7 @@ class ThreadsModel {
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['id'] = this.id;
-    data['_id'] = this.uuid;
+    data['uuid'] = this.uuid;
     data['content'] = this.content;
     data['forum_id'] = this.forumId;
     data['content_id'] = this.contentId;
@@ -57,6 +63,8 @@ class ThreadsModel {
     data['parent_id'] = this.parentId;
     data['is_anonymous'] = this.isAnonymous;
     data['count_comments'] = this.countComments;
+    data['count_likes'] = this.countLikes;
+    data['is_liked'] = this.isLiked;
     data['created_at'] = this.createdAt;
     data['updated_at'] = this.updatedAt;
     if (this.child != null) {

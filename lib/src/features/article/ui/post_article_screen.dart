@@ -321,7 +321,7 @@ class _PostArticleScreenState extends State<PostArticleScreen> {
                                               status: newValue.toString()));
                                         },
                                         items: [
-                                          'published',
+                                          'publish',
                                           'unpublish',
                                         ]
                                             .map((value) => DropdownMenuItem(

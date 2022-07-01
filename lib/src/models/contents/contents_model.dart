@@ -51,7 +51,7 @@ class ContentsModel {
 
   ContentsModel.fromJson(Map<String, dynamic> json) {
     id = json['id'];
-    uuid = json['_id'];
+    uuid = json['uuid'];
     title = json['title'];
     subtitle = json['subtitle'];
     content = json['content'];
@@ -83,7 +83,7 @@ class ContentsModel {
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['id'] = this.id;
-    data['_id'] = this.uuid;
+    data['uuid'] = this.uuid;
     data['title'] = this.title;
     data['subtitle'] = this.subtitle;
     data['content'] = this.content;

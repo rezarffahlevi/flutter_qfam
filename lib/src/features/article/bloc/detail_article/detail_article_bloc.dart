@@ -41,7 +41,7 @@ class DetailArticleBloc extends Bloc<DetailArticleEvent, DetailArticleState> {
       Emitter<DetailArticleState> emit) async {
     add(DetailArticleEventGetCategory());
     add(DetailArticleEventOnChange(
-        categoryId: 1, isExternal: 0, isVideo: 0, status: 'published'));
+        categoryId: 1, isExternal: 0, isVideo: 0, status: 'publish'));
     txtTitle.addListener(() {
       add(DetailArticleEventOnChange(title: txtTitle.text));
     });
@@ -58,10 +58,10 @@ class DetailArticleBloc extends Bloc<DetailArticleEvent, DetailArticleState> {
       add(DetailArticleEventOnChange(thumbnail: txtThumbnail.text));
     });
     txtSourceBy.addListener(() {
-      add(DetailArticleEventOnChange(thumbnail: txtSourceBy.text));
+      add(DetailArticleEventOnChange(sourceBy: txtSourceBy.text));
     });
     txtVerifiedBy.addListener(() {
-      add(DetailArticleEventOnChange(thumbnail: txtVerifiedBy.text));
+      add(DetailArticleEventOnChange(verifiedBy: txtVerifiedBy.text));
     });
   }
 

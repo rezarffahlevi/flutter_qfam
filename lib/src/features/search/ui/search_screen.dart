@@ -6,6 +6,7 @@ import 'package:flutter_qfam/src/features/article/ui/post_article_screen.dart';
 import 'package:flutter_qfam/src/features/auth/bloc/auth_bloc.dart';
 import 'package:flutter_qfam/src/features/home/bloc/home_root/home_root_bloc.dart';
 import 'package:flutter_qfam/src/features/search/bloc/search/search_bloc.dart';
+import 'package:flutter_qfam/src/helpers/helpers.dart';
 import 'package:flutter_qfam/src/models/contents/contents_model.dart';
 import 'package:flutter_qfam/src/models/profile/user_model.dart';
 import 'package:flutter_qfam/src/styles/my_colors.dart';
@@ -203,7 +204,7 @@ class _SearchScreenState extends State<SearchScreen> {
                                               ],
                                             ),
                                           ),
-                                          article.verifiedBy == null
+                                          Helpers.isEmpty(article.verifiedBy)
                                               ? Container()
                                               : Icon(
                                                   Icons.verified_outlined,

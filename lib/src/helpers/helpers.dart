@@ -304,7 +304,7 @@ class Helpers {
   }
 
   static Widget datePickerWidget(BuildContext context, String title,
-      Function(DateTime) onConfirm, DateTime defaultDateTime,
+      Function(DateTime) onConfirm, DateTime? defaultDateTime,
       {minimumYear, maximumYear}) {
     DateTime dateTime = defaultDateTime ?? DateTime.now();
     int minYear = minimumYear ?? DateTime.now().year - 100;
@@ -449,6 +449,7 @@ class Helpers {
   }
 
   static bool isInteger(num value) => (value % 1) == 0;
+  static bool isEmpty(String? value) => value == null || value == '';
 
   static String replaceZero(String value) {
     String result = removeDecimalZero(value);

@@ -8,6 +8,7 @@ import 'package:flutter_qfam/src/features/auth/ui/login_screen.dart';
 import 'package:flutter_qfam/src/features/home/bloc/home_root/home_root_bloc.dart';
 import 'package:flutter_qfam/src/features/home/ui/home_root_screen.dart';
 import 'package:flutter_qfam/src/helpers/helpers.dart';
+import 'package:flutter_qfam/src/helpers/notification_helper.dart';
 import 'package:flutter_qfam/src/models/profile/user_model.dart';
 import 'package:flutter_qfam/src/services/auth/auth_service.dart';
 import 'package:flutter_qfam/src/widgets/widgets.dart';
@@ -15,6 +16,7 @@ import 'package:getwidget/getwidget.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 
 part 'auth_event.dart';
+
 part 'auth_state.dart';
 
 class AuthBloc extends Bloc<AuthEvent, AuthState> {
@@ -28,9 +30,11 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     on<AuthEventOnLogout>(_onLogout);
     on<AuthEventOnRegister>(_onRegister);
   }
+
   RefreshController refreshController =
       RefreshController(initialRefresh: false);
   AuthService apiService = AuthService();
+
   // late HomeRootBloc homeRootBloc;
 
   final txtEmail = TextEditingController();
@@ -68,7 +72,9 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       AuthEventGetCurrentUser event, Emitter<AuthState> emit) async {
     try {
       emit(state.copyWith(state: NetworkStates.onLoading));
-      var response = await apiService.getCurrentUser();
+      var fcmToken = await NotificationHelper.getFcmToken();
+      var response =
+          await apiService.getCurrentUser(params: {'fcm': fcmToken});
       emit(state.copyWith(
           currentUser: response?.data, state: NetworkStates.onLoaded));
     } catch (e) {
@@ -111,9 +117,11 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     try {
       Helpers.dismissKeyboard(state.context as BuildContext);
       emit(state.copyWith(state: NetworkStates.onLoading));
+      var fcmToken = await NotificationHelper.getFcmToken();
       var params = {
         "email": state.formdataUser?.email,
         "password": state.formdataUser?.password,
+        "fcm": fcmToken,
       };
       var response = await apiService.onLogin(params: params);
       ResponseLoginModel? data = response?.data;

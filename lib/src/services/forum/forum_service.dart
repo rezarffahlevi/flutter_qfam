@@ -42,4 +42,13 @@ class ForumService {
       throw e;
     }
   }
+
+  Future<DefaultResponseModel?> likeThread(dynamic params) async {
+    try {
+      var response = await apiHelper.post('/like', params: params);
+      return DefaultResponseModel.fromJson(response, null);
+    } catch (e) {
+      throw e;
+    }
+  }
 }

@@ -57,11 +57,11 @@ class _HomeRootScreenState extends State<HomeRootScreen> {
                   onTap: () {
                     Helpers.dismissKeyboard(context);
                   },
-                  child: bloc.children[state.index],
-                  // child: IndexedStack(
-                  //   children: bloc.children,
-                  //   index: state.index,
-                  // ),
+                  // child: bloc.children[state.index],
+                  child: IndexedStack(
+                    children: bloc.children,
+                    index: state.index,
+                  ),
                 ),
                 bottomNavigationBar: BottomNavigationBar(
                   type: BottomNavigationBarType.fixed,

@@ -5,7 +5,6 @@ import 'package:flutter_qfam/src/features/auth/bloc/auth_bloc.dart';
 import 'package:flutter_qfam/src/features/auth/ui/login_screen.dart';
 import 'package:flutter_qfam/src/features/forum/bloc/forum/forum_bloc.dart';
 import 'package:flutter_qfam/src/features/forum/ui/post_thread_screen.dart';
-import 'package:flutter_qfam/src/features/home/bloc/home/home_bloc.dart';
 import 'package:flutter_qfam/src/models/forum/threads_model.dart';
 import 'package:flutter_qfam/src/styles/my_colors.dart';
 import 'package:flutter_qfam/src/widgets/widgets.dart';
@@ -96,17 +95,24 @@ class _DetailForumScreenState extends State<DetailForumScreen> {
                         isDetail: true,
                         name: '${detail.createdBy}',
                         content: detail.content,
-                        countComments: detail.countComments,
                         isAnonymous: detail.isAnonymous == 1,
+                        countComments: detail.countComments,
+                        countLikes: detail.countLikes,
                         isChild: false,
+                        isLiked: detail.isLiked == 1,
                         //  detail.parentId != 0,
                         onTapParent: () {
                           bloc.add(
                               ForumEventGetData(parentId: detail.parentId));
                         },
                         onTapLike: () {
-                          GFToast.showToast('Fitur belum tersedia', context,
-                              toastPosition: GFToastPosition.BOTTOM);
+                          if (authBloc.state.currentUser?.email == null)
+                            GFToast.showToast(
+                                'Anda harus login terlebih dahulu', context,
+                                toastPosition: GFToastPosition.BOTTOM);
+                          else
+                            GFToast.showToast('Fitur belum tersedia', context,
+                                toastPosition: GFToastPosition.BOTTOM);
                         },
                         onTapShare: () {
                           GFToast.showToast('Fitur belum tersedia', context,
@@ -114,7 +120,7 @@ class _DetailForumScreenState extends State<DetailForumScreen> {
                         },
                       ),
                       Wrapper(
-                        state: state.state,
+                        state: NetworkStates.onLoaded,
                         onLoaded: ListView.separated(
                           padding: EdgeInsets.all(8),
                           shrinkWrap: true,
@@ -127,12 +133,19 @@ class _DetailForumScreenState extends State<DetailForumScreen> {
                                   arguments: item),
                               name: '${item.createdBy}',
                               content: item.content,
-                              isAnonymous: item.isAnonymous == 1,
                               countComments: item.countComments,
+                              countLikes: item.countLikes,
+                              isAnonymous: item.isAnonymous == 1,
+                              isLiked: item.isLiked == 1,
                               onTapLike: () {
-                                GFToast.showToast(
-                                    'Fitur belum tersedia', context,
-                                    toastPosition: GFToastPosition.BOTTOM);
+                                if (authBloc.state.currentUser?.email == null)
+                                  GFToast.showToast(
+                                      'Anda harus login terlebih dahulu',
+                                      context,
+                                      toastPosition: GFToastPosition.BOTTOM);
+                                else
+                                  bloc.add(
+                                      ForumEventOnLiked(thread_id: item.id));
                               },
                               onTapShare: () {
                                 GFToast.showToast(

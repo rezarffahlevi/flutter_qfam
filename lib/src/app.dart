@@ -1,3 +1,9 @@
+
+import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:flutter_qfam/firebase_options.dart';
 import 'package:flutter_qfam/src/commons/app_settings.dart';
 import 'package:flutter_qfam/src/features/article/ui/detail_article_screen.dart';
 import 'package:flutter_qfam/src/features/article/ui/post_article_screen.dart';
@@ -10,6 +16,8 @@ import 'package:flutter_qfam/src/features/home/bloc/home_root/home_root_bloc.dar
 import 'package:flutter_qfam/src/features/home/ui/home_root_screen.dart';
 import 'package:flutter_qfam/src/features/search/ui/search_screen.dart';
 import 'package:flutter_qfam/src/features/splash/ui/splash_screen.dart';
+import 'package:flutter_qfam/src/helpers/helpers.dart';
+import 'package:flutter_qfam/src/helpers/notification_helper.dart';
 import 'package:flutter_qfam/src/models/contents/contents_model.dart';
 import 'package:flutter_qfam/src/models/forum/threads_model.dart';
 import 'package:flutter/material.dart';
@@ -25,6 +33,13 @@ class App extends StatefulWidget {
 }
 
 class _AppState extends State<App> {
+  NotificationHelper notificationHelper = NotificationHelper();
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return MultiBlocProvider(
@@ -38,6 +53,7 @@ class _AppState extends State<App> {
       ],
       child: MaterialApp(
         title: AppSettings.name,
+        navigatorKey: Helpers.navigatorKey,
         initialRoute: SplashScreen.routeName,
         theme: ThemeData(fontFamily: 'Nunito', brightness: Brightness.light),
         routes: {
@@ -48,8 +64,11 @@ class _AppState extends State<App> {
           SearchScreen.routeName: (context) => SearchScreen(
               argument: ModalRoute.of(context)?.settings.arguments as String?),
           PostThreadScreen.routeName: (context) => PostThreadScreen(
-              argument: ModalRoute.of(context)?.settings.arguments as ThreadsModel?),
-          PostArticleScreen.routeName: (context) => PostArticleScreen(argument: ModalRoute.of(context)?.settings.arguments as ContentsModel?),
+              argument:
+                  ModalRoute.of(context)?.settings.arguments as ThreadsModel?),
+          PostArticleScreen.routeName: (context) => PostArticleScreen(
+              argument:
+                  ModalRoute.of(context)?.settings.arguments as ContentsModel?),
           DetailForumScreen.routeName: (context) => DetailForumScreen(
               argument:
                   ModalRoute.of(context)?.settings.arguments as ThreadsModel),

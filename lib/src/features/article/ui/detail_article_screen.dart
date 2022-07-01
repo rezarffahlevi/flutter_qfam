@@ -21,6 +21,7 @@ import 'package:youtube_player_iframe/youtube_player_iframe.dart';
 class DetailArticleScreen extends StatefulWidget {
   static const String routeName = '/detail-article';
   final ContentsModel argument;
+
   const DetailArticleScreen({Key? key, required this.argument})
       : super(key: key);
 
@@ -90,7 +91,7 @@ class _DetailArticleScreenState extends State<DetailArticleScreen> {
                   onTapBack: () {
                     Navigator.pop(context);
                   },
-                  icon: Text(
+                  icon: authBloc.state.currentUser?.role != 'admin' ? null : Text(
                     'Ubah',
                     style: MyTextStyle.h5.bold
                         .copyWith(color: MyColors.background),
@@ -221,7 +222,7 @@ class _DetailArticleScreenState extends State<DetailArticleScreen> {
                                   builder: (context, state) {
                                     final list = state.threadsList;
                                     return Wrapper(
-                                      state: state.state,
+                                      state: NetworkStates.onLoaded,
                                       onLoaded: state.threadsList!.length < 1
                                           ? Center(
                                               child: Text(
@@ -243,17 +244,29 @@ class _DetailArticleScreenState extends State<DetailArticleScreen> {
                                                           arguments: item),
                                                   name: '${item?.createdBy}',
                                                   content: item?.content,
-                                                  isAnonymous:
-                                                      item?.isAnonymous == 1,
                                                   countComments:
                                                       item?.countComments,
+                                                  countLikes: item?.countLikes,
+                                                  isAnonymous:
+                                                      item?.isAnonymous == 1,
+                                                  isLiked: item?.isLiked == 1,
                                                   onTapLike: () {
-                                                    GFToast.showToast(
-                                                        'Fitur belum tersedia',
-                                                        context,
-                                                        toastPosition:
-                                                            GFToastPosition
-                                                                .BOTTOM);
+                                                    if (authBloc
+                                                            .state
+                                                            .currentUser
+                                                            ?.email ==
+                                                        null)
+                                                      GFToast.showToast(
+                                                          'Anda harus login terlebih dahulu',
+                                                          context,
+                                                          toastPosition:
+                                                              GFToastPosition
+                                                                  .BOTTOM);
+                                                    else
+                                                      blocForum.add(
+                                                          ForumEventOnLiked(
+                                                              thread_id:
+                                                                  item?.id));
                                                   },
                                                   onTapShare: () {
                                                     GFToast.showToast(
