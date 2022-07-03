@@ -120,7 +120,7 @@ class _DetailForumScreenState extends State<DetailForumScreen> {
                         },
                       ),
                       Wrapper(
-                        state: NetworkStates.onLoaded,
+                        state: state.state,
                         onLoaded: ListView.separated(
                           padding: EdgeInsets.all(8),
                           shrinkWrap: true,

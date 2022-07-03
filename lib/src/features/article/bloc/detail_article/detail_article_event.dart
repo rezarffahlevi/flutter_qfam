@@ -29,11 +29,12 @@ class DetailArticleEventSetActiveBanner extends DetailArticleEvent {
 
 class DetailArticleEventInitPost extends DetailArticleEvent {
   BuildContext? context;
+  ContentsModel? formdata;
 
-  DetailArticleEventInitPost({this.context});
+  DetailArticleEventInitPost({this.context, this.formdata});
 
   @override
-  List<Object?> get props => [context];
+  List<Object?> get props => [context, formdata];
 }
 
 class DetailArticleEventOnChange extends DetailArticleEvent {

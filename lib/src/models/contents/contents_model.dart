@@ -74,7 +74,7 @@ class ContentsModel {
 
     if (json['banner'] != null) {
       banner = <FilesModel>[];
-      json['banner'].forEach((v) {
+      json['banner']!.forEach((v) {
         banner!.add(new FilesModel.fromJson(v));
       });
     }

@@ -62,9 +62,7 @@ class ForumBloc extends Bloc<ForumEvent, ForumState> {
 
   _getData(ForumEventGetData event, Emitter<ForumState> emit) async {
     try {
-      if (event.page < 2) {
-        emit(state.copyWith(state: NetworkStates.onLoading));
-      }
+      if (event.page < 2) emit(state.copyWith(state: NetworkStates.onLoading));
       var response = await apiService.getThreadsList({
         'uuid': event.uuid,
         'id': event.id,

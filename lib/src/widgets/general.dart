@@ -4,6 +4,7 @@ enum NetworkStates {
   onLoading,
   onLoaded,
   onError,
+  onEmpty,
 }
 
 Widget sectionWidget(text, {child, showAll = true, onTapAll}) {

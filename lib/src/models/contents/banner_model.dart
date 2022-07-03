@@ -17,7 +17,7 @@ class FilesModel {
       this.type,
       this.link,
       this.note,
-      this.from,
+      // this.from,
       this.parentId,
       this.createdAt,
       this.updatedAt});

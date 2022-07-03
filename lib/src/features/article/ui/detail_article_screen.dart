@@ -9,9 +9,11 @@ import 'package:flutter_qfam/src/features/auth/ui/login_screen.dart';
 import 'package:flutter_qfam/src/features/forum/bloc/forum/forum_bloc.dart';
 import 'package:flutter_qfam/src/features/forum/ui/detail_forum_screen.dart';
 import 'package:flutter_qfam/src/features/forum/ui/post_thread_screen.dart';
+import 'package:flutter_qfam/src/helpers/helpers.dart';
 import 'package:flutter_qfam/src/models/contents/contents_model.dart';
 import 'package:flutter_qfam/src/models/forum/threads_model.dart';
 import 'package:flutter_qfam/src/styles/my_colors.dart';
+import 'package:flutter_qfam/src/styles/my_font_weight.dart';
 import 'package:flutter_qfam/src/styles/my_text_style.dart';
 import 'package:flutter_qfam/src/widgets/widgets.dart';
 import 'package:getwidget/getwidget.dart';
@@ -91,16 +93,18 @@ class _DetailArticleScreenState extends State<DetailArticleScreen> {
                   onTapBack: () {
                     Navigator.pop(context);
                   },
-                  icon: authBloc.state.currentUser?.role != 'admin' ? null : Text(
-                    'Ubah',
-                    style: MyTextStyle.h5.bold
-                        .copyWith(color: MyColors.background),
-                  ),
+                  icon: authBloc.state.currentUser?.role != 'admin'
+                      ? null
+                      : Text(
+                          'Ubah',
+                          style: MyTextStyle.h5.bold
+                              .copyWith(color: MyColors.background),
+                        ),
                   onTap: () async {
-                    var postThread = await Navigator.of(context).pushNamed(
+                    var postArticle = await Navigator.of(context).pushNamed(
                         PostArticleScreen.routeName,
                         arguments: detail);
-                    if (postThread != null) {
+                    if (postArticle != null) {
                       bloc.add(DetailArticleEventGetDetail(
                           uuid: widget.argument.uuid));
                     }
@@ -164,14 +168,46 @@ class _DetailArticleScreenState extends State<DetailArticleScreen> {
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Text(
+                                    '${detail?.category}',
+                                    style: MyTextStyle.h7.bold.copyWith(
+                                      color: MyColors.primary,
+                                    ),
+                                  ),
+                                  Row(
+                                    children: [
+                                      RichText(
+                                        text: new TextSpan(
+                                          children: [
+                                            new TextSpan(
+                                              text: detail?.sourceBy == null
+                                                  ? 'Dibuat oleh '
+                                                  : 'Sumber dari ',
+                                              style: MyTextStyle
+                                                  .contentDescription,
+                                            ),
+                                            new TextSpan(
+                                              text:
+                                                  '${detail?.sourceBy ?? detail?.createdByName}',
+                                              style: new TextStyle(
+                                                  color: MyColors.link),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                  Spaces.largeVertical(),
+                                  Text(
                                     '${detail?.title}',
                                     style: MyTextStyle.contentTitle,
                                   ),
                                   Spaces.smallVertical(),
-                                  Text(
-                                    '${detail?.subtitle}',
-                                    style: MyTextStyle.sessionTitle,
-                                  ),
+                                  Helpers.isEmpty(detail?.subtitle)
+                                      ? Container()
+                                      : Text(
+                                          '${detail?.subtitle}',
+                                          style: MyTextStyle.sessionTitle,
+                                        ),
                                   Spaces.normalVertical(),
                                 ],
                               ),
@@ -201,6 +237,39 @@ class _DetailArticleScreenState extends State<DetailArticleScreen> {
                                 },
                               ),
                             ),
+                            Helpers.isEmpty(detail?.verifiedBy)
+                                ? Container()
+                                : Container(
+                                    margin:
+                                        EdgeInsets.symmetric(horizontal: 16),
+                                    child: Row(
+                                      children: [
+                                        RichText(
+                                          text: new TextSpan(
+                                            children: [
+                                              new TextSpan(
+                                                text: 'Terverifikasi ',
+                                                style: MyTextStyle
+                                                    .contentDescription,
+                                              ),
+                                              new TextSpan(
+                                                text: '${detail?.verifiedBy}',
+                                                style: new TextStyle(
+                                                    color: MyColors.link,),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                        detail?.verifiedBy == null
+                                            ? Container()
+                                            : Icon(
+                                                Icons.verified_outlined,
+                                                color: MyColors.primary,
+                                                size: 20,
+                                              ),
+                                      ],
+                                    ),
+                                  ),
                             Spaces.largeVertical(),
                             Divider(),
                             Container(

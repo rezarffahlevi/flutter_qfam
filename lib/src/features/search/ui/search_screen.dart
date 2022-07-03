@@ -95,27 +95,171 @@ class _SearchScreenState extends State<SearchScreen> {
                     ),
                   ),
                 ),
-                body: SmartRefresher(
-                  enablePullDown: true,
-                  enablePullUp: true,
-                  controller: _refreshController,
-                  onRefresh: () {
-                    _refreshController.resetNoData();
-                    bloc.add(SearchEventRefresh());
-                  },
-                  onLoading: () {
-                    if (state.page <
-                        (state.response?.pagination?.lastPage ?? 1)) {
-                      bloc.add(SearchEventGetData(page: state.page + 1, categoryId: state.selectedCategory, search: state.search));
-                    } else {
-                      _refreshController.loadNoData();
-                    }
-                  },
-                  child: SingleChildScrollView(
-                    child: Column(children: [
-                      Spaces.normalVertical(),
-                      Wrapper(
-                        state: state.state,
+                body: Stack(
+                  children: [
+                    SmartRefresher(
+                      enablePullDown: true,
+                      enablePullUp: true,
+                      controller: _refreshController,
+                      onRefresh: () {
+                        _refreshController.resetNoData();
+                        bloc.add(SearchEventRefresh());
+                      },
+                      onLoading: () {
+                        if (state.page <
+                            (state.response?.pagination?.lastPage ?? 1)) {
+                          bloc.add(SearchEventGetData(
+                              page: state.page + 1,
+                              categoryId: state.selectedCategory,
+                              search: state.search));
+                        } else {
+                          _refreshController.loadNoData();
+                        }
+                      },
+                      child: SingleChildScrollView(
+                        child: Column(children: [
+                          SizedBox(
+                            height: 60,
+                          ),
+                          Wrapper(
+                            state: state.state,
+                            onLoading: GFShimmer(
+                              child: Column(
+                                children: [
+                                  for (var i = 0; i < 12; i++)
+                                    Column(
+                                      children: [
+                                        loadingBlock(dimension),
+                                        Spaces.normalVertical()
+                                      ],
+                                    ),
+                                ],
+                              ),
+                            ),
+                            onLoaded: Column(
+                              children: [
+                                ListView.separated(
+                                  shrinkWrap: true,
+                                  physics: const NeverScrollableScrollPhysics(),
+                                  padding: EdgeInsets.only(
+                                      left: 16, right: 16, bottom: 16),
+                                  itemBuilder: (c, i) {
+                                    final article = state.contentsList![i];
+                                    return GestureDetector(
+                                      onTap: () {
+                                        Navigator.of(context).pushNamed(
+                                            DetailArticleScreen.routeName,
+                                            arguments: article);
+                                      },
+                                      child: Material(
+                                        elevation: 1.0,
+                                        color: Colors.transparent,
+                                        borderRadius: BorderRadius.circular(8),
+                                        child: Container(
+                                          padding: EdgeInsets.all(16),
+                                          decoration: BoxDecoration(
+                                            color: MyColors.white,
+                                            borderRadius:
+                                                BorderRadius.circular(8),
+                                          ),
+                                          child: Column(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            children: [
+                                              Text(
+                                                article?.title ?? '-',
+                                                style: MyTextStyle.sessionTitle,
+                                              ),
+                                              Spaces.smallVertical(),
+                                              GFImageOverlay(
+                                                color: MyColors.greyPlaceHolder,
+                                                height: 120,
+                                                borderRadius: BorderRadius.all(
+                                                    Radius.circular(8)),
+                                                image: NetworkImage(
+                                                    article?.thumbnail ?? ''),
+                                                boxFit: BoxFit.fitWidth,
+                                                child: article.isVideo == 1
+                                                    ? Icon(
+                                                        Icons.play_circle,
+                                                        size: 50,
+                                                        color: Colors.white,
+                                                      )
+                                                    : Container(),
+                                              ),
+                                              Spaces.smallVertical(),
+                                              Text(
+                                                '${article?.category}',
+                                                style: MyTextStyle.h7.bold
+                                                    .copyWith(
+                                                  color: MyColors.primary,
+                                                ),
+                                              ),
+                                              Row(
+                                                children: [
+                                                  RichText(
+                                                    text: new TextSpan(
+                                                      children: [
+                                                        new TextSpan(
+                                                          text: article
+                                                                      .sourceBy ==
+                                                                  null
+                                                              ? 'Dibuat oleh '
+                                                              : 'Sumber dari ',
+                                                          style: MyTextStyle
+                                                              .contentDescription,
+                                                        ),
+                                                        new TextSpan(
+                                                          text:
+                                                              '${article.sourceBy ?? article.createdByName}',
+                                                          style: new TextStyle(
+                                                              color: MyColors
+                                                                  .link),
+                                                        ),
+                                                      ],
+                                                    ),
+                                                  ),
+                                                  article.verifiedBy == null
+                                                      ? Container()
+                                                      : Icon(
+                                                          Icons
+                                                              .verified_outlined,
+                                                          color:
+                                                              MyColors.primary,
+                                                        ),
+                                                ],
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                      ),
+                                    );
+                                  },
+                                  separatorBuilder: (c, i) {
+                                    return Spaces.normalVertical();
+                                  },
+                                  itemCount: state.contentsList?.length ?? 0,
+                                ),
+                              ],
+                            ),
+                            onError: Padding(
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: 16.0, vertical: 16),
+                              child: Text(
+                                state.message ?? 'Unknown Error',
+                              ),
+                            ),
+                          ),
+                        ]),
+                      ),
+                    ),
+                    Container(
+                      padding:
+                          EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                      color: MyColors.background,
+                      width: dimension.width,
+                      child: Wrapper(
+                        state: NetworkStates.onLoaded,
                         onLoading: GFShimmer(
                           child: _categoryBlock(dimension),
                         ),
@@ -126,113 +270,8 @@ class _SearchScreenState extends State<SearchScreen> {
                           child: Text(state.message ?? 'Unknown Error'),
                         ),
                       ),
-                      Spaces.normalVertical(),
-                      Wrapper(
-                        state: state.state,
-                        onLoading: GFShimmer(
-                          child: Column(
-                            children: [
-                              for (var i = 0; i < 12; i++)
-                                Column(
-                                  children: [
-                                    loadingBlock(dimension),
-                                    Spaces.normalVertical()
-                                  ],
-                                ),
-                            ],
-                          ),
-                        ),
-                        onLoaded: Column(
-                          children: [
-                            ListView.separated(
-                              shrinkWrap: true,
-                              physics: const NeverScrollableScrollPhysics(),
-                              padding: EdgeInsets.only(
-                                  left: 16, right: 16, bottom: 16),
-                              itemBuilder: (c, i) {
-                                final article = state.contentsList![i];
-                                return GestureDetector(
-                                  onTap: () {
-                                    Navigator.of(context).pushNamed(
-                                        DetailArticleScreen.routeName,
-                                        arguments: article);
-                                  },
-                                  child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      GFImageOverlay(
-                                        color: MyColors.greyPlaceHolder,
-                                        height: 130,
-                                        borderRadius: BorderRadius.all(
-                                            Radius.circular(8)),
-                                        image: NetworkImage(
-                                            article.thumbnail ?? ''),
-                                        boxFit: BoxFit.fitWidth,
-                                        child: article.isVideo == 1
-                                            ? Icon(
-                                                Icons.play_circle,
-                                                size: 50,
-                                                color: Colors.white,
-                                              )
-                                            : Container(),
-                                      ),
-                                      Spaces.smallVertical(),
-                                      Text(
-                                        article.title ?? '-',
-                                        style: MyTextStyle.sessionTitle,
-                                      ),
-                                      Spaces.smallVertical(),
-                                      Row(
-                                        children: [
-                                          RichText(
-                                            text: new TextSpan(
-                                              children: [
-                                                new TextSpan(
-                                                  text: article.sourceBy == null
-                                                      ? 'Dibuat oleh '
-                                                      : 'Sumber dari ',
-                                                  style: MyTextStyle
-                                                      .contentDescription,
-                                                ),
-                                                new TextSpan(
-                                                  text:
-                                                      '${article.sourceBy ?? article.createdByName}',
-                                                  style: new TextStyle(
-                                                      color: MyColors.link),
-                                                ),
-                                              ],
-                                            ),
-                                          ),
-                                          Helpers.isEmpty(article.verifiedBy)
-                                              ? Container()
-                                              : Icon(
-                                                  Icons.verified_outlined,
-                                                  color: MyColors.primary,
-                                                ),
-                                        ],
-                                      ),
-                                    ],
-                                  ),
-                                );
-                              },
-                              separatorBuilder: (c, i) {
-                                return Spaces.largeVertical();
-                              },
-                              itemCount: state.contentsList?.length ?? 0,
-                            ),
-                          ],
-                        ),
-                        onError: Padding(
-                          padding: const EdgeInsets.symmetric(
-                              horizontal: 16.0, vertical: 16),
-                          child: Text(
-                            state.message ?? 'Unknown Error',
-                          ),
-                        ),
-                      ),
-                    ]),
-                  ),
+                    ),
+                  ],
                 ),
                 floatingActionButton:
                     (authState.currentUser?.role != Constants.ROLES.USER &&
@@ -240,11 +279,14 @@ class _SearchScreenState extends State<SearchScreen> {
                         ? FloatingActionButton(
                             heroTag: null,
                             onPressed: () async {
-                              var postThread = await Navigator.of(context)
+                              var postArticle = await Navigator.of(context)
                                   .pushNamed(PostArticleScreen.routeName,
                                       arguments: ContentsModel());
-                              if (postThread != null) {
-                                bloc.add(SearchEventGetData(page: 1, categoryId: state.selectedCategory, search: state.search));
+                              if (postArticle != null) {
+                                bloc.add(SearchEventGetData(
+                                    page: 1,
+                                    categoryId: state.selectedCategory,
+                                    search: state.search));
                               }
                             },
                             backgroundColor: MyColors.primary,
@@ -264,7 +306,6 @@ class _SearchScreenState extends State<SearchScreen> {
   Widget _categorySection(listCategory, state) {
     return Container(
       height: 40,
-      margin: EdgeInsets.symmetric(horizontal: 15),
       child: ListView.separated(
         shrinkWrap: true,
         scrollDirection: Axis.horizontal,
@@ -306,7 +347,9 @@ class _SearchScreenState extends State<SearchScreen> {
 
   Widget _categoryBlock(dimension) {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+      padding: const EdgeInsets.symmetric(
+        horizontal: 16,
+      ),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [

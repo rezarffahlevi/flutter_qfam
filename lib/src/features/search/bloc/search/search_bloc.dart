@@ -32,21 +32,25 @@ class SearchBloc extends Bloc<SearchEvent, SearchState> {
     txtSearch.addListener(() {
       if (timer == null) {
         timer = Timer(Duration(seconds: 1), () {
-          add(SearchEventGetData(page: 1, search: txtSearch.text, categoryId: state.selectedCategory));
-        timer = null;
+          add(SearchEventGetData(
+              page: 1,
+              search: txtSearch.text,
+              categoryId: state.selectedCategory));
+          timer = null;
         });
       }
     });
   }
 
   _onRefresh(SearchEventRefresh event, Emitter<SearchState> emit) async {
-    add(SearchEventGetData(search: state.search, categoryId: state.selectedCategory, page: 1));
+    add(SearchEventGetData(
+        search: state.search, categoryId: state.selectedCategory, page: 1));
     add(SearchEventGetCategory());
   }
 
   _getData(SearchEventGetData event, Emitter<SearchState> emit) async {
     try {
-      emit(state.copyWith(state: NetworkStates.onLoading));
+      if (event.page < 2) emit(state.copyWith(state: NetworkStates.onLoading));
       var response = await apiService.getList(params: {
         'page': event.page,
         'category_id': event.categoryId,
@@ -85,7 +89,8 @@ class SearchBloc extends Bloc<SearchEvent, SearchState> {
 
   _setSelectedCategory(
       SearchEventSetSelectedCategory event, Emitter<SearchState> emit) async {
-    add(SearchEventGetData(page: 1, categoryId: event.selectedCategory, search: state.search));
+    add(SearchEventGetData(
+        page: 1, categoryId: event.selectedCategory, search: state.search));
     emit(state.copyWith(selectedCategory: event.selectedCategory));
   }
 }

@@ -134,7 +134,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                   decoration: BoxDecoration(
                                     image: DecorationImage(
                                         image: NetworkImage(
-                                            'https://weddingmarket.com/storage/images/artikelidea/c66afbcc39555a48c1ec3a7f4a300be3a3401b32.webp'),
+                                            state.currentUser?.photo ?? ''),
                                         fit: BoxFit.cover),
                                   ),
                                 ),

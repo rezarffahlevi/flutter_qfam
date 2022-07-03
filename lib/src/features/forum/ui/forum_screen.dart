@@ -120,7 +120,7 @@ class _ForumScreenState extends State<ForumScreen>
                   Container(
                     margin: EdgeInsets.only(top: 50),
                     child: Wrapper(
-                      state: NetworkStates.onLoaded,
+                      state: state.state,
                       onLoading: GFShimmer(
                         child: Column(
                           children: [

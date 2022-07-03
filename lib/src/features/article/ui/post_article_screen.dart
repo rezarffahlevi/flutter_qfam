@@ -16,7 +16,7 @@ import 'package:pull_to_refresh/pull_to_refresh.dart';
 
 class PostArticleScreen extends StatefulWidget {
   static const String routeName = '/post-article';
-  final ContentsModel? argument; 
+  final ContentsModel? argument;
   const PostArticleScreen({Key? key, this.argument}) : super(key: key);
 
   @override
@@ -27,14 +27,12 @@ class _PostArticleScreenState extends State<PostArticleScreen> {
   DetailArticleBloc bloc = DetailArticleBloc();
   final RefreshController _refreshController =
       RefreshController(initialRefresh: false);
-  
 
   @override
   void initState() {
     super.initState();
-    bloc.add(DetailArticleEventInitPost());
     final bool isEdit = widget.argument?.id != null;
-    if(isEdit){
+    if (isEdit) {
       ContentsModel? data = widget.argument;
       bloc.txtTitle.text = data?.title ?? '';
       bloc.txtSubtitle.text = data?.subtitle ?? '';
@@ -42,19 +40,10 @@ class _PostArticleScreenState extends State<PostArticleScreen> {
       bloc.txtThumbnail.text = data?.thumbnail ?? '';
       bloc.txtSourceBy.text = data?.sourceBy ?? '';
       bloc.txtVerifiedBy.text = data?.verifiedBy ?? '';
-      bloc.add(DetailArticleEventOnChange(
-        id: data?.id,
-        title: data?.title,
-        subtitle: data?.subtitle,
-        categoryId: data?.categoryId,
-        isExternal: data?.isExternal,
-        isVideo: data?.isVideo,
-        content: data?.content,
-        thumbnail: data?.thumbnail,
-        sourceBy: data?.sourceBy,
-        verifiedBy: data?.verifiedBy,
-        status: data?.status,
-      ));
+
+      bloc.add(DetailArticleEventInitPost(formdata: data));
+    } else {
+      bloc.add(DetailArticleEventInitPost());
     }
   }
 
@@ -86,7 +75,11 @@ class _PostArticleScreenState extends State<PostArticleScreen> {
             enablePullDown: true,
             enablePullUp: false,
             controller: _refreshController,
-            onRefresh: () => bloc.add(DetailArticleEventRefresh()),
+            onRefresh: () {
+              bloc.add(DetailArticleEventInitPost(formdata: widget.argument));
+              _refreshController.refreshCompleted();
+              _refreshController.loadComplete();
+            },
             child: SingleChildScrollView(
               child: Column(
                 children: [
@@ -119,11 +112,11 @@ class _PostArticleScreenState extends State<PostArticleScreen> {
                                 children: <Widget>[
                                   _entryField('Judul',
                                       controller: bloc.txtTitle,
-                                      keyboardType: TextInputType.name),
+                                      keyboardType: TextInputType.text),
                                   Spaces.normalVertical(),
                                   _entryField('Sub Judul',
                                       controller: bloc.txtSubtitle,
-                                      keyboardType: TextInputType.phone),
+                                      keyboardType: TextInputType.text),
                                   Spaces.normalVertical(),
                                   Align(
                                     alignment: Alignment.centerLeft,
@@ -377,7 +370,7 @@ class _PostArticleScreenState extends State<PostArticleScreen> {
     TextEditingController? controller,
     String? errorText,
     bool obscureText = false,
-    TextInputType keyboardType = TextInputType.emailAddress,
+    TextInputType keyboardType = TextInputType.text,
   }) {
     return MyTextField(
       labelText: labelText,

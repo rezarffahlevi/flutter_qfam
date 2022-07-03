@@ -4,6 +4,7 @@ import 'package:flutter_qfam/src/features/auth/bloc/auth_bloc.dart';
 import 'package:flutter_qfam/src/features/home/bloc/home/home_bloc.dart';
 import 'package:flutter_qfam/src/features/home/bloc/home_root/home_root_bloc.dart';
 import 'package:flutter_qfam/src/features/search/ui/search_screen.dart';
+import 'package:flutter_qfam/src/helpers/helpers.dart';
 import 'package:flutter_qfam/src/models/contents/banner_model.dart';
 import 'package:flutter_qfam/src/models/contents/contents_model.dart';
 import 'package:flutter_qfam/src/styles/my_colors.dart';
@@ -156,63 +157,96 @@ class _HomeScreenState extends State<HomeScreen> {
                             item: article,
                             isProgram: item.title.contains('Program Kami'));
                       },
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          GFImageOverlay(
-                            color: MyColors.greyPlaceHolder,
-                            height: 120,
-                            borderRadius: BorderRadius.all(Radius.circular(8)),
-                            image: NetworkImage(article?.thumbnail ?? ''),
-                            boxFit: BoxFit.fitWidth,
-                            child: article.isVideo == 1
-                                ? Icon(
-                                    Icons.play_circle,
-                                    size: 50,
-                                    color: Colors.white,
-                                  )
-                                : Container(),
+                      child: Material(
+                        elevation: 1.0,
+                        color: Colors.transparent,
+                        borderRadius: BorderRadius.circular(8),
+                        child: Container(
+                          padding: EdgeInsets.all(16),
+                          decoration: BoxDecoration(
+                            color: MyColors.white,
+                            borderRadius: BorderRadius.circular(8),
                           ),
-                          Spaces.smallVertical(),
-                          Text(
-                            article?.title ?? '-',
-                            style: MyTextStyle.sessionTitle,
-                          ),
-                          Spaces.smallVertical(),
-                          Row(
-                            children: [
-                              RichText(
-                                text: new TextSpan(
-                                  children: [
-                                    new TextSpan(
-                                      text: article.sourceBy == null
-                                          ? 'Dibuat oleh '
-                                          : 'Sumber dari ',
-                                      style: MyTextStyle.contentDescription,
+                          child: Row(
+                            children: <Widget>[
+                              Container(
+                                width: 100.0,
+                                height: 100.0,
+                                decoration: BoxDecoration(
+                                  image: DecorationImage(
+                                    fit: BoxFit.cover,
+                                    image:
+                                        NetworkImage(article?.thumbnail ?? ''),
+                                  ),
+                                  borderRadius:
+                                      BorderRadius.all(Radius.circular(8.0)),
+                                  color: Colors.grey,
+                                ),
+                              ),
+                              Spaces.smallHorizontal(),
+                              Flexible(
+                                child: Column(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: <Widget>[
+                                    Text(
+                                      article?.category ?? '',
+                                      style: MyTextStyle.h7
+                                          .copyWith(color: MyColors.primary),
                                     ),
-                                    new TextSpan(
-                                      text:
-                                          '${article.sourceBy ?? article.createdByName}',
-                                      style:
-                                          new TextStyle(color: MyColors.link),
+                                    Text(
+                                      article?.title ?? '',
+                                      style: MyTextStyle.h6.semiBold
+                                          .copyWith(color: MyColors.black),
+                                    ),
+                                    Spaces.smallVertical(),
+                                    Column(
+                                      children: [
+                                        RichText(
+                                          softWrap: true,
+                                          text: new TextSpan(
+                                            children: [
+                                              new TextSpan(
+                                                text: article.sourceBy == null
+                                                    ? 'Dibuat oleh '
+                                                    : 'Sumber dari ',
+                                                style: MyTextStyle
+                                                    .contentDescription,
+                                              ),
+                                              new TextSpan(
+                                                text:
+                                                    '${article.sourceBy ?? article.createdByName}',
+                                                style: new TextStyle(
+                                                  color: MyColors.link,
+                                                ),
+                                              ),
+                                              WidgetSpan(
+                                                child: article.verifiedBy ==
+                                                        null
+                                                    ? Container()
+                                                    : Icon(
+                                                        Icons.verified_outlined,
+                                                        color: MyColors.primary,
+                                                        size: 18,
+                                                      ),
+                                              )
+                                            ],
+                                          ),
+                                        ),
+                                      ],
                                     ),
                                   ],
                                 ),
                               ),
-                              article.verifiedBy == null
-                                  ? Container()
-                                  : Icon(
-                                      Icons.verified_outlined,
-                                      color: MyColors.primary,
-                                    ),
                             ],
                           ),
-                        ],
+                        ),
                       ),
                     );
                   },
                   separatorBuilder: (c, i) {
-                    return Spaces.largeVertical();
+                    return Spaces.smallVertical();
                   },
                   itemCount: item.contents?.length ?? 0,
                 ),
@@ -225,34 +259,97 @@ class _HomeScreenState extends State<HomeScreen> {
               onTapAll: () => onTapAll(item),
               child: Container(
                 width: dimension.width,
+                margin: EdgeInsets.symmetric(
+                  horizontal: 16,
+                ),
                 child: ListView.separated(
                   shrinkWrap: true,
                   physics: const NeverScrollableScrollPhysics(),
                   itemBuilder: (c, j) {
-                    var article = item.contents?[j];
+                    final article = item.contents?[j];
                     return GestureDetector(
                       onTap: () {
                         onTapCard(
                             item: article,
                             isProgram: item.title.contains('Program Kami'));
                       },
-                      child: MyListTile(
-                        // margin: EdgeInsets.all(0),
-                        avatar: GFAvatar(
-                          shape: GFAvatarShape.square,
-                          size: 60,
-                          borderRadius: BorderRadius.circular(10),
-                          backgroundImage: NetworkImage('${article.thumbnail}'),
+                      child: Material(
+                        elevation: 1.0,
+                        color: Colors.transparent,
+                        borderRadius: BorderRadius.circular(8),
+                        child: Container(
+                          padding: EdgeInsets.all(16),
+                          decoration: BoxDecoration(
+                            color: MyColors.white,
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                article?.title ?? '-',
+                                style: MyTextStyle.sessionTitle,
+                              ),
+                              Spaces.smallVertical(),
+                              GFImageOverlay(
+                                color: MyColors.greyPlaceHolder,
+                                height: 120,
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(8)),
+                                image: NetworkImage(article?.thumbnail ?? ''),
+                                boxFit: BoxFit.fitWidth,
+                                child: article.isVideo == 1
+                                    ? Icon(
+                                        Icons.play_circle,
+                                        size: 50,
+                                        color: Colors.white,
+                                      )
+                                    : Container(),
+                              ),
+                              Spaces.smallVertical(),
+                              Text(
+                                '${article?.category}',
+                                style: MyTextStyle.h7.bold.copyWith(
+                                  color: MyColors.primary,
+                                ),
+                              ),
+                              Row(
+                                children: [
+                                  RichText(
+                                    text: new TextSpan(
+                                      children: [
+                                        new TextSpan(
+                                          text: article.sourceBy == null
+                                              ? 'Dibuat oleh '
+                                              : 'Sumber dari ',
+                                          style: MyTextStyle.contentDescription,
+                                        ),
+                                        new TextSpan(
+                                          text:
+                                              '${article.sourceBy ?? article.createdByName}',
+                                          style: new TextStyle(
+                                              color: MyColors.link),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                  article.verifiedBy == null
+                                      ? Container()
+                                      : Icon(
+                                          Icons.verified_outlined,
+                                          color: MyColors.primary,
+                                          size: 18,
+                                        ),
+                                ],
+                              ),
+                            ],
+                          ),
                         ),
-                        color: MyColors.background,
-                        titleText: article.title,
-                        subTitleText: '${article.subtitle}',
-                        // icon: Icon(Icons.favorite),
                       ),
                     );
                   },
                   separatorBuilder: (c, i) {
-                    return Container();
+                    return Spaces.smallVertical();
                   },
                   itemCount: item.contents?.length ?? 0,
                 ),
