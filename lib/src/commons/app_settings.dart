@@ -21,15 +21,15 @@ class AppSettings {
     switch (ENV) {
       case AppEnv.DEVELOPMENT:
         config.ENV = AppEnv.DEVELOPMENT;
-        config.BASE_URL = 'http://192.168.1.110:8000/api';
+        config.BASE_URL = 'http://192.168.1.110:8000/';
         break;
       case AppEnv.STAGING:
         config.ENV = AppEnv.STAGING;
-        config.BASE_URL = 'https://qfam.onepeerstech.com/api';
+        config.BASE_URL = 'https://qfam.onepeerstech.com/';
         break;
       default:
         config.ENV = AppEnv.PRODUCTION;
-        config.BASE_URL = 'https://qfam.onepeerstech.com/api';
+        config.BASE_URL = 'https://qfam.onepeerstech.com/';
         break;
     }
     return config;

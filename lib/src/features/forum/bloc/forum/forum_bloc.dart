@@ -1,13 +1,20 @@
+import 'dart:io';
+
 import 'package:bloc/bloc.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter_qfam/src/commons/preferences_base.dart';
+import 'package:flutter_qfam/src/helpers/helpers.dart';
+import 'package:flutter_qfam/src/models/contents/banner_model.dart';
 import 'package:flutter_qfam/src/models/default_response_model.dart';
 import 'package:flutter_qfam/src/models/forum/forum_model.dart';
 import 'package:flutter_qfam/src/models/forum/threads_model.dart';
+import 'package:flutter_qfam/src/services/contents/content_service.dart';
 import 'package:flutter_qfam/src/services/forum/forum_service.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_qfam/src/widgets/widgets.dart';
 import 'package:getwidget/getwidget.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 
 part 'forum_event.dart';
@@ -24,14 +31,17 @@ class ForumBloc extends Bloc<ForumEvent, ForumState> {
     on<ForumEventInitPostThread>(_initPostThread);
     on<ForumEventInitForumList>(_initForumList);
     on<ForumEventOnLiked>(_toggleLike);
+    on<ForumEventAddPhoto>(_addPhoto);
   }
 
   ForumService apiService = ForumService();
+  ContentService contentService = ContentService();
   TabController? tabController;
   List<RefreshController> refreshController = [
     RefreshController(initialRefresh: false)
   ];
   final txtContent = TextEditingController();
+  final ImagePicker _picker = ImagePicker();
 
   _initPostThread(
       ForumEventInitPostThread event, Emitter<ForumState> emit) async {
@@ -118,6 +128,9 @@ class ForumBloc extends Bloc<ForumEvent, ForumState> {
         'is_anonymous': state.isAnonymous,
       };
       var response = await apiService.postThread(params);
+      if (!Helpers.isEmpty(state.photo?.path)) {
+        await _uploadFile(response?.data);
+      }
       emit(state.copyWith(
         state: NetworkStates.onLoaded,
         message: response?.message,
@@ -125,6 +138,20 @@ class ForumBloc extends Bloc<ForumEvent, ForumState> {
       ));
     } catch (e) {
       emit(state.copyWith(state: NetworkStates.onError, message: '${e}'));
+    }
+  }
+
+  _uploadFile(ThreadsModel? data) async {
+    try {
+      FilesModel files = FilesModel();
+      files.file = File(
+        state.photo!.path,
+      );
+      files.parentId = data?.uuid;
+      var response = await contentService.uploadFile(files);
+      debugPrint('file data ${response?.data?.id}');
+    } catch (e) {
+      debugPrint('ERROR FILE ${e}');
     }
   }
 
@@ -142,7 +169,6 @@ class ForumBloc extends Bloc<ForumEvent, ForumState> {
       threadsList[index].countLikes = isLike
           ? (threadsList[index].countLikes ?? 1) - 1
           : (threadsList[index].countLikes ?? 0) + 1;
-      debugPrint('LIKE ${threadsList[index].isLiked} ${index}');
       emit(state.copyWith(
           threadsList: threadsList, state: NetworkStates.onLoaded));
     } catch (e) {
@@ -159,6 +185,18 @@ class ForumBloc extends Bloc<ForumEvent, ForumState> {
           forumId: event.forumId,
           contentId: event.contentId,
           isAnonymous: event.isAnonymous));
+    } catch (e) {
+      emit(state.copyWith(state: NetworkStates.onError, message: '${e}'));
+    }
+  }
+
+  _addPhoto(ForumEventAddPhoto event, Emitter<ForumState> emit) async {
+    try {
+      // Pick an image
+      emit(state.copyWith(state: NetworkStates.onLoading));
+      final XFile? image = await _picker.pickImage(
+          source: ImageSource.gallery, imageQuality: 25);
+      emit(state.copyWith(photo: image, state: NetworkStates.onLoaded));
     } catch (e) {
       emit(state.copyWith(state: NetworkStates.onError, message: '${e}'));
     }

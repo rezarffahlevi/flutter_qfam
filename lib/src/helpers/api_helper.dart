@@ -29,7 +29,7 @@ class ApiHelper {
   }
 
   Future<dynamic> get(String url, {dynamic params, String? baseUrl}) async {
-    baseUrl = baseUrl ?? config.BASE_URL;
+    baseUrl = baseUrl ?? config.BASE_URL + '/api';
     options.baseUrl = baseUrl;
     options.headers = await _getHeaders();
     dio.options = options;
@@ -55,7 +55,7 @@ class ApiHelper {
   }
 
   Future<dynamic> post(String url, {dynamic params, String? baseUrl}) async {
-    baseUrl = baseUrl ?? config.BASE_URL;
+    baseUrl = baseUrl ?? config.BASE_URL + '/api';
     options.baseUrl = baseUrl;
     options.headers = await _getHeaders();
     dio.options = options;

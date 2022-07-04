@@ -280,15 +280,66 @@ class _PostArticleScreenState extends State<PostArticleScreen> {
                                             ),
                                           ),
                                         ),
-                                  Spaces.normalVertical(),
-                                  _entryField('Thumbnail',
-                                      controller: bloc.txtThumbnail),
+                                  // Spaces.normalVertical(),
+                                  // _entryField('Thumbnail',
+                                  //     controller: bloc.txtThumbnail),
                                   Spaces.normalVertical(),
                                   _entryField('Sumber Dari',
                                       controller: bloc.txtSourceBy),
                                   Spaces.normalVertical(),
                                   _entryField('Terverifikasi Oleh',
                                       controller: bloc.txtVerifiedBy),
+                                  Spaces.normalVertical(),
+                                  Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Column(
+                                        children: [
+                                          InkWell(
+                                            onTap: () {
+                                              bloc.add(DetailArticleAddPhoto(
+                                                  type: 'thumbnail'));
+                                            },
+                                            child: Container(
+                                              margin: EdgeInsets.all(10),
+                                              child: Row(
+                                                children: [
+                                                  Icon(Icons
+                                                      .add_photo_alternate),
+                                                  Text('Upload thumbnail')
+                                                ],
+                                              ),
+                                            ),
+                                          ),
+                                          Text(
+                                              '${Helpers.isEmpty(state.thumbnail?.path) ? 0 : 1} selected')
+                                        ],
+                                      ),
+                                      Column(
+                                        children: [
+                                          InkWell(
+                                            onTap: () {
+                                              bloc.add(DetailArticleAddPhoto(
+                                                  type: 'banner'));
+                                            },
+                                            child: Container(
+                                              margin: EdgeInsets.all(10),
+                                              child: Row(
+                                                children: [
+                                                  Icon(Icons
+                                                      .add_photo_alternate),
+                                                  Text('Upload gambar')
+                                                ],
+                                              ),
+                                            ),
+                                          ),
+                                          Text(
+                                              '${state.banner?.length ?? 0} selected')
+                                        ],
+                                      ),
+                                    ],
+                                  ),
                                   Spaces.normalVertical(),
                                   Align(
                                     alignment: Alignment.centerLeft,

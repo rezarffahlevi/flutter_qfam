@@ -1,13 +1,17 @@
+import 'dart:io';
+
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_qfam/src/helpers/helpers.dart';
 import 'package:flutter_qfam/src/models/contents/banner_model.dart';
 import 'package:flutter_qfam/src/models/contents/category_model.dart';
 import 'package:flutter_qfam/src/models/contents/contents_model.dart';
 import 'package:flutter_qfam/src/models/default_response_model.dart';
 import 'package:flutter_qfam/src/services/contents/content_service.dart';
 import 'package:flutter_qfam/src/widgets/widgets.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:youtube_player_iframe/youtube_player_iframe.dart';
 
@@ -23,11 +27,13 @@ class DetailArticleBloc extends Bloc<DetailArticleEvent, DetailArticleState> {
     on<DetailArticleEventSetActiveBanner>(_setActiveBanner);
     on<DetailArticleEventOnChange>(_onChangeFormdata);
     on<DetailArticleEventGetCategory>(_getCategory);
+    on<DetailArticleAddPhoto>(_addPhoto);
   }
   RefreshController refreshController =
       RefreshController(initialRefresh: false);
   late YoutubePlayerController ytController;
   ContentService apiService = ContentService();
+  final ImagePicker _picker = ImagePicker();
 
   final txtTitle = TextEditingController();
   final txtSubtitle = TextEditingController();
@@ -76,6 +82,12 @@ class DetailArticleBloc extends Bloc<DetailArticleEvent, DetailArticleState> {
       emit(state.copyWith(state: NetworkStates.onLoading));
       var response =
           await apiService.postArticle(params: state.formdata!.toJson());
+      if (!Helpers.isEmpty(state.thumbnail?.path)) {
+        _uploadThumbnail(response?.data);
+      }
+      if ((state.banner?.length ?? 0) > 0) {
+        _uploadFile(response?.data);
+      }
       emit(state.copyWith(
         state: NetworkStates.onLoaded,
         detail: response?.data,
@@ -169,5 +181,54 @@ class DetailArticleBloc extends Bloc<DetailArticleEvent, DetailArticleState> {
   _setActiveBanner(DetailArticleEventSetActiveBanner event,
       Emitter<DetailArticleState> emit) async {
     emit(state.copyWith(activeBanner: event.activeBanner));
+  }
+
+  _addPhoto(
+      DetailArticleAddPhoto event, Emitter<DetailArticleState> emit) async {
+    try {
+      // Pick an image
+      emit(state.copyWith(state: NetworkStates.onLoading));
+      if (event.type == 'thumbnail') {
+        final XFile? image = await _picker.pickImage(
+            source: ImageSource.gallery, imageQuality: 50);
+        emit(state.copyWith(thumbnail: image));
+      } else {
+        List<XFile>? images = await _picker.pickMultiImage(imageQuality: 50);
+        emit(state.copyWith(banner: images));
+      }
+      emit(state.copyWith(state: NetworkStates.onLoaded));
+    } catch (e) {
+      emit(state.copyWith(state: NetworkStates.onError, message: '${e}'));
+    }
+  }
+
+  _uploadThumbnail(ContentsModel? data) async {
+    try {
+      FilesModel files = FilesModel();
+      files.file = File(
+        state.thumbnail!.path,
+      );
+      files.id = data?.id;
+      var response = await apiService.uploadThumbnail(files);
+      debugPrint('file data ${response?.data?.id}');
+    } catch (e) {
+      debugPrint('ERROR FILE ${e}');
+    }
+  }
+
+  _uploadFile(ContentsModel? data) async {
+    try {
+      FilesModel files = FilesModel();
+      state.banner?.forEach((element) async {
+        files.file = File(
+          element.path,
+        );
+        files.parentId = data?.uuid;
+        var response = await apiService.uploadFile(files);
+        debugPrint('file data ${response?.data?.id}');
+      });
+    } catch (e) {
+      debugPrint('ERROR FILE ${e}');
+    }
   }
 }

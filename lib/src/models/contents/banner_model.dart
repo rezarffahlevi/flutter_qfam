@@ -1,5 +1,8 @@
+import 'dart:io';
+
 class FilesModel {
   int? id;
+  File? file;
   String? name;
   String? path;
   String? type;
@@ -12,6 +15,7 @@ class FilesModel {
 
   FilesModel(
       {this.id,
+      this.file,
       this.name,
       this.path,
       this.type,

@@ -10,6 +10,8 @@ class DetailArticleState extends Equatable {
   final List<CategoryModel>? categoryList;
   final int page;
   final DefaultResponseModel? response;
+  final XFile? thumbnail;
+  final List<XFile>? banner;
 
   const DetailArticleState({
     this.state = NetworkStates.onLoaded,
@@ -21,6 +23,8 @@ class DetailArticleState extends Equatable {
     this.categoryList,
     this.page = 1,
     this.response,
+    this.thumbnail,
+    this.banner,
   });
 
   DetailArticleState copyWith({
@@ -33,6 +37,8 @@ class DetailArticleState extends Equatable {
     List<CategoryModel>? categoryList,
     int? page = 1,
     DefaultResponseModel? response,
+    XFile? thumbnail,
+    List<XFile>? banner,
   }) {
     return DetailArticleState(
       state: state ?? this.state,
@@ -44,6 +50,8 @@ class DetailArticleState extends Equatable {
       categoryList: categoryList ?? this.categoryList,
       page: page ?? this.page,
       response: response ?? this.response,
+      thumbnail: thumbnail ?? this.thumbnail,
+      banner: banner ?? this.banner,
     );
   }
 
@@ -57,6 +65,8 @@ class DetailArticleState extends Equatable {
         formdata,
         categoryList,
         page,
-        response
+        response,
+        thumbnail,
+        banner,
       ];
 }

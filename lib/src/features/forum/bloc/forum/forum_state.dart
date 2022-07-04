@@ -15,6 +15,7 @@ class ForumState extends Equatable {
   final String? content;
   final int page;
   final DefaultResponseModel? response;
+  final XFile? photo;
 
   const ForumState({
     this.state = NetworkStates.onLoaded,
@@ -31,6 +32,7 @@ class ForumState extends Equatable {
     this.content,
     this.page = 1,
     this.response,
+    this.photo,
   });
 
   ForumState copyWith({
@@ -48,6 +50,7 @@ class ForumState extends Equatable {
     String? content,
     int? page,
     DefaultResponseModel? response,
+    XFile? photo,
   }) {
     return ForumState(
       state: state ?? this.state,
@@ -64,6 +67,7 @@ class ForumState extends Equatable {
       content: content ?? this.content,
       page: page ?? this.page,
       response: response ?? this.response,
+      photo: photo ?? this.photo,
     );
   }
 

@@ -201,6 +201,7 @@ class _ForumScreenState extends State<ForumScreen>
                                             arguments: item),
                                         name: '${item?.createdBy}',
                                         content: item?.content,
+                                        image: item?.image,
                                         countComments: item?.countComments,
                                         countLikes: item?.countLikes,
                                         isAnonymous: item?.isAnonymous == 1,

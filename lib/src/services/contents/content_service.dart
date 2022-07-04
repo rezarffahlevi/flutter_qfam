@@ -1,3 +1,6 @@
+import 'dart:io';
+
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_qfam/src/helpers/api_helper.dart';
 import 'package:flutter_qfam/src/models/contents/banner_model.dart';
@@ -79,6 +82,44 @@ class ContentService {
         data.add(new CategoryModel.fromJson(v));
       });
       return DefaultResponseModel.fromJson(response, data);
+    } catch (e) {
+      throw e;
+    }
+  }
+
+  Future<DefaultResponseModel?> uploadFile(FilesModel params) async {
+    try {
+      String fileName = params.file!.path.split('/').last;
+      FormData formData = FormData.fromMap({
+        "file":
+            await MultipartFile.fromFile(params.file!.path, filename: fileName),
+        "parent_id": params.parentId
+      });
+      var response = await apiHelper.post(
+        '/contents/save_file',
+        params: formData,
+      );
+      return DefaultResponseModel.fromJson(
+          response, FilesModel.fromJson(response['data']));
+    } catch (e) {
+      throw e;
+    }
+  }
+
+  Future<DefaultResponseModel?> uploadThumbnail(FilesModel params) async {
+    try {
+      String fileName = params.file!.path.split('/').last;
+      FormData formData = FormData.fromMap({
+        "thumbnail":
+            await MultipartFile.fromFile(params.file!.path, filename: fileName),
+        "id": params.id
+      });
+      var response = await apiHelper.post(
+        '/contents/save_thumbnail',
+        params: formData,
+      );
+      return DefaultResponseModel.fromJson(
+          response, ContentsModel.fromJson(response['data']));
     } catch (e) {
       throw e;
     }

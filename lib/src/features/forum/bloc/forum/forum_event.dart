@@ -31,6 +31,7 @@ class ForumEventGetData extends ForumEvent {
 }
 
 class ForumEventRefresh extends ForumEvent {}
+class ForumEventAddPhoto extends ForumEvent {}
 
 class ForumEventPostThread extends ForumEvent {
   String? content;

@@ -37,7 +37,7 @@ class ForumService {
   Future<DefaultResponseModel?> postThread(dynamic params) async {
     try {
       var response = await apiHelper.post('/threads/save', params: params);
-      return DefaultResponseModel.fromJson(response, null);
+      return DefaultResponseModel.fromJson(response, ThreadsModel.fromJson(response['data']));
     } catch (e) {
       throw e;
     }

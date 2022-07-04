@@ -5,6 +5,7 @@ class Threads extends StatelessWidget {
     Key? key,
     this.name,
     this.content,
+    this.image,
     this.countComments,
     this.countLikes,
     this.onTap,
@@ -24,6 +25,7 @@ class Threads extends StatelessWidget {
 
   final String? name;
   final String? content;
+  final String? image;
   final int? countComments;
   final int? countLikes;
   final bool isDetail;
@@ -102,6 +104,20 @@ class Threads extends StatelessWidget {
                   '${content}',
                   style: MyTextStyle.h5,
                 ),
+              ),
+              Padding(
+                padding: const EdgeInsets.only(right: 16),
+                child: Helpers.isEmpty(image)
+                    ? Container()
+                    : GFImageOverlay(
+                        color: MyColors.greyPlaceHolder,
+                        height: 120,
+                        borderRadius: BorderRadius.all(Radius.circular(8)),
+                        image: NetworkImage(AppSettings.getConfig.BASE_URL +
+                            'storages/' +
+                            image!.replaceFirstMapped('.', (match) => '/')),
+                        boxFit: BoxFit.cover,
+                      ),
               ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -246,6 +262,17 @@ class Threads extends StatelessWidget {
                   style: MyTextStyle.h4,
                 ),
               ),
+              Helpers.isEmpty(image)
+                  ? Container()
+                  : GFImageOverlay(
+                    color: MyColors.greyPlaceHolder,
+                    height: 120,
+                    borderRadius: BorderRadius.all(Radius.circular(8)),
+                    image: NetworkImage(AppSettings.getConfig.BASE_URL +
+                        'storages/' +
+                        image!.replaceFirstMapped('.', (match) => '/')),
+                    boxFit: BoxFit.cover,
+                  ),
               Spaces.normalVertical(),
               Text(
                 '19.30 · 19/04/22',

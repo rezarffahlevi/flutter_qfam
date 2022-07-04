@@ -2,9 +2,10 @@ class ThreadsModel {
   int? id;
   String? uuid;
   String? content;
+  String? image;
   int? forumId;
   int? contentId;
-  String? createdBy;
+  dynamic? createdBy;
   String? createdByRole;
   int? parentId;
   int? isAnonymous;
@@ -19,6 +20,7 @@ class ThreadsModel {
       {this.id,
       this.uuid,
       this.content,
+      this.image,
       this.forumId,
       this.contentId,
       this.createdBy,
@@ -35,6 +37,7 @@ class ThreadsModel {
     id = json['id'];
     uuid = json['uuid'];
     content = json['content'];
+    image = json['image'];
     forumId = json['forum_id'];
     contentId = json['content_id'];
     createdBy = json['created_by'];
@@ -59,6 +62,7 @@ class ThreadsModel {
     data['id'] = this.id;
     data['uuid'] = this.uuid;
     data['content'] = this.content;
+    data['image'] = this.image;
     data['forum_id'] = this.forumId;
     data['content_id'] = this.contentId;
     data['created_by'] = this.createdBy;

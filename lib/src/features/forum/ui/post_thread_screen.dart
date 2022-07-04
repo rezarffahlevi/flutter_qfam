@@ -1,3 +1,4 @@
+import 'dart:io';
 import 'package:flutter_qfam/src/commons/spaces.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -55,7 +56,12 @@ class _PostThreadScreenState extends State<PostThreadScreen> {
         child: Scaffold(
           appBar: appBar(
             onTap: () async {
-              bloc.add(await ForumEventPostThread());
+              if (!Helpers.isEmpty(bloc.state.content))
+                bloc.add(await ForumEventPostThread());
+              else {
+                GFToast.showToast('Anda belum menulis apapun', context,
+                    toastPosition: GFToastPosition.TOP);
+              }
             },
             onTapBack: () {
               Navigator.pop(context);
@@ -125,7 +131,8 @@ class _PostThreadScreenState extends State<PostThreadScreen> {
                                 ],
                               ),
                               Container(
-                                margin: EdgeInsets.all(10),
+                                margin: EdgeInsets.only(
+                                    top: 10, left: 10, right: 10),
                                 child: Row(
                                   mainAxisAlignment:
                                       MainAxisAlignment.spaceBetween,
@@ -165,7 +172,9 @@ class _PostThreadScreenState extends State<PostThreadScreen> {
                                       ],
                                     ),
                                     InkWell(
-                                      onTap: () {},
+                                      onTap: () {
+                                        bloc.add(ForumEventAddPhoto());
+                                      },
                                       child: Container(
                                         margin: EdgeInsets.all(10),
                                         child: Row(
@@ -179,6 +188,15 @@ class _PostThreadScreenState extends State<PostThreadScreen> {
                                   ],
                                 ),
                               ),
+                              Center(
+                                child: Helpers.isEmpty(state.photo?.path)
+                                    ? Container()
+                                    : Image.file(
+                                        new File(state.photo!.path),
+                                        height: 100,
+                                        width: 100,
+                                      ),
+                              )
                             ],
                           ),
                           onLoading: GFShimmer(

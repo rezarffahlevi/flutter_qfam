@@ -105,6 +105,7 @@ class _DetailArticleScreenState extends State<DetailArticleScreen> {
                         PostArticleScreen.routeName,
                         arguments: detail);
                     if (postArticle != null) {
+                      await Future.delayed(Duration(seconds: 1));
                       bloc.add(DetailArticleEventGetDetail(
                           uuid: widget.argument.uuid));
                     }
