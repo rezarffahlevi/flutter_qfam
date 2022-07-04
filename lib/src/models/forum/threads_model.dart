@@ -5,6 +5,7 @@ class ThreadsModel {
   int? forumId;
   int? contentId;
   String? createdBy;
+  String? createdByRole;
   int? parentId;
   int? isAnonymous;
   int? countComments;
@@ -37,6 +38,7 @@ class ThreadsModel {
     forumId = json['forum_id'];
     contentId = json['content_id'];
     createdBy = json['created_by'];
+    createdByRole = json['created_by_role'];
     parentId = json['parent_id'];
     isAnonymous = json['is_anonymous'];
     countComments = json['count_comments'];
@@ -60,6 +62,7 @@ class ThreadsModel {
     data['forum_id'] = this.forumId;
     data['content_id'] = this.contentId;
     data['created_by'] = this.createdBy;
+    data['created_by_role'] = this.createdByRole;
     data['parent_id'] = this.parentId;
     data['is_anonymous'] = this.isAnonymous;
     data['count_comments'] = this.countComments;

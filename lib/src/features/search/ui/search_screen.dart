@@ -167,7 +167,7 @@ class _SearchScreenState extends State<SearchScreen> {
                                                 CrossAxisAlignment.start,
                                             children: [
                                               Text(
-                                                article?.title ?? '-',
+                                                article.title ?? '-',
                                                 style: MyTextStyle.sessionTitle,
                                               ),
                                               Spaces.smallVertical(),
@@ -177,7 +177,7 @@ class _SearchScreenState extends State<SearchScreen> {
                                                 borderRadius: BorderRadius.all(
                                                     Radius.circular(8)),
                                                 image: NetworkImage(
-                                                    article?.thumbnail ?? ''),
+                                                    article.thumbnail ?? ''),
                                                 boxFit: BoxFit.fitWidth,
                                                 child: article.isVideo == 1
                                                     ? Icon(
@@ -189,7 +189,7 @@ class _SearchScreenState extends State<SearchScreen> {
                                               ),
                                               Spaces.smallVertical(),
                                               Text(
-                                                '${article?.category}',
+                                                '${article.category}',
                                                 style: MyTextStyle.h7.bold
                                                     .copyWith(
                                                   color: MyColors.primary,

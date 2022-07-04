@@ -11,6 +11,7 @@ class Threads extends StatelessWidget {
     this.isDetail = false,
     this.isChild = false,
     this.isAnonymous = false,
+    this.isVerified = false,
     this.isLiked = false,
     this.onTapParent,
     this.onTapComment,
@@ -28,6 +29,7 @@ class Threads extends StatelessWidget {
   final bool isDetail;
   final bool isChild;
   final bool isAnonymous;
+  final bool isVerified;
   final bool isLiked;
   final Function()? onTap;
   final Function()? onTapParent;
@@ -72,10 +74,24 @@ class Threads extends StatelessWidget {
               Spaces.smallVertical(),
               Row(
                 children: [
-                  Text(isAnonymous ? 'Nama disamarkan' : name ?? '-', style: MyTextStyle.h5.bold.copyWith(decoration: isAnonymous ? TextDecoration.lineThrough : TextDecoration.none),),
+                  Text(
+                    isAnonymous ? 'Nama disamarkan' : name ?? '-',
+                    style: MyTextStyle.h5.bold.copyWith(
+                        decoration: isAnonymous
+                            ? TextDecoration.lineThrough
+                            : TextDecoration.none),
+                  ),
+                  Spaces.smallHorizontal(),
+                  isVerified && !isAnonymous
+                      ? Icon(
+                          Icons.verified_outlined,
+                          color: MyColors.primary,
+                          size: 18,
+                        )
+                      : Container(),
                   Spaces.smallHorizontal(),
                   Text(
-                    '· 7h',
+                    '· ${isVerified && !isAnonymous ? 'Edukator' : ''}',
                     style: MyTextStyle.contentDescription,
                   ),
                 ],
@@ -111,9 +127,10 @@ class Threads extends StatelessWidget {
                         icon: Row(
                           children: [
                             Icon(
-                              isLiked ?  Icons.favorite : Icons.favorite_border,
+                              isLiked ? Icons.favorite : Icons.favorite_border,
                               size: 16,
-                              color: isLiked ? MyColors.primary : Colors.black38,
+                              color:
+                                  isLiked ? MyColors.primary : Colors.black38,
                             ),
                             Spaces.smallHorizontal(),
                             Text(
@@ -191,11 +208,29 @@ class Threads extends StatelessWidget {
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(isAnonymous ? 'Nama disamarkan' : name ?? '-', style: MyTextStyle.h5.bold.copyWith(decoration: isAnonymous ? TextDecoration.lineThrough : TextDecoration.none),),
-                  // Text(
-                  //   '@-',
-                  //   style: MyTextStyle.contentDescription,
-                  // ),
+                  Row(
+                    children: [
+                      Text(
+                        isAnonymous ? 'Nama disamarkan' : name ?? '-',
+                        style: MyTextStyle.h5.bold.copyWith(
+                            decoration: isAnonymous
+                                ? TextDecoration.lineThrough
+                                : TextDecoration.none),
+                      ),
+                      Spaces.smallHorizontal(),
+                      isVerified && !isAnonymous
+                          ? Icon(
+                              Icons.verified_outlined,
+                              color: MyColors.primary,
+                              size: 18,
+                            )
+                          : Container(),
+                    ],
+                  ),
+                  Text(
+                    '${isVerified && !isAnonymous ? 'Edukator' : ''}',
+                    style: MyTextStyle.contentDescription,
+                  ),
                 ],
               ),
             ],

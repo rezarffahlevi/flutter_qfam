@@ -204,6 +204,7 @@ class _ForumScreenState extends State<ForumScreen>
                                         countComments: item?.countComments,
                                         countLikes: item?.countLikes,
                                         isAnonymous: item?.isAnonymous == 1,
+                                        isVerified: !(item?.createdByRole == 'user'),
                                         isLiked: item?.isLiked == 1,
                                         onTapLike: () {
                                           if (authBloc

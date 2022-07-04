@@ -96,6 +96,7 @@ class _DetailForumScreenState extends State<DetailForumScreen> {
                         name: '${detail.createdBy}',
                         content: detail.content,
                         isAnonymous: detail.isAnonymous == 1,
+                        isVerified: !(detail.createdByRole == 'user'),
                         countComments: detail.countComments,
                         countLikes: detail.countLikes,
                         isChild: false,
@@ -136,6 +137,7 @@ class _DetailForumScreenState extends State<DetailForumScreen> {
                               countComments: item.countComments,
                               countLikes: item.countLikes,
                               isAnonymous: item.isAnonymous == 1,
+                              isVerified: !(item.createdByRole == 'user'),
                               isLiked: item.isLiked == 1,
                               onTapLike: () {
                                 if (authBloc.state.currentUser?.email == null)
