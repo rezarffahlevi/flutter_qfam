@@ -400,12 +400,12 @@ class _HomeScreenState extends State<HomeScreen> {
               onTapAll: () => onTapAll(item),
               child: Container(
                 width: dimension.width,
-                height: 180,
+                height: 245,
                 child: ListView.separated(
                   shrinkWrap: true,
                   scrollDirection: Axis.horizontal,
                   padding: EdgeInsets.symmetric(horizontal: 15),
-                  physics: const AlwaysScrollableScrollPhysics(),
+                  physics: BouncingScrollPhysics(),
                   itemBuilder: (c, j) {
                     final article = item.contents?[j];
                     return GestureDetector(
@@ -414,64 +414,83 @@ class _HomeScreenState extends State<HomeScreen> {
                             item: article,
                             isProgram: item.title.contains('Program Kami'));
                       },
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          GFImageOverlay(
-                            color: MyColors.greyPlaceHolder,
-                            height: 170,
-                            width: 120,
-                            borderRadius: BorderRadius.all(Radius.circular(8)),
-                            image: NetworkImage(article?.thumbnail ?? ''),
-                            boxFit: BoxFit.fitHeight,
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Padding(
-                                  padding: EdgeInsets.only(top: 10),
-                                  child: Column(
-                                    children: [
-                                      Text(
-                                        article?.title ?? '-',
-                                        textAlign: TextAlign.center,
-                                        style:
-                                            MyTextStyle.sessionTitle.copyWith(
-                                          color: MyColors.textReverse,
-                                          shadows: [
-                                            Shadow(
-                                              offset: Offset(2.0, 2.0),
-                                              blurRadius: 3.0,
-                                              color:
-                                                  Color.fromARGB(255, 0, 0, 0),
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-                                      Text('${article?.subtitle}',
-                                          style: MyTextStyle.contentDescription
-                                              .copyWith(
-                                                  color: MyColors.textReverse),
-                                          maxLines: 2,
-                                          textAlign: TextAlign.center,
-                                          overflow: TextOverflow.ellipsis),
-                                    ],
-                                  ),
-                                ),
-                                Container(
-                                  margin: EdgeInsets.symmetric(horizontal: 10),
-                                  child: GFButton(
-                                    onPressed: () {},
-                                    text: "Lihat Detail",
-                                    blockButton: true,
-                                    size: 25,
-                                    color: MyColors.background,
-                                    textColor: MyColors.text,
-                                  ),
-                                ),
-                              ],
-                            ),
+                      child: Material(
+                        elevation: 1.0,
+                        color: Colors.transparent,
+                        borderRadius: BorderRadius.circular(8),
+                        child: Container(
+                          width: item.contents.length > 1
+                              ? dimension.width - 60    
+                              : dimension.width - 32,
+                          padding: EdgeInsets.all(16),
+                          decoration: BoxDecoration(
+                            color: MyColors.white,
+                            borderRadius: BorderRadius.circular(8),
                           ),
-                        ],
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                article?.title ?? '-',
+                                style: MyTextStyle.sessionTitle,
+                              ),
+                              Spaces.smallVertical(),
+                              GFImageOverlay(
+                                color: MyColors.greyPlaceHolder,
+                                height: 120,
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(8)),
+                                image: NetworkImage(article?.thumbnail ?? ''),
+                                boxFit: BoxFit.fitWidth,
+                                child: article.isVideo == 1
+                                    ? Icon(
+                                        Icons.play_circle,
+                                        size: 50,
+                                        color: Colors.white,
+                                      )
+                                    : Container(),
+                              ),
+                              Spaces.smallVertical(),
+                              Text(
+                                '${article?.category}',
+                                style: MyTextStyle.h7.bold.copyWith(
+                                  color: MyColors.primary,
+                                ),
+                              ),
+                              Column(
+                                children: [
+                                  RichText(
+                                    text: new TextSpan(
+                                      children: [
+                                        new TextSpan(
+                                          text: article.sourceBy == null
+                                              ? 'Dibuat oleh '
+                                              : 'Sumber dari ',
+                                          style: MyTextStyle.contentDescription,
+                                        ),
+                                        new TextSpan(
+                                          text:
+                                              '${article.sourceBy ?? article.createdByName}',
+                                          style: new TextStyle(
+                                              color: MyColors.link),
+                                        ),
+                                        WidgetSpan(
+                                          child: article.verifiedBy == null
+                                              ? Container()
+                                              : Icon(
+                                                  Icons.verified_outlined,
+                                                  color: MyColors.primary,
+                                                  size: 18,
+                                                ),
+                                        )
+                                      ],
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ],
+                          ),
+                        ),
                       ),
                     );
                   },
