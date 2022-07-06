@@ -97,6 +97,7 @@ class ForumBloc extends Bloc<ForumEvent, ForumState> {
         contentId: event.contentId,
         page: event.page,
         response: response,
+        thread: response?.detail 
       ));
     } catch (e) {
       emit(state.copyWith(state: NetworkStates.onError, message: '${e}'));
@@ -134,7 +135,6 @@ class ForumBloc extends Bloc<ForumEvent, ForumState> {
       emit(state.copyWith(
         state: NetworkStates.onLoaded,
         message: response?.message,
-        threads: response?.data,
       ));
     } catch (e) {
       emit(state.copyWith(state: NetworkStates.onError, message: '${e}'));
@@ -160,19 +160,32 @@ class ForumBloc extends Bloc<ForumEvent, ForumState> {
       emit(state.copyWith(state: NetworkStates.onLoading, message: 'like'));
       var response =
           await apiService.likeThread({"thread_id": event.thread_id});
-      int index = state.threadsList
-              ?.indexWhere((element) => element.id == event.thread_id) ??
-          0;
-      List<ThreadsModel>? threadsList = state.threadsList;
-      var isLike = threadsList![index].isLiked == 1;
-      threadsList[index].isLiked = isLike ? 0 : 1;
-      threadsList[index].countLikes = isLike
-          ? (threadsList[index].countLikes ?? 1) - 1
-          : (threadsList[index].countLikes ?? 0) + 1;
-      emit(state.copyWith(
-          threadsList: threadsList,
-          state: NetworkStates.onLoaded,
-          message: 'success'));
+      if (event.isParent) {
+        var detail = state.thread;
+        var isLike = detail?.isLiked == 1;
+        detail?.isLiked = isLike ? 0 : 1;
+        detail?.countLikes = isLike
+            ? (detail.countLikes ?? 1) - 1
+            : (detail.countLikes ?? 0) + 1;
+        emit(state.copyWith(
+            thread: detail,
+            state: NetworkStates.onLoaded,
+            message: 'success'));
+      } else {
+        int index = state.threadsList
+                ?.indexWhere((element) => element.id == event.thread_id) ??
+            0;
+        List<ThreadsModel>? threadsList = state.threadsList;
+        var isLike = threadsList![index].isLiked == 1;
+        threadsList[index].isLiked = isLike ? 0 : 1;
+        threadsList[index].countLikes = isLike
+            ? (threadsList[index].countLikes ?? 1) - 1
+            : (threadsList[index].countLikes ?? 0) + 1;
+        emit(state.copyWith(
+            threadsList: threadsList,
+            state: NetworkStates.onLoaded,
+            message: 'success'));
+      }
     } catch (e) {
       emit(state.copyWith(state: NetworkStates.onError, message: '${e}'));
     }

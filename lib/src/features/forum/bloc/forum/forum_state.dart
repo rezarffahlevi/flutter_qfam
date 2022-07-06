@@ -6,7 +6,7 @@ class ForumState extends Equatable {
   final BuildContext? context;
   final List<ThreadsModel>? threadsList;
   final List<ForumModel>? forumList;
-  final ThreadsModel? threads;
+  final ThreadsModel? thread;
   final int? forumId;
   final int? parentId;
   final int? contentId;
@@ -23,7 +23,7 @@ class ForumState extends Equatable {
     this.context,
     this.threadsList = const [],
     this.forumList = const [],
-    this.threads,
+    this.thread,
     this.forumId,
     this.parentId,
     this.contentId,
@@ -41,7 +41,7 @@ class ForumState extends Equatable {
     BuildContext? context,
     List<ThreadsModel>? threadsList,
     List<ForumModel>? forumList,
-    ThreadsModel? threads,
+    ThreadsModel? thread,
     int? parentId,
     int? forumId,
     int? contentId,
@@ -58,7 +58,7 @@ class ForumState extends Equatable {
       context: context ?? this.context,
       threadsList: threadsList ?? this.threadsList,
       forumList: forumList ?? this.forumList,
-      threads: threads ?? this.threads,
+      thread: thread ?? this.thread,
       parentId: parentId ?? this.parentId,
       forumId: forumId ?? this.forumId,
       contentId: contentId ?? this.contentId,
@@ -78,7 +78,7 @@ class ForumState extends Equatable {
         context,
         threadsList,
         forumList,
-        threads,
+        thread,
         forumId,
         parentId,
         contentId,

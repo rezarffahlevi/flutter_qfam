@@ -75,7 +75,8 @@ class ForumEventOnChangeThread extends ForumEvent {
 
 class ForumEventOnLiked extends ForumEvent {
   int? thread_id;
-  ForumEventOnLiked({this.thread_id});
+  bool isParent;
+  ForumEventOnLiked({this.thread_id, this.isParent = false});
   @override
-  List<Object?> get props => [thread_id];
+  List<Object?> get props => [thread_id, isParent];
 }

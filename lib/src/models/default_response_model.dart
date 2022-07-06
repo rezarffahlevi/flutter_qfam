@@ -3,11 +3,16 @@ class DefaultResponseModel {
   String? message;
   dynamic error;
   dynamic data;
+  dynamic detail;
   PaginationModel? pagination;
 
-  DefaultResponseModel({this.code, this.message, this.error, this.data});
+  DefaultResponseModel(
+      {this.code, this.message, this.error, this.data, this.detail});
 
-  DefaultResponseModel.fromJson(Map<String, dynamic> json, dynamic jsonData) {
+  DefaultResponseModel.fromJson(
+      {required Map<String, dynamic> json,
+      dynamic jsonData,
+      dynamic jsonDetail}) {
     code = json['code'];
     message = json['message'];
     error = json['error'];
@@ -15,6 +20,7 @@ class DefaultResponseModel {
     pagination = json['pagination'] != null
         ? new PaginationModel.fromJson(json['pagination'])
         : null;
+    detail = jsonDetail != null ? jsonDetail : null;
   }
 
   Map<String, dynamic> toJson() {
@@ -27,6 +33,9 @@ class DefaultResponseModel {
     }
     if (this.pagination != null) {
       data['pagination'] = this.pagination!.toJson();
+    }
+    if (this.detail != null) {
+      data['detail'] = this.detail!.toJson();
     }
     return data;
   }

@@ -11,7 +11,7 @@ class AuthService {
     try {
       var response = await apiHelper.get('/current_user', params: params);
       return DefaultResponseModel.fromJson(
-          response, UserModel.fromJson(response['data']));
+          json: response, jsonData: UserModel.fromJson(response['data']));
     } catch (e) {
       throw e;
     }
@@ -23,7 +23,7 @@ class AuthService {
       ResponseLoginModel? data;
       if (response['data'] != null)
         data = ResponseLoginModel.fromJson(response['data']);
-      return DefaultResponseModel.fromJson(response, data);
+      return DefaultResponseModel.fromJson(json: response, jsonData: data);
     } catch (e) {
       throw e;
     }
@@ -35,7 +35,7 @@ class AuthService {
       ResponseLoginModel? data;
       if (response['data'] != null)
         data = ResponseLoginModel.fromJson(response['data']);
-      return DefaultResponseModel.fromJson(response, data);
+      return DefaultResponseModel.fromJson(json: response, jsonData: data);
     } catch (e) {
       throw e;
     }
@@ -47,7 +47,7 @@ class AuthService {
       ResponseLoginModel? data;
       if (response['data'] != null)
         data = ResponseLoginModel.fromJson(response['data']);
-      return DefaultResponseModel.fromJson(response, data);
+      return DefaultResponseModel.fromJson(json:response, jsonData:data);
     } catch (e) {
       throw e;
     }

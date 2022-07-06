@@ -265,14 +265,14 @@ class Threads extends StatelessWidget {
               Helpers.isEmpty(image)
                   ? Container()
                   : GFImageOverlay(
-                    color: MyColors.greyPlaceHolder,
-                    height: 120,
-                    borderRadius: BorderRadius.all(Radius.circular(8)),
-                    image: NetworkImage(AppSettings.getConfig.BASE_URL +
-                        'storages/' +
-                        image!.replaceFirstMapped('.', (match) => '/')),
-                    boxFit: BoxFit.cover,
-                  ),
+                      color: MyColors.greyPlaceHolder,
+                      height: 120,
+                      borderRadius: BorderRadius.all(Radius.circular(8)),
+                      image: NetworkImage(AppSettings.getConfig.BASE_URL +
+                          'storages/' +
+                          image!.replaceFirstMapped('.', (match) => '/')),
+                      boxFit: BoxFit.cover,
+                    ),
               Spaces.normalVertical(),
               Text(
                 '19.30 · 19/04/22',
@@ -364,13 +364,14 @@ class Threads extends StatelessWidget {
                         icon: Row(
                           children: [
                             Icon(
-                              Icons.favorite_border,
+                              isLiked ? Icons.favorite : Icons.favorite_border,
                               size: 16,
-                              color: Colors.black38,
+                              color:
+                                  isLiked ? MyColors.primary : Colors.black38,
                             ),
                             Spaces.smallHorizontal(),
                             Text(
-                              '',
+                              '${countLikes ?? 0}',
                               style: MyTextStyle.contentDescription,
                             ),
                           ],

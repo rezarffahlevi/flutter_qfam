@@ -2,11 +2,11 @@ import 'package:flutter_qfam/src/helpers/api_helper.dart';
 import 'package:flutter_qfam/src/models/default_response_model.dart';
 import 'package:flutter_qfam/src/models/forum/forum_model.dart';
 import 'package:flutter_qfam/src/models/forum/threads_model.dart';
+
 class ForumService {
   ApiHelper apiHelper = ApiHelper();
 
   ForumService();
-
 
   Future<DefaultResponseModel?> getForumList() async {
     try {
@@ -15,7 +15,7 @@ class ForumService {
       response['data']!.forEach((v) {
         data.add(new ForumModel.fromJson(v));
       });
-      return DefaultResponseModel.fromJson(response, data);
+      return DefaultResponseModel.fromJson(json: response, jsonData: data);
     } catch (e) {
       throw e;
     }
@@ -28,7 +28,10 @@ class ForumService {
       response['data']!.forEach((v) {
         data.add(new ThreadsModel.fromJson(v));
       });
-      return DefaultResponseModel.fromJson(response, data);
+      return DefaultResponseModel.fromJson(
+          json: response,
+          jsonData: data,
+          jsonDetail: response['detail'] == null ? null : ThreadsModel.fromJson(response['detail']));
     } catch (e) {
       throw e;
     }
@@ -37,7 +40,8 @@ class ForumService {
   Future<DefaultResponseModel?> postThread(dynamic params) async {
     try {
       var response = await apiHelper.post('/threads/save', params: params);
-      return DefaultResponseModel.fromJson(response, ThreadsModel.fromJson(response['data']));
+      return DefaultResponseModel.fromJson(
+          json: response, jsonDetail: ThreadsModel.fromJson(response['data']));
     } catch (e) {
       throw e;
     }
@@ -46,7 +50,7 @@ class ForumService {
   Future<DefaultResponseModel?> likeThread(dynamic params) async {
     try {
       var response = await apiHelper.post('/like', params: params);
-      return DefaultResponseModel.fromJson(response, null);
+      return DefaultResponseModel.fromJson(json: response);
     } catch (e) {
       throw e;
     }

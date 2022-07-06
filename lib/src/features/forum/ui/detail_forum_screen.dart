@@ -61,7 +61,7 @@ class _DetailForumScreenState extends State<DetailForumScreen> {
           _refreshController.loadComplete();
         },
         builder: (context, state) {
-          ThreadsModel detail = widget.argument;
+          ThreadsModel? detail = state.thread;
           return Scaffold(
               appBar: appBar(
                   child: "Utas",
@@ -93,19 +93,19 @@ class _DetailForumScreenState extends State<DetailForumScreen> {
                     children: [
                       Threads(
                         isDetail: true,
-                        name: '${detail.createdBy}',
-                        content: detail.content,
-                        image: detail.image,
-                        isAnonymous: detail.isAnonymous == 1,
-                        isVerified: !(detail.createdByRole == 'user'),
-                        countComments: detail.countComments,
-                        countLikes: detail.countLikes,
+                        name: '${detail?.createdBy}',
+                        content: detail?.content,
+                        image: detail?.image,
+                        isAnonymous: detail?.isAnonymous == 1,
+                        isVerified: !(detail?.createdByRole == 'user'),
+                        countComments: detail?.countComments,
+                        countLikes: detail?.countLikes,
                         isChild: false,
-                        isLiked: detail.isLiked == 1,
-                        //  detail.parentId != 0,
+                        isLiked: detail?.isLiked == 1,
+                        //  detail?.parentId != 0,
                         onTapParent: () {
                           bloc.add(
-                              ForumEventGetData(parentId: detail.parentId));
+                              ForumEventGetData(parentId: detail?.parentId));
                         },
                         onTapLike: () {
                           if (authBloc.state.currentUser?.email == null)
@@ -113,8 +113,7 @@ class _DetailForumScreenState extends State<DetailForumScreen> {
                                 'Anda harus login terlebih dahulu', context,
                                 toastPosition: GFToastPosition.BOTTOM);
                           else
-                            GFToast.showToast('Fitur belum tersedia', context,
-                                toastPosition: GFToastPosition.BOTTOM);
+                            bloc.add(ForumEventOnLiked(thread_id: detail?.id, isParent: true));
                         },
                         onTapShare: () {
                           GFToast.showToast('Fitur belum tersedia', context,
@@ -122,7 +121,7 @@ class _DetailForumScreenState extends State<DetailForumScreen> {
                         },
                       ),
                       Wrapper(
-                        state: state.state,
+                      state: state.message == 'like' ? NetworkStates.onLoaded : state.state,
                         onLoaded: ListView.separated(
                           padding: EdgeInsets.all(8),
                           shrinkWrap: true,
@@ -189,9 +188,9 @@ class _DetailForumScreenState extends State<DetailForumScreen> {
                         PostThreadScreen.routeName,
                         arguments: ThreadsModel(
                             parentId:
-                                widget.argument.id ?? bloc.state.threads?.id,
+                                widget.argument.id ?? bloc.state.thread?.id,
                             forumId: state.forumId,
-                            contentId: detail.contentId));
+                            contentId: detail?.contentId));
                     if (postThread != null) {
                       bloc.add(
                           ForumEventGetData(uuid: bloc.state.uuid, page: 1));

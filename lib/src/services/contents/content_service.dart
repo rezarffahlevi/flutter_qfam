@@ -21,7 +21,7 @@ class ContentService {
       response['data']!.forEach((v) {
         data.add(new ContentsModel.fromJson(v));
       });
-      return DefaultResponseModel.fromJson(response, data);
+      return DefaultResponseModel.fromJson(json: response, jsonData: data);
     } catch (e) {
       throw e;
     }
@@ -31,7 +31,7 @@ class ContentService {
     try {
       var response = await apiHelper.post('/contents/save', params: params);
       ContentsModel? data = ContentsModel.fromJson(response['data']);
-      return DefaultResponseModel.fromJson(response, data);
+      return DefaultResponseModel.fromJson(json: response, jsonData: data);
     } catch (e) {
       throw e;
     }
@@ -41,7 +41,7 @@ class ContentService {
     try {
       var response = await apiHelper.get('/contents', params: params);
       ContentsModel? data = ContentsModel.fromJson(response['data']);
-      return DefaultResponseModel.fromJson(response, data);
+      return DefaultResponseModel.fromJson(json: response, jsonData: data);
     } catch (e) {
       throw e;
     }
@@ -54,7 +54,7 @@ class ContentService {
       response['data']!.forEach((v) {
         data.add(new SectionsModel.fromJson(v));
       });
-      return DefaultResponseModel.fromJson(response, data);
+      return DefaultResponseModel.fromJson(json: response, jsonData: data);
     } catch (e) {
       throw e;
     }
@@ -67,7 +67,7 @@ class ContentService {
       response['data']!.forEach((v) {
         data.add(new FilesModel.fromJson(v));
       });
-      return DefaultResponseModel.fromJson(response, data);
+      return DefaultResponseModel.fromJson(json: response, jsonData: data);
     } catch (e) {
       throw e;
     }
@@ -81,7 +81,7 @@ class ContentService {
       response['data']!.forEach((v) {
         data.add(new CategoryModel.fromJson(v));
       });
-      return DefaultResponseModel.fromJson(response, data);
+      return DefaultResponseModel.fromJson(json: response, jsonData: data);
     } catch (e) {
       throw e;
     }
@@ -100,7 +100,7 @@ class ContentService {
         params: formData,
       );
       return DefaultResponseModel.fromJson(
-          response, FilesModel.fromJson(response['data']));
+          json: response, jsonData: FilesModel.fromJson(response['data']));
     } catch (e) {
       throw e;
     }
@@ -119,7 +119,7 @@ class ContentService {
         params: formData,
       );
       return DefaultResponseModel.fromJson(
-          response, ContentsModel.fromJson(response['data']));
+          json: response, jsonData: ContentsModel.fromJson(response['data']));
     } catch (e) {
       throw e;
     }
