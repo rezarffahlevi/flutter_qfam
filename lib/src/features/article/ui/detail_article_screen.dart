@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_html/flutter_html.dart';
+import 'package:flutter_qfam/src/commons/app_settings.dart';
 import 'package:flutter_qfam/src/commons/spaces.dart';
 import 'package:flutter_qfam/src/features/article/bloc/detail_article/detail_article_bloc.dart';
 import 'package:flutter_qfam/src/features/article/ui/post_article_screen.dart';
@@ -18,6 +19,7 @@ import 'package:flutter_qfam/src/styles/my_text_style.dart';
 import 'package:flutter_qfam/src/widgets/widgets.dart';
 import 'package:getwidget/getwidget.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
+import 'package:share_plus/share_plus.dart';
 import 'package:youtube_player_iframe/youtube_player_iframe.dart';
 
 class DetailArticleScreen extends StatefulWidget {
@@ -136,7 +138,9 @@ class _DetailArticleScreenState extends State<DetailArticleScreen> {
                 child: SingleChildScrollView(
                   child: Column(children: [
                     Wrapper(
-                      state: state.message == 'like' ? NetworkStates.onLoaded : state.state,
+                      state: state.message == 'like'
+                          ? NetworkStates.onLoaded
+                          : state.state,
                       onLoading: GFShimmer(
                         child: Column(
                           children: [
@@ -381,12 +385,10 @@ class _DetailArticleScreenState extends State<DetailArticleScreen> {
                                                                   item?.id));
                                                   },
                                                   onTapShare: () {
-                                                    GFToast.showToast(
-                                                        'Fitur belum tersedia',
-                                                        context,
-                                                        toastPosition:
-                                                            GFToastPosition
-                                                                .BOTTOM);
+                                                    Share.share(
+                                                        '${item?.content} ${AppSettings.getConfig.BASE_URL}thread/${item?.uuid}',
+                                                        subject:
+                                                            'Lihat disuksi ini');
                                                   },
                                                 );
                                               },

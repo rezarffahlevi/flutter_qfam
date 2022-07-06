@@ -1,3 +1,4 @@
+import 'package:flutter_qfam/src/commons/app_settings.dart';
 import 'package:flutter_qfam/src/commons/spaces.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -10,6 +11,7 @@ import 'package:flutter_qfam/src/styles/my_colors.dart';
 import 'package:flutter_qfam/src/widgets/widgets.dart';
 import 'package:getwidget/getwidget.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
+import 'package:share_plus/share_plus.dart';
 
 class DetailForumScreen extends StatefulWidget {
   static const String routeName = '/detail-forum';
@@ -113,15 +115,19 @@ class _DetailForumScreenState extends State<DetailForumScreen> {
                                 'Anda harus login terlebih dahulu', context,
                                 toastPosition: GFToastPosition.BOTTOM);
                           else
-                            bloc.add(ForumEventOnLiked(thread_id: detail?.id, isParent: true));
+                            bloc.add(ForumEventOnLiked(
+                                thread_id: detail?.id, isParent: true));
                         },
                         onTapShare: () {
-                          GFToast.showToast('Fitur belum tersedia', context,
-                              toastPosition: GFToastPosition.BOTTOM);
+                          Share.share(
+                              '${detail?.content} ${AppSettings.getConfig.BASE_URL}thread/${detail?.uuid}',
+                              subject: 'Lihat disuksi ini');
                         },
                       ),
                       Wrapper(
-                      state: state.message == 'like' ? NetworkStates.onLoaded : state.state,
+                        state: state.message == 'like'
+                            ? NetworkStates.onLoaded
+                            : state.state,
                         onLoaded: ListView.separated(
                           padding: EdgeInsets.all(8),
                           shrinkWrap: true,
@@ -151,9 +157,9 @@ class _DetailForumScreenState extends State<DetailForumScreen> {
                                       ForumEventOnLiked(thread_id: item.id));
                               },
                               onTapShare: () {
-                                GFToast.showToast(
-                                    'Fitur belum tersedia', context,
-                                    toastPosition: GFToastPosition.BOTTOM);
+                                Share.share(
+                                    '${item.content} ${AppSettings.getConfig.BASE_URL}thread/${item.uuid}',
+                                    subject: 'Lihat disuksi ini');
                               },
                             );
                           },
