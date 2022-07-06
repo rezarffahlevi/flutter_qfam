@@ -10,6 +10,7 @@ import 'package:flutter_qfam/src/models/contents/category_model.dart';
 import 'package:flutter_qfam/src/models/contents/contents_model.dart';
 import 'package:flutter_qfam/src/models/default_response_model.dart';
 import 'package:flutter_qfam/src/services/contents/content_service.dart';
+import 'package:flutter_qfam/src/services/forum/forum_service.dart';
 import 'package:flutter_qfam/src/widgets/widgets.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
@@ -28,11 +29,13 @@ class DetailArticleBloc extends Bloc<DetailArticleEvent, DetailArticleState> {
     on<DetailArticleEventOnChange>(_onChangeFormdata);
     on<DetailArticleEventGetCategory>(_getCategory);
     on<DetailArticleAddPhoto>(_addPhoto);
+    on<DetailArticleOnLiked>(_toggleLike);
   }
   RefreshController refreshController =
       RefreshController(initialRefresh: false);
   late YoutubePlayerController ytController;
   ContentService apiService = ContentService();
+  ForumService forumService = ForumService();
   final ImagePicker _picker = ImagePicker();
 
   final txtTitle = TextEditingController();
@@ -197,6 +200,23 @@ class DetailArticleBloc extends Bloc<DetailArticleEvent, DetailArticleState> {
         emit(state.copyWith(banner: images));
       }
       emit(state.copyWith(state: NetworkStates.onLoaded));
+    } catch (e) {
+      emit(state.copyWith(state: NetworkStates.onError, message: '${e}'));
+    }
+  }
+
+  _toggleLike(
+      DetailArticleOnLiked event, Emitter<DetailArticleState> emit) async {
+    try {
+      emit(state.copyWith(state: NetworkStates.onLoading, message: 'like'));
+      var response =
+          await forumService.likeThread({"content_id": event.content_id});
+      var detail = state.detail;
+      detail?.isLiked = detail.isLiked == 0 ? 1 : 0;
+      emit(state.copyWith(
+          detail: detail,
+          state: NetworkStates.onLoaded,
+          message: 'success'));
     } catch (e) {
       emit(state.copyWith(state: NetworkStates.onError, message: '${e}'));
     }

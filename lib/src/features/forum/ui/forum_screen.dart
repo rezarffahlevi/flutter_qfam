@@ -120,7 +120,7 @@ class _ForumScreenState extends State<ForumScreen>
                   Container(
                     margin: EdgeInsets.only(top: 50),
                     child: Wrapper(
-                      state: state.state,
+                      state: state.message == 'like' ? NetworkStates.onLoaded : state.state,
                       onLoading: GFShimmer(
                         child: Column(
                           children: [

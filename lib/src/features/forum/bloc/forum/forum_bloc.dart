@@ -157,7 +157,7 @@ class ForumBloc extends Bloc<ForumEvent, ForumState> {
 
   _toggleLike(ForumEventOnLiked event, Emitter<ForumState> emit) async {
     try {
-      emit(state.copyWith(state: NetworkStates.onLoading));
+      emit(state.copyWith(state: NetworkStates.onLoading, message: 'like'));
       var response =
           await apiService.likeThread({"thread_id": event.thread_id});
       int index = state.threadsList
@@ -170,7 +170,9 @@ class ForumBloc extends Bloc<ForumEvent, ForumState> {
           ? (threadsList[index].countLikes ?? 1) - 1
           : (threadsList[index].countLikes ?? 0) + 1;
       emit(state.copyWith(
-          threadsList: threadsList, state: NetworkStates.onLoaded));
+          threadsList: threadsList,
+          state: NetworkStates.onLoaded,
+          message: 'success'));
     } catch (e) {
       emit(state.copyWith(state: NetworkStates.onError, message: '${e}'));
     }

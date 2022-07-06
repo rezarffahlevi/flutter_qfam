@@ -20,6 +20,8 @@ class ContentsModel {
   String? sourceBy;
   String? verifiedBy;
   int? userVerified;
+  int? countLikes;
+  int? isLiked;
   String? createdAt;
   String? updatedAt;
   List<FilesModel>? banner;
@@ -44,6 +46,8 @@ class ContentsModel {
     this.sourceBy,
     this.verifiedBy,
     this.userVerified,
+    this.countLikes,
+    this.isLiked,
     this.createdAt,
     this.updatedAt,
     this.banner,
@@ -69,6 +73,8 @@ class ContentsModel {
     sourceBy = json['source_by'];
     verifiedBy = json['verified_by'];
     userVerified = json['user_verified'];
+    countLikes = json['count_likes'];
+    isLiked = json['is_liked'];
     createdAt = json['created_at'];
     updatedAt = json['updated_at'];
 
@@ -101,6 +107,8 @@ class ContentsModel {
     data['source_by'] = this.sourceBy;
     data['verified_by'] = this.verifiedBy;
     data['user_verified'] = this.userVerified;
+    data['count_likes'] = this.countLikes;
+    data['is_liked'] = this.isLiked;
     data['created_at'] = this.createdAt;
     data['updated_at'] = this.updatedAt;
     data['banner'] = this.banner;

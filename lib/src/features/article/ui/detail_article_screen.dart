@@ -136,7 +136,7 @@ class _DetailArticleScreenState extends State<DetailArticleScreen> {
                 child: SingleChildScrollView(
                   child: Column(children: [
                     Wrapper(
-                      state: state.state,
+                      state: state.message == 'like' ? NetworkStates.onLoaded : state.state,
                       onLoading: GFShimmer(
                         child: Column(
                           children: [
@@ -175,6 +175,8 @@ class _DetailArticleScreenState extends State<DetailArticleScreen> {
                                     ),
                                   ),
                                   Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
                                     children: [
                                       RichText(
                                         text: new TextSpan(
@@ -195,6 +197,42 @@ class _DetailArticleScreenState extends State<DetailArticleScreen> {
                                           ],
                                         ),
                                       ),
+                                      GestureDetector(
+                                        onTap: () {
+                                          if (authBloc
+                                                  .state.currentUser?.email ==
+                                              null)
+                                            GFToast.showToast(
+                                                'Anda harus login terlebih dahulu',
+                                                context,
+                                                toastPosition:
+                                                    GFToastPosition.BOTTOM);
+                                          else
+                                            bloc.add(DetailArticleOnLiked(
+                                                content_id: detail?.id));
+                                        },
+                                        child: Material(
+                                          elevation: 2.0,
+                                          color: Colors.transparent,
+                                          borderRadius:
+                                              BorderRadius.circular(8),
+                                          child: Container(
+                                            alignment: Alignment.topRight,
+                                            child: Icon(
+                                              detail?.isLiked == 1
+                                                  ? Icons.favorite
+                                                  : Icons.favorite_outline,
+                                              color: MyColors.primary,
+                                            ),
+                                            padding: EdgeInsets.all(10),
+                                            decoration: BoxDecoration(
+                                              borderRadius:
+                                                  BorderRadius.circular(8),
+                                              color: MyColors.background,
+                                            ),
+                                          ),
+                                        ),
+                                      )
                                     ],
                                   ),
                                   Spaces.largeVertical(),
@@ -256,7 +294,8 @@ class _DetailArticleScreenState extends State<DetailArticleScreen> {
                                               new TextSpan(
                                                 text: '${detail?.verifiedBy}',
                                                 style: new TextStyle(
-                                                    color: MyColors.link,),
+                                                  color: MyColors.link,
+                                                ),
                                               ),
                                             ],
                                           ),
@@ -320,6 +359,9 @@ class _DetailArticleScreenState extends State<DetailArticleScreen> {
                                                   isAnonymous:
                                                       item?.isAnonymous == 1,
                                                   isLiked: item?.isLiked == 1,
+                                                  isVerified:
+                                                      !(item?.createdByRole ==
+                                                          'user'),
                                                   onTapLike: () {
                                                     if (authBloc
                                                             .state

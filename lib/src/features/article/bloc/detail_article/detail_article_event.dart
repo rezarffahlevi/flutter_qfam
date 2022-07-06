@@ -29,6 +29,13 @@ class DetailArticleEventSetActiveBanner extends DetailArticleEvent {
   List<Object?> get props => [activeBanner];
 }
 
+class DetailArticleOnLiked extends DetailArticleEvent {
+  int? content_id;
+  DetailArticleOnLiked({this.content_id});
+  @override
+  List<Object?> get props => [content_id];
+}
+
 class DetailArticleAddPhoto extends DetailArticleEvent {
   String? type;
 
