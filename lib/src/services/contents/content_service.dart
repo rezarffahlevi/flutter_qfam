@@ -1,11 +1,10 @@
-import 'dart:io';
-
 import 'package:dio/dio.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_qfam/src/helpers/api_helper.dart';
 import 'package:flutter_qfam/src/models/contents/banner_model.dart';
 import 'package:flutter_qfam/src/models/contents/category_model.dart';
 import 'package:flutter_qfam/src/models/contents/contents_model.dart';
+import 'package:flutter_qfam/src/models/contents/likes_model.dart';
+import 'package:flutter_qfam/src/models/contents/notification_model.dart';
 import 'package:flutter_qfam/src/models/contents/sections_model.dart';
 import 'package:flutter_qfam/src/models/default_response_model.dart';
 
@@ -120,6 +119,32 @@ class ContentService {
       );
       return DefaultResponseModel.fromJson(
           json: response, jsonData: ContentsModel.fromJson(response['data']));
+    } catch (e) {
+      throw e;
+    }
+  }
+
+  Future<DefaultResponseModel?> getNotifList({dynamic params}) async {
+    try {
+      var response = await apiHelper.get('/notifications', params: params);
+      List<NotificationModel>? data = <NotificationModel>[];
+      response['data']!.forEach((v) {
+        data.add(new NotificationModel.fromJson(v));
+      });
+      return DefaultResponseModel.fromJson(json: response, jsonData: data);
+    } catch (e) {
+      throw e;
+    }
+  }
+
+  Future<DefaultResponseModel?> getListLike({dynamic params}) async {
+    try {
+      var response = await apiHelper.get('/likes', params: params);
+      List<LikesModel>? data = <LikesModel>[];
+      response['data']!.forEach((v) {
+        data.add(new LikesModel.fromJson(v));
+      });
+      return DefaultResponseModel.fromJson(json: response, jsonData: data);
     } catch (e) {
       throw e;
     }

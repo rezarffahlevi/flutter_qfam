@@ -21,7 +21,7 @@ class AppSettings {
     switch (ENV) {
       case AppEnv.DEVELOPMENT:
         config.ENV = AppEnv.DEVELOPMENT;
-        config.BASE_URL = 'http://192.168.1.110:8000/';
+        config.BASE_URL = 'http://192.168.0.116:8000/';
         break;
       case AppEnv.STAGING:
         config.ENV = AppEnv.STAGING;

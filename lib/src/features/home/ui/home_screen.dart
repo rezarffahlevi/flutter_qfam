@@ -3,6 +3,7 @@ import 'package:flutter_qfam/src/features/article/ui/detail_article_screen.dart'
 import 'package:flutter_qfam/src/features/auth/bloc/auth_bloc.dart';
 import 'package:flutter_qfam/src/features/home/bloc/home/home_bloc.dart';
 import 'package:flutter_qfam/src/features/home/bloc/home_root/home_root_bloc.dart';
+import 'package:flutter_qfam/src/features/notification/ui/notification_screen.dart';
 import 'package:flutter_qfam/src/features/search/ui/search_screen.dart';
 import 'package:flutter_qfam/src/helpers/helpers.dart';
 import 'package:flutter_qfam/src/models/contents/banner_model.dart';
@@ -51,7 +52,9 @@ class _HomeScreenState extends State<HomeScreen> {
     return BlocProvider(
       create: (BuildContext context) => HomeBloc(),
       child: Scaffold(
-          appBar: appBar(onTap: () {}, fontFamily: 'GreatVibes'),
+          appBar: appBar(onTap: () {
+            Navigator.of(context).pushNamed(NotificationScreen.routeName);
+          }, fontFamily: 'GreatVibes'),
           body: SmartRefresher(
             enablePullDown: true,
             enablePullUp: false,

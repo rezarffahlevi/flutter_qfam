@@ -1,13 +1,12 @@
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_qfam/src/commons/spaces.dart';
 import 'package:flutter_qfam/src/features/auth/bloc/auth_bloc.dart';
 import 'package:flutter_qfam/src/features/auth/ui/login_screen.dart';
 import 'package:flutter_qfam/src/features/auth/ui/register_screen.dart';
-import 'package:flutter_qfam/src/features/home/bloc/home/home_bloc.dart';
 import 'package:flutter_qfam/src/features/home/bloc/home_root/home_root_bloc.dart';
+import 'package:flutter_qfam/src/features/likes/ui/likes_screen.dart';
 import 'package:flutter_qfam/src/features/profile/bloc/profile/profile_bloc.dart';
-import 'package:flutter_qfam/src/features/search/bloc/search/search_bloc.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_qfam/src/styles/my_colors.dart';
 import 'package:flutter_qfam/src/styles/my_font_weight.dart';
 import 'package:flutter_qfam/src/widgets/widgets.dart';
@@ -55,7 +54,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
         body: BlocConsumer<HomeRootBloc, HomeRootState>(
           bloc: homeRootBloc,
           listener: (context, state) {
-            debugPrint('homeRootBloc ${authBloc.state.currentUser?.role} ${state.index}');
+            debugPrint(
+                'homeRootBloc ${authBloc.state.currentUser?.role} ${state.index}');
             if (authBloc.state.currentUser?.email == null && state.index == 3) {
               homeRootBloc.add(HomeRootEventSelectedIndex(index: 0));
               Navigator.of(context).pushNamed(LoginScreen.routeName);
@@ -67,7 +67,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
             return BlocConsumer<AuthBloc, AuthState>(
               bloc: authBloc,
               listener: (context, state) {
-                debugPrint('AuthBloc ${state.currentUser?.role} ${homeRootBloc.state.index}');
+                debugPrint(
+                    'AuthBloc ${state.currentUser?.role} ${homeRootBloc.state.index}');
                 if (state.currentUser?.email == null &&
                     homeRootBloc.state.index == 3) {
                   homeRootBloc.add(HomeRootEventSelectedIndex(index: 0));
@@ -206,11 +207,17 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       fontSize: 16),
                 ),
                 _menuWidget(
-                    icon: Icons.edit, text: 'Ubah Profil', onTap: () {
+                    icon: Icons.edit,
+                    text: 'Ubah Profil',
+                    onTap: () {
                       Navigator.of(context).pushNamed(RegisterScreen.routeName);
                     }),
                 _menuWidget(
-                    icon: Icons.favorite, text: 'Daftar Suka', onTap: () {}),
+                    icon: Icons.favorite,
+                    text: 'Daftar Suka',
+                    onTap: () {
+                      Navigator.of(context).pushNamed(LikesScreen.routeName);
+                    }),
                 _menuWidget(
                     icon: Icons.logout,
                     text: 'Logout',

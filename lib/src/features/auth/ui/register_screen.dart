@@ -1,13 +1,9 @@
-import 'package:flutter/services.dart';
-import 'package:flutter_qfam/src/commons/spaces.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_qfam/src/commons/spaces.dart';
 import 'package:flutter_qfam/src/features/auth/bloc/auth_bloc.dart';
-import 'package:flutter_qfam/src/features/forum/bloc/forum/forum_bloc.dart';
-import 'package:flutter_qfam/src/features/forum/ui/detail_forum_screen.dart';
 import 'package:flutter_qfam/src/helpers/helpers.dart';
-import 'package:flutter_qfam/src/styles/my_colors.dart';
-import 'package:flutter_qfam/src/styles/my_font_weight.dart';
 import 'package:flutter_qfam/src/styles/my_text_style.dart';
 import 'package:flutter_qfam/src/widgets/card/textfield.dart';
 import 'package:flutter_qfam/src/widgets/custom_loader.dart';
@@ -206,16 +202,29 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                   controller: bloc.txtEmail,
                                 ),
                                 Spaces.normalVertical(),
-                                _entryField(
-                                  'Password',
-                                  controller: bloc.txtPassword,
-                                  obscureText: true,
-                                  keyboardType: TextInputType.visiblePassword
-                                ),
+                                _entryField('Password',
+                                    controller: bloc.txtPassword,
+                                    obscureText: true,
+                                    keyboardType:
+                                        TextInputType.visiblePassword),
                                 // Spaces.normalVertical(),
                                 // _entryField(
                                 //   'Ulangi Password',
                                 // ),
+
+                                Spaces.normalVertical(),
+                                InkWell(
+                                  onTap: () {},
+                                  child: Container(
+                                    margin: EdgeInsets.all(10),
+                                    child: Row(
+                                      children: [
+                                        Icon(Icons.add_photo_alternate),
+                                        Text('Upload gambar')
+                                      ],
+                                    ),
+                                  ),
+                                ),
                                 Spaces.normalVertical(),
                                 GFButton(
                                   onPressed: () {

@@ -1,12 +1,9 @@
 import 'package:bloc/bloc.dart';
-import 'package:dio/dio.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_qfam/src/commons/preferences_base.dart';
 import 'package:flutter_qfam/src/features/auth/arguments/auth_argument.dart';
 import 'package:flutter_qfam/src/features/auth/ui/login_screen.dart';
-import 'package:flutter_qfam/src/features/home/bloc/home_root/home_root_bloc.dart';
-import 'package:flutter_qfam/src/features/home/ui/home_root_screen.dart';
 import 'package:flutter_qfam/src/helpers/helpers.dart';
 import 'package:flutter_qfam/src/helpers/notification_helper.dart';
 import 'package:flutter_qfam/src/models/profile/user_model.dart';
@@ -16,7 +13,6 @@ import 'package:getwidget/getwidget.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 
 part 'auth_event.dart';
-
 part 'auth_state.dart';
 
 class AuthBloc extends Bloc<AuthEvent, AuthState> {
@@ -73,10 +69,10 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     try {
       emit(state.copyWith(state: NetworkStates.onLoading));
       var fcmToken = await NotificationHelper.getFcmToken();
-      var response =
-          await apiService.getCurrentUser(params: {'fcm': fcmToken});
+      var response = await apiService.getCurrentUser(params: {'fcm': fcmToken});
       emit(state.copyWith(
           currentUser: response?.data, state: NetworkStates.onLoaded));
+      debugPrint('token: ${await Prefs.token}');
     } catch (e) {
       emit(state.copyWith(
           state: NetworkStates.onError,
