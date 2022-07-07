@@ -96,7 +96,7 @@ class Threads extends StatelessWidget {
                 ],
               ),
               Padding(
-                padding: const EdgeInsets.only(right: 8),
+                padding: const EdgeInsets.only(right: 8, bottom: 6),
                 child: Text(
                   '${content}',
                   style: MyTextStyle.h5,
@@ -121,23 +121,29 @@ class Threads extends StatelessWidget {
                 children: [
                   Row(
                     children: [
-                      IconButton(
-                        onPressed: onTapComment,
-                        icon: Row(
-                          children: [
-                            Icon(Icons.mode_comment_outlined, size: 16),
-                            Spaces.smallHorizontal(),
-                            Text(
-                              '${countComments ?? '0'}',
-                              style: MyTextStyle.contentDescription,
-                            ),
-                          ],
+                      InkWell(
+                        onTap: onTapComment,
+                        child: Container(
+                          padding: EdgeInsets.symmetric(vertical: 16),
+                          child: Row(
+                            children: [
+                              Icon(Icons.mode_comment_outlined, size: 16,
+                                color:Colors.black38,
+                              ),
+                              Spaces.smallHorizontal(),
+                              Text(
+                                '${countComments ?? '0'}',
+                                style: MyTextStyle.contentDescription,
+                              ),
+                              Spaces.normalHorizontal(),
+                            ],
+                          ),
                         ),
                       ),
                       Spaces.normalHorizontal(),
-                      IconButton(
-                        onPressed: onTapLike,
-                        icon: Row(
+                      InkWell(
+                        onTap: onTapLike,
+                        child: Row(
                           children: [
                             Icon(
                               isLiked ? Icons.favorite : Icons.favorite_border,
@@ -150,13 +156,14 @@ class Threads extends StatelessWidget {
                               '${countLikes ?? '0'}',
                               style: MyTextStyle.contentDescription,
                             ),
+                            Spaces.normalHorizontal(),
                           ],
                         ),
                       ),
                       Spaces.normalHorizontal(),
-                      IconButton(
-                        onPressed: onTapShare,
-                        icon: Row(
+                      InkWell(
+                        onTap: onTapShare,
+                        child: Row(
                           children: [
                             Icon(
                               Icons.share_outlined,
@@ -253,7 +260,7 @@ class Threads extends StatelessWidget {
             children: [
               Spaces.normalVertical(),
               Padding(
-                padding: const EdgeInsets.only(right: 8),
+                padding: const EdgeInsets.only(right: 8, bottom: 6),
                 child: Text(
                   '${content}',
                   style: MyTextStyle.h4,
@@ -342,23 +349,24 @@ class Threads extends StatelessWidget {
                 children: [
                   Row(
                     children: [
-                      IconButton(
-                        onPressed: null,
-                        icon: Row(
+                      InkWell(
+                        onTap: null,
+                        child: Row(
                           children: [
-                            Icon(Icons.mode_comment_outlined, size: 16),
+                            Icon(Icons.mode_comment_outlined, size: 16, color: Colors.black38,),
                             Spaces.smallHorizontal(),
                             Text(
-                              '${countComments ?? ''}',
+                              '${countComments ?? 0}',
                               style: MyTextStyle.contentDescription,
                             ),
+                            Spaces.normalHorizontal(),
                           ],
                         ),
                       ),
                       Spaces.normalHorizontal(),
-                      IconButton(
-                        onPressed: onTapLike,
-                        icon: Row(
+                      InkWell(
+                        onTap: onTapLike,
+                        child: Row(
                           children: [
                             Icon(
                               isLiked ? Icons.favorite : Icons.favorite_border,
@@ -371,6 +379,7 @@ class Threads extends StatelessWidget {
                               '${countLikes ?? 0}',
                               style: MyTextStyle.contentDescription,
                             ),
+                            Spaces.normalHorizontal(),
                           ],
                         ),
                       ),

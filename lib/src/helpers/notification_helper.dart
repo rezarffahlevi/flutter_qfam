@@ -6,7 +6,9 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:flutter_qfam/src/features/forum/ui/detail_forum_screen.dart';
 import 'package:flutter_qfam/src/helpers/helpers.dart';
+import 'package:flutter_qfam/src/models/forum/threads_model.dart';
 import 'package:getwidget/getwidget.dart';
 
 class NotificationHelper {
@@ -65,6 +67,9 @@ class NotificationHelper {
         .then((RemoteMessage? message) {
       if (message != null) {
         debugPrint('getInitialMessage: ${message.notification?.title}');
+        Future.delayed(Duration(seconds: 3)).then((value) =>
+          onSelectNotification(message.data['uuid'])
+        );
       }
     });
 
@@ -86,14 +91,14 @@ class NotificationHelper {
               icon: 'launcher_icon',
             ),
           ),
+          payload: message.data['uuid'] ?? message.data.toString(),
         );
       }
     });
 
     FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
-      print('A new onMessageOpenedApp event was published!');
-
-      debugPrint('onMessageOpenedApp: ${message.notification?.title}');
+      debugPrint('onMessageOpenedApp: ${message.notification?.title} ${message.data['uuid']}');
+      onSelectNotification(message.data['uuid']);
     });
   }
 
@@ -160,6 +165,7 @@ class NotificationHelper {
         onSelectNotification: (String? payload) async {
           if (payload != null) {
             debugPrint('notification payload: $payload');
+            onSelectNotification(payload);
           }
         });
   }
@@ -188,7 +194,8 @@ class NotificationHelper {
 
   void onSelectNotification(String? payload) async {
     if (payload != null) {
-      debugPrint('notification payload: $payload');
+      Navigator.of(Helpers.navigatorKey.currentContext as BuildContext).pushNamed(DetailForumScreen.routeName, arguments: ThreadsModel(uuid: payload));
+      debugPrint('onSelectNotification: $payload');
     }
   }
 }
