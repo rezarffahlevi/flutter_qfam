@@ -83,6 +83,27 @@ class DetailArticleBloc extends Bloc<DetailArticleEvent, DetailArticleState> {
       DetailArticleEventOnPost event, Emitter<DetailArticleState> emit) async {
     try {
       emit(state.copyWith(state: NetworkStates.onLoading));
+      // Validation
+      if (Helpers.isEmpty(state.formdata?.title)) {
+        return emit(state.copyWith(
+            state: NetworkStates.onLoaded,
+            response: DefaultResponseModel(code: '01'),
+            message: 'Judul wajib di isi'));
+      }
+      if (state.formdata?.isVideo == 1 &&
+          Helpers.isEmpty(state.formdata?.link)) {
+        return emit(state.copyWith(
+            state: NetworkStates.onLoaded,
+            response: DefaultResponseModel(code: '01'),
+            message: 'Link wajib di isi'));
+      }
+      if (Helpers.isEmpty(state.formdata?.content)) {
+        return emit(state.copyWith(
+            state: NetworkStates.onLoaded,
+            response: DefaultResponseModel(code: '01'),
+            message: 'Konten wajib di isi'));
+      }
+
       var response =
           await apiService.postArticle(params: state.formdata!.toJson());
       if (!Helpers.isEmpty(state.thumbnail?.path)) {
@@ -92,11 +113,11 @@ class DetailArticleBloc extends Bloc<DetailArticleEvent, DetailArticleState> {
         _uploadFile(response?.data);
       }
       emit(state.copyWith(
-        state: NetworkStates.onLoaded,
-        detail: response?.data,
-        bannerList: response?.data?.banner,
-        message: response?.message,
-      ));
+          state: NetworkStates.onLoaded,
+          detail: response?.data,
+          bannerList: response?.data?.banner,
+          message: response?.message,
+          response: response));
     } catch (e) {
       emit(state.copyWith(state: NetworkStates.onError, message: '${e}'));
     }
@@ -214,9 +235,7 @@ class DetailArticleBloc extends Bloc<DetailArticleEvent, DetailArticleState> {
       var detail = state.detail;
       detail?.isLiked = detail.isLiked == 0 ? 1 : 0;
       emit(state.copyWith(
-          detail: detail,
-          state: NetworkStates.onLoaded,
-          message: 'success'));
+          detail: detail, state: NetworkStates.onLoaded, message: 'success'));
     } catch (e) {
       emit(state.copyWith(state: NetworkStates.onError, message: '${e}'));
     }

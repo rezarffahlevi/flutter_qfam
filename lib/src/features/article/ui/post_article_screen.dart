@@ -69,7 +69,7 @@ class _PostArticleScreenState extends State<PostArticleScreen> {
             onTapBack: () {
               Navigator.pop(context);
             },
-            child: '${isEdit ? 'Ubah' : 'Post'} Artikel',
+            child: '${isEdit ? 'Ubah' : 'Post'} Konten Edukasi',
           ),
           body: SmartRefresher(
             enablePullDown: true,
@@ -95,6 +95,10 @@ class _PostArticleScreenState extends State<PostArticleScreen> {
                           GFToast.showToast('${state.message}', context,
                               toastPosition: GFToastPosition.BOTTOM);
                           Navigator.pop(context, true);
+                        } else if (state.response?.code == '01') {
+                          Helpers.dismissKeyboard(context);
+                          GFToast.showToast('${state.message}', context,
+                              toastPosition: GFToastPosition.BOTTOM);
                         }
                       },
                       builder: (context, state) {

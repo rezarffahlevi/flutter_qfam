@@ -420,7 +420,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         borderRadius: BorderRadius.circular(8),
                         child: Container(
                           width: item.contents.length > 1
-                              ? dimension.width - 60    
+                              ? dimension.width - 60
                               : dimension.width - 32,
                           padding: EdgeInsets.all(16),
                           decoration: BoxDecoration(
@@ -601,12 +601,17 @@ class _HomeScreenState extends State<HomeScreen> {
           GFCarousel(
             items: bannerList.map<Widget>(
               (item) {
-                return Container(
-                  margin: EdgeInsets.all(8.0),
-                  child: ClipRRect(
-                    borderRadius: BorderRadius.all(Radius.circular(5.0)),
-                    child: Image.network(item.link ?? '',
-                        fit: BoxFit.cover, width: 1000.0),
+                return GestureDetector(
+                  onTap: () {
+                    Helpers.launchURL(url: item.link);
+                  },
+                  child: Container(
+                    margin: EdgeInsets.all(8.0),
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.all(Radius.circular(5.0)),
+                      child: Image.network(item.link ?? '',
+                          fit: BoxFit.cover, width: 1000.0),
+                    ),
                   ),
                 );
               },

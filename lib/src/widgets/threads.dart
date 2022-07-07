@@ -14,13 +14,11 @@ class Threads extends StatelessWidget {
     this.isAnonymous = false,
     this.isVerified = false,
     this.isLiked = false,
+    this.createdAt,
     this.onTapParent,
     this.onTapComment,
     this.onTapLike,
     this.onTapShare,
-    this.onLoading,
-    this.onLoaded,
-    this.onError,
   }) : super(key: key);
 
   final String? name;
@@ -33,14 +31,13 @@ class Threads extends StatelessWidget {
   final bool isAnonymous;
   final bool isVerified;
   final bool isLiked;
+  final String? createdAt;
   final Function()? onTap;
   final Function()? onTapParent;
   final Function()? onTapComment;
   final Function()? onTapLike;
   final Function()? onTapShare;
-  final Widget? onLoading;
-  final Widget? onLoaded;
-  final Widget? onError;
+  
 
   @override
   Widget build(BuildContext context) {
@@ -275,7 +272,7 @@ class Threads extends StatelessWidget {
                     ),
               Spaces.normalVertical(),
               Text(
-                '19.30 · 19/04/22',
+                '${Helpers.formatDateTime(createdAt ?? DateTime.now().toString(), format: 'HH:mm · dd MMMM yyyy')}',
                 style: MyTextStyle.contentDescription,
               ),
               Container(

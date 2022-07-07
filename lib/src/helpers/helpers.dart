@@ -6,6 +6,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_qfam/src/commons/spaces.dart';
 import 'package:flutter_qfam/src/styles/my_colors.dart';
 import 'package:flutter_qfam/src/styles/my_text_style.dart';
+import 'package:intl/date_symbol_data_local.dart';
+import 'package:intl/intl.dart';
+import 'package:url_launcher/url_launcher_string.dart';
 
 class Helpers {
   static final GlobalKey<NavigatorState> navigatorKey =
@@ -158,7 +161,6 @@ class Helpers {
     );
   }
 
-
   static String getErrorMessage(e) {
     return e.toString().replaceAll('Exception: ', '');
   }
@@ -203,9 +205,8 @@ class Helpers {
   static String formatDateTime(String date,
       {String format = 'dd MMMM yyyy HH:mm'}) {
     try {
-      // initializeDateFormatting();
-      return 'null';
-      // return DateFormat(format, 'id').format(DateTime.parse(date));
+      initializeDateFormatting('id_ID', null);
+      return DateFormat(format, 'id').format(DateTime.parse(date));
     } catch (e) {
       print(e.toString());
       return '-';
@@ -522,6 +523,14 @@ class Helpers {
         return "Seratus " + intToWritten(n % 100);
       default:
         return 'NUMBER NOT FOUND';
+    }
+  }
+
+  static launchURL({String url = 'https://flutter.io'}) async {
+    if (await canLaunchUrlString(url)) {
+      await launchUrlString(url);
+    } else {
+      throw 'Could not launch $url';
     }
   }
 }

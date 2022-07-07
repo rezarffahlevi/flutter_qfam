@@ -97,6 +97,7 @@ class _DetailForumScreenState extends State<DetailForumScreen> {
                         isDetail: true,
                         name: '${detail?.createdBy}',
                         content: detail?.content,
+                        createdAt: detail?.createdAt,
                         image: detail?.image,
                         isAnonymous: detail?.isAnonymous == 1,
                         isVerified: !(detail?.createdByRole == 'user'),

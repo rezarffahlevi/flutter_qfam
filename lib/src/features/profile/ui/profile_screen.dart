@@ -1,6 +1,7 @@
 import 'package:flutter_qfam/src/commons/spaces.dart';
 import 'package:flutter_qfam/src/features/auth/bloc/auth_bloc.dart';
 import 'package:flutter_qfam/src/features/auth/ui/login_screen.dart';
+import 'package:flutter_qfam/src/features/auth/ui/register_screen.dart';
 import 'package:flutter_qfam/src/features/home/bloc/home/home_bloc.dart';
 import 'package:flutter_qfam/src/features/home/bloc/home_root/home_root_bloc.dart';
 import 'package:flutter_qfam/src/features/profile/bloc/profile/profile_bloc.dart';
@@ -198,14 +199,18 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 _itemWidget(value: state.currentUser?.telp, key: 'Telp'),
                 Spaces.smallVertical(),
                 Text(
-                  "Settings",
+                  "Pengaturan",
                   style: TextStyle(
                       color: MyColors.primary,
                       fontWeight: FontWeight.bold,
                       fontSize: 16),
                 ),
                 _menuWidget(
-                    icon: Icons.lock_open, text: 'Ubah Password', onTap: () {}),
+                    icon: Icons.edit, text: 'Ubah Profil', onTap: () {
+                      Navigator.of(context).pushNamed(RegisterScreen.routeName);
+                    }),
+                _menuWidget(
+                    icon: Icons.favorite, text: 'Daftar Suka', onTap: () {}),
                 _menuWidget(
                     icon: Icons.logout,
                     text: 'Logout',

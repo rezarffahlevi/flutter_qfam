@@ -52,6 +52,7 @@ class _AppState extends State<App> {
         ),
       ],
       child: MaterialApp(
+        debugShowCheckedModeBanner: false,
         title: AppSettings.name,
         navigatorKey: Helpers.navigatorKey,
         initialRoute: SplashScreen.routeName,
