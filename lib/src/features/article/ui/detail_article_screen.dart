@@ -14,7 +14,6 @@ import 'package:flutter_qfam/src/helpers/helpers.dart';
 import 'package:flutter_qfam/src/models/contents/contents_model.dart';
 import 'package:flutter_qfam/src/models/forum/threads_model.dart';
 import 'package:flutter_qfam/src/styles/my_colors.dart';
-import 'package:flutter_qfam/src/styles/my_font_weight.dart';
 import 'package:flutter_qfam/src/styles/my_text_style.dart';
 import 'package:flutter_qfam/src/widgets/widgets.dart';
 import 'package:getwidget/getwidget.dart';
@@ -386,7 +385,7 @@ class _DetailArticleScreenState extends State<DetailArticleScreen> {
                                                   },
                                                   onTapShare: () {
                                                     Share.share(
-                                                        '${item?.content} ${AppSettings.getConfig.BASE_URL}thread/${item?.uuid}',
+                                                        'Lihat diskusi: ${item?.content} ${AppSettings.getConfig.BASE_URL}thread?id=${item?.uuid}',
                                                         subject:
                                                             'Lihat disuksi ini');
                                                   },

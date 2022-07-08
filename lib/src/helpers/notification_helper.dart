@@ -9,13 +9,12 @@ import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_qfam/src/features/forum/ui/detail_forum_screen.dart';
 import 'package:flutter_qfam/src/helpers/helpers.dart';
 import 'package:flutter_qfam/src/models/forum/threads_model.dart';
-import 'package:getwidget/getwidget.dart';
 
 class NotificationHelper {
   FirebaseMessaging messaging = FirebaseMessaging.instance;
   late AndroidNotificationChannel channel;
   final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
-  FlutterLocalNotificationsPlugin();
+      FlutterLocalNotificationsPlugin();
 
   final MethodChannel platform = MethodChannel('qfam.dev/notification_test');
 
@@ -46,7 +45,7 @@ class NotificationHelper {
 
       await flutterLocalNotificationsPlugin
           .resolvePlatformSpecificImplementation<
-          AndroidFlutterLocalNotificationsPlugin>()
+              AndroidFlutterLocalNotificationsPlugin>()
           ?.createNotificationChannel(channel);
 
       /// Update the iOS foreground notification presentation options to allow
@@ -61,17 +60,6 @@ class NotificationHelper {
     debugPrint('PERMISSION NOTIF: ${settings.authorizationStatus}');
     // use the returned token to send messages to users from your custom server
     // await getFcmToken();
-
-    FirebaseMessaging.instance
-        .getInitialMessage()
-        .then((RemoteMessage? message) {
-      if (message != null) {
-        debugPrint('getInitialMessage: ${message.notification?.title}');
-        Future.delayed(Duration(seconds: 3)).then((value) =>
-          onSelectNotification(message.data['uuid'])
-        );
-      }
-    });
 
     FirebaseMessaging.onMessage.listen((RemoteMessage message) {
       print('Got a message whilst in the foreground!');
@@ -97,7 +85,8 @@ class NotificationHelper {
     });
 
     FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
-      debugPrint('onMessageOpenedApp: ${message.notification?.title} ${message.data['uuid']}');
+      debugPrint(
+          'onMessageOpenedApp: ${message.notification?.title} ${message.data['uuid']}');
       onSelectNotification(message.data['uuid']);
     });
   }
@@ -106,7 +95,7 @@ class NotificationHelper {
     FirebaseMessaging messaging = FirebaseMessaging.instance;
     String? token = await messaging.getToken(
       vapidKey:
-      "BJ8r0cBjzcIyeWFVVeZTCJ_umnpWyUpnHqlmPfoabFch4jzIi2UDbLA652B33FdUP81gCznmPj3hhctBXhiTm4g",
+          "BJ8r0cBjzcIyeWFVVeZTCJ_umnpWyUpnHqlmPfoabFch4jzIi2UDbLA652B33FdUP81gCznmPj3hhctBXhiTm4g",
     );
     debugPrint('MY TOKEN: ${token}');
     return token;
@@ -115,86 +104,89 @@ class NotificationHelper {
   void _requestPermissions() {
     flutterLocalNotificationsPlugin
         .resolvePlatformSpecificImplementation<
-        IOSFlutterLocalNotificationsPlugin>()
+            IOSFlutterLocalNotificationsPlugin>()
         ?.requestPermissions(
-      alert: true,
-      badge: true,
-      sound: true,
-    );
+          alert: true,
+          badge: true,
+          sound: true,
+        );
     flutterLocalNotificationsPlugin
         .resolvePlatformSpecificImplementation<
-        MacOSFlutterLocalNotificationsPlugin>()
+            MacOSFlutterLocalNotificationsPlugin>()
         ?.requestPermissions(
-      alert: true,
-      badge: true,
-      sound: true,
-    );
+          alert: true,
+          badge: true,
+          sound: true,
+        );
   }
 
   void initSettings() async {
     final NotificationAppLaunchDetails? notificationAppLaunchDetails =
-    !kIsWeb && Platform.isLinux
-        ? null
-        : await flutterLocalNotificationsPlugin
-        .getNotificationAppLaunchDetails();
+        !kIsWeb && Platform.isLinux
+            ? null
+            : await flutterLocalNotificationsPlugin
+                .getNotificationAppLaunchDetails();
     if (notificationAppLaunchDetails?.didNotificationLaunchApp ?? false) {
       debugPrint('APAAN ${notificationAppLaunchDetails!.payload} || ');
     }
 
     const AndroidInitializationSettings initializationSettingsAndroid =
-    AndroidInitializationSettings('launcher_icon');
+        AndroidInitializationSettings('launcher_icon');
     final IOSInitializationSettings initializationSettingsIOS =
-    IOSInitializationSettings(
-        requestAlertPermission: false,
-        requestBadgePermission: false,
-        requestSoundPermission: false,
-        onDidReceiveLocalNotification: (int id,
-            String? title,
-            String? body,
-            String? payload,) async {
-          debugPrint(
-              'id: ${id}, title: ${title}, body: ${body}, payload: ${payload}');
-        });
+        IOSInitializationSettings(
+            requestAlertPermission: false,
+            requestBadgePermission: false,
+            requestSoundPermission: false,
+            onDidReceiveLocalNotification: (
+              int id,
+              String? title,
+              String? body,
+              String? payload,
+            ) async {
+              debugPrint(
+                  'id: ${id}, title: ${title}, body: ${body}, payload: ${payload}');
+            });
 
     final InitializationSettings initializationSettings =
-    InitializationSettings(
+        InitializationSettings(
       android: initializationSettingsAndroid,
       iOS: initializationSettingsIOS,
     );
     await flutterLocalNotificationsPlugin.initialize(initializationSettings,
         onSelectNotification: (String? payload) async {
-          if (payload != null) {
-            debugPrint('notification payload: $payload');
-            onSelectNotification(payload);
-          }
-        });
+      if (payload != null) {
+        debugPrint('notification payload: $payload');
+        onSelectNotification(payload);
+      }
+    });
   }
 
-  void onDidReceiveLocalNotification(int? id, String? title, String? body,
-      String? payload) async {
+  void onDidReceiveLocalNotification(
+      int? id, String? title, String? body, String? payload) async {
     // display a dialog with the notification details, tap ok to go to another page
     showDialog(
       context: Helpers.navigatorKey.currentContext as BuildContext,
-      builder: (BuildContext context) =>
-          CupertinoAlertDialog(
-            title: Text(title ?? ''),
-            content: Text(body ?? ''),
-            actions: [
-              CupertinoDialogAction(
-                isDefaultAction: true,
-                child: Text('Ok'),
-                onPressed: () async {
-                  debugPrint('test');
-                },
-              )
-            ],
-          ),
+      builder: (BuildContext context) => CupertinoAlertDialog(
+        title: Text(title ?? ''),
+        content: Text(body ?? ''),
+        actions: [
+          CupertinoDialogAction(
+            isDefaultAction: true,
+            child: Text('Ok'),
+            onPressed: () async {
+              debugPrint('test');
+            },
+          )
+        ],
+      ),
     );
   }
 
-  void onSelectNotification(String? payload) async {
+  static void onSelectNotification(String? payload) async {
     if (payload != null) {
-      Navigator.of(Helpers.navigatorKey.currentContext as BuildContext).pushNamed(DetailForumScreen.routeName, arguments: ThreadsModel(uuid: payload));
+      Navigator.of(Helpers.navigatorKey.currentContext as BuildContext)
+          .pushNamed(DetailForumScreen.routeName,
+              arguments: ThreadsModel(uuid: payload));
       debugPrint('onSelectNotification: $payload');
     }
   }

@@ -1,7 +1,7 @@
-import 'package:flutter_qfam/src/commons/app_settings.dart';
-import 'package:flutter_qfam/src/commons/spaces.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_qfam/src/commons/app_settings.dart';
+import 'package:flutter_qfam/src/commons/spaces.dart';
 import 'package:flutter_qfam/src/features/auth/bloc/auth_bloc.dart';
 import 'package:flutter_qfam/src/features/auth/ui/login_screen.dart';
 import 'package:flutter_qfam/src/features/forum/bloc/forum/forum_bloc.dart';
@@ -121,7 +121,7 @@ class _DetailForumScreenState extends State<DetailForumScreen> {
                         },
                         onTapShare: () {
                           Share.share(
-                              '${detail?.content} ${AppSettings.getConfig.BASE_URL}thread/${detail?.uuid}',
+                              'Lihat diskusi: ${detail?.content} ${AppSettings.getConfig.BASE_URL}thread?id=${detail?.uuid}',
                               subject: 'Lihat disuksi ini');
                         },
                       ),
@@ -159,7 +159,7 @@ class _DetailForumScreenState extends State<DetailForumScreen> {
                               },
                               onTapShare: () {
                                 Share.share(
-                                    '${item.content} ${AppSettings.getConfig.BASE_URL}thread/${item.uuid}',
+                                    'Lihat diskusi: ${item.content} ${AppSettings.getConfig.BASE_URL}thread?id=${item.uuid}',
                                     subject: 'Lihat disuksi ini');
                               },
                             );
