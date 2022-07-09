@@ -8,11 +8,10 @@ abstract class SplashEvent extends Equatable {
 }
 
 class SplashEventInit extends SplashEvent {
-  final bool isLoading;
   final BuildContext context;
 
-  SplashEventInit({required this.isLoading, required this.context});
+  SplashEventInit({required this.context});
 
   @override
-  List<Object?> get props => [isLoading, context];
+  List<Object?> get props => [context];
 }

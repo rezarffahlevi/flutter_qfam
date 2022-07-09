@@ -98,7 +98,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       AuthEventSetFormdataUser event, Emitter<AuthState> emit) async {
     emit(state.copyWith(state: NetworkStates.onLoading));
     UserModel? formdataUser = UserModel(
-      id: state?.formdataUser?.id,
+      id: state.formdataUser?.id,
       email: state.formdataUser?.email,
       password: state.formdataUser?.password,
       name: state.formdataUser?.name,
