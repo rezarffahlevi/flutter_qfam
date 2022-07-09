@@ -102,7 +102,8 @@ AppBar appBar(
     onTapBack: null,
     onTap: null,
     icon: Icons.notifications,
-    fontFamily: null}) {
+    fontFamily: null,
+    photo: null}) {
   return AppBar(
     backgroundColor: MyColors.primary,
     leading: InkWell(
@@ -113,7 +114,7 @@ AppBar appBar(
                   onPressed: onTapBack,
                 )
               : GFAvatar(
-                  backgroundImage: NetworkImage(
+                  backgroundImage: NetworkImage(photo ??
                       'https://i.pinimg.com/originals/7c/c7/a6/7cc7a630624d20f7797cb4c8e93c09c1.png'),
                   size: 20,
                   backgroundColor: MyColors.background,
@@ -137,11 +138,13 @@ AppBar appBar(
               child: Container(
                 alignment: Alignment.center,
                 padding: const EdgeInsets.all(10.0),
-                child: icon.runtimeType == IconData ? Icon(
-                  icon,
-                  color: MyColors.textReverse,
-                  size: 24,
-                ) : icon,
+                child: icon.runtimeType == IconData
+                    ? Icon(
+                        icon,
+                        color: MyColors.textReverse,
+                        size: 24,
+                      )
+                    : icon,
               ),
               onTap: onTap,
             ),

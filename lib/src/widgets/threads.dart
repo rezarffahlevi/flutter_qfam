@@ -6,6 +6,7 @@ class Threads extends StatelessWidget {
     this.name,
     this.content,
     this.image,
+    this.photo,
     this.countComments,
     this.countLikes,
     this.onTap,
@@ -24,6 +25,7 @@ class Threads extends StatelessWidget {
   final String? name;
   final String? content;
   final String? image;
+  final String? photo;
   final int? countComments;
   final int? countLikes;
   final bool isDetail;
@@ -37,7 +39,6 @@ class Threads extends StatelessWidget {
   final Function()? onTapComment;
   final Function()? onTapLike;
   final Function()? onTapShare;
-  
 
   @override
   Widget build(BuildContext context) {
@@ -60,7 +61,7 @@ class Threads extends StatelessWidget {
         Container(
           padding: const EdgeInsets.all(10.0),
           child: GFAvatar(
-            backgroundImage: NetworkImage(
+            backgroundImage: NetworkImage(photo ??
                 'https://i.pinimg.com/originals/7c/c7/a6/7cc7a630624d20f7797cb4c8e93c09c1.png'),
             // size: 20,
             backgroundColor: MyColors.background,
@@ -127,8 +128,10 @@ class Threads extends StatelessWidget {
                           padding: EdgeInsets.symmetric(vertical: 16),
                           child: Row(
                             children: [
-                              Icon(Icons.mode_comment_outlined, size: 16,
-                                color:Colors.black38,
+                              Icon(
+                                Icons.mode_comment_outlined,
+                                size: 16,
+                                color: Colors.black38,
                               ),
                               Spaces.smallHorizontal(),
                               Text(
@@ -220,7 +223,7 @@ class Threads extends StatelessWidget {
           Row(
             children: [
               GFAvatar(
-                backgroundImage: NetworkImage(
+                backgroundImage: NetworkImage(photo ??
                     'https://i.pinimg.com/originals/7c/c7/a6/7cc7a630624d20f7797cb4c8e93c09c1.png'),
                 backgroundColor: MyColors.background,
               ),
@@ -353,7 +356,11 @@ class Threads extends StatelessWidget {
                         onTap: null,
                         child: Row(
                           children: [
-                            Icon(Icons.mode_comment_outlined, size: 16, color: Colors.black38,),
+                            Icon(
+                              Icons.mode_comment_outlined,
+                              size: 16,
+                              color: Colors.black38,
+                            ),
                             Spaces.smallHorizontal(),
                             Text(
                               '${countComments ?? 0}',

@@ -7,6 +7,7 @@ class AuthState extends Equatable {
   final UserModel? currentUser;
   final UserModel? formdataUser;
   final BuildContext? context;
+  final XFile? photo;
 
   const AuthState({
     this.state = NetworkStates.onLoaded,
@@ -15,6 +16,7 @@ class AuthState extends Equatable {
     this.currentUser,
     this.formdataUser,
     this.context,
+    this.photo,
   });
 
   AuthState copyWith({
@@ -24,6 +26,7 @@ class AuthState extends Equatable {
     UserModel? currentUser,
     UserModel? formdataUser,
     BuildContext? context,
+    XFile? photo,
   }) {
     return AuthState(
       state: state ?? this.state,
@@ -32,9 +35,11 @@ class AuthState extends Equatable {
       currentUser: currentUser ?? this.currentUser,
       formdataUser: formdataUser ?? this.formdataUser,
       context: context ?? this.context,
+      photo: photo ?? this.photo,
     );
   }
 
   @override
-  List<Object?> get props => [state, message, error, currentUser, formdataUser, context];
+  List<Object?> get props =>
+      [state, message, error, currentUser, formdataUser, context, photo];
 }

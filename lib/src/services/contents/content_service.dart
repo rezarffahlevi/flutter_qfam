@@ -92,7 +92,8 @@ class ContentService {
       FormData formData = FormData.fromMap({
         "file":
             await MultipartFile.fromFile(params.file!.path, filename: fileName),
-        "parent_id": params.parentId
+        "parent_id": params.parentId,
+        "type": params.type
       });
       var response = await apiHelper.post(
         '/contents/save_file',

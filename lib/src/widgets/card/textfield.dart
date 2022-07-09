@@ -20,7 +20,7 @@ class MyTextField extends StatelessWidget {
   final List<TextInputFormatter>? inputFormatters;
   final Function(bool)? onTextFieldTap;
   final TextInputAction? textInputAction;
-  final bool? enabled;
+  final bool enabled;
 
   MyTextField({
     this.controller,
@@ -38,7 +38,7 @@ class MyTextField extends StatelessWidget {
     this.inputFormatters,
     this.onTextFieldTap,
     this.textInputAction,
-    this.enabled,
+    this.enabled = true,
   });
 
   @override
@@ -53,17 +53,17 @@ class MyTextField extends StatelessWidget {
       obscureText: obscureText,
       onChanged: onChanged,
       decoration: InputDecoration(
-        labelText: labelText,
-        border: OutlineInputBorder(borderRadius: BorderRadius.circular(6)),
-        focusedBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.all(
-            Radius.circular(6.0),
+          labelText: labelText,
+          border: OutlineInputBorder(borderRadius: BorderRadius.circular(6)),
+          focusedBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.all(
+              Radius.circular(6.0),
+            ),
+            borderSide: BorderSide(color: Colors.blue),
           ),
-          borderSide: BorderSide(color: Colors.blue),
-        ),
-        contentPadding: EdgeInsets.symmetric(vertical: 15, horizontal: 20),
-        errorText: errorText,
-      ),
+          contentPadding: EdgeInsets.symmetric(vertical: 15, horizontal: 20),
+          errorText: errorText,
+          enabled: enabled),
     );
   }
 }

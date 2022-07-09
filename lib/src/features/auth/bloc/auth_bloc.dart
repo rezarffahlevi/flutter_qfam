@@ -1,15 +1,21 @@
+import 'dart:io';
+
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_qfam/src/commons/app_settings.dart';
 import 'package:flutter_qfam/src/commons/preferences_base.dart';
 import 'package:flutter_qfam/src/features/auth/arguments/auth_argument.dart';
 import 'package:flutter_qfam/src/features/auth/ui/login_screen.dart';
 import 'package:flutter_qfam/src/helpers/helpers.dart';
 import 'package:flutter_qfam/src/helpers/notification_helper.dart';
+import 'package:flutter_qfam/src/models/contents/banner_model.dart';
 import 'package:flutter_qfam/src/models/profile/user_model.dart';
 import 'package:flutter_qfam/src/services/auth/auth_service.dart';
+import 'package:flutter_qfam/src/services/contents/content_service.dart';
 import 'package:flutter_qfam/src/widgets/widgets.dart';
 import 'package:getwidget/getwidget.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 
 part 'auth_event.dart';
@@ -25,11 +31,14 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     on<AuthEventOnLogin>(_onLogin);
     on<AuthEventOnLogout>(_onLogout);
     on<AuthEventOnRegister>(_onRegister);
+    on<AuthEventAddPhoto>(_addPhoto);
   }
 
   RefreshController refreshController =
       RefreshController(initialRefresh: false);
   AuthService apiService = AuthService();
+  ContentService contentService = ContentService();
+  final ImagePicker _picker = ImagePicker();
 
   // late HomeRootBloc homeRootBloc;
 
@@ -89,6 +98,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       AuthEventSetFormdataUser event, Emitter<AuthState> emit) async {
     emit(state.copyWith(state: NetworkStates.onLoading));
     UserModel? formdataUser = UserModel(
+      id: state?.formdataUser?.id,
       email: state.formdataUser?.email,
       password: state.formdataUser?.password,
       name: state.formdataUser?.name,
@@ -97,6 +107,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       religion: state.formdataUser?.religion,
       photo: state.formdataUser?.photo,
     );
+    if (event.id != null) formdataUser.id = event.id;
     if (event.email != null) formdataUser.email = event.email;
     if (event.password != null) formdataUser.password = event.password;
     if (event.name != null) formdataUser.name = event.name;
@@ -105,8 +116,17 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     if (event.religion != null) formdataUser.religion = event.religion;
     if (event.photo != null) formdataUser.photo = event.photo;
 
-    emit(state.copyWith(
-        formdataUser: formdataUser, state: NetworkStates.onLoaded));
+    if (event.reset) {
+      txtName.text = '';
+      txtTelp.text = '';
+      txtEmail.text = '';
+      txtPassword.text = '';
+      emit(state.copyWith(
+          formdataUser: UserModel(), state: NetworkStates.onLoaded));
+    } else {
+      emit(state.copyWith(
+          formdataUser: formdataUser, state: NetworkStates.onLoaded));
+    }
   }
 
   _onLogin(AuthEventOnLogin event, Emitter<AuthState> emit) async {
@@ -144,7 +164,13 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     try {
       Helpers.dismissKeyboard(state.context as BuildContext);
       emit(state.copyWith(state: NetworkStates.onLoading));
+      FilesModel? upload = FilesModel();
+      if (!Helpers.isEmpty(state.photo?.name)) {
+        upload = await _uploadFile();
+      }
+
       var params = {
+        "id": state.formdataUser?.id,
         "email": state.formdataUser?.email,
         "password": state.formdataUser?.password,
         "name": state.formdataUser?.name,
@@ -152,19 +178,26 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
         "gender": state.formdataUser?.gender,
         "religion": state.formdataUser?.religion,
         "role": state.formdataUser?.role,
-        "photo": state.formdataUser?.photo,
+        "photo": !Helpers.isEmpty(upload?.name)
+            ? '${AppSettings.getConfig.BASE_URL}storages/${upload?.name?.split('.')[0]}/${upload?.type}'
+            : Helpers.isEmpty(state.formdataUser?.photo)
+                ? 'https://i.pinimg.com/originals/7c/c7/a6/7cc7a630624d20f7797cb4c8e93c09c1.png'
+                : state.formdataUser?.photo,
       };
       var response = await apiService.onRegister(params: params);
       ResponseLoginModel? data = response?.data;
-      if (response?.code == '00') {
+
+      if (response?.code == '00' && state.formdataUser?.id == null) {
         AuthArgument? formdataUser = AuthArgument(
             email: state.formdataUser?.email,
             password: state.formdataUser?.password);
         await Prefs.setAuth(formdataUser);
         await Prefs.setToken('${data?.tokenType} ${data?.token}');
-        Navigator.popUntil(state.context as BuildContext,
-            (Route<dynamic> route) => route.isFirst);
+      } else {
+        add(AuthEventGetCurrentUser());
       }
+      Navigator.popUntil(state.context as BuildContext,
+          (Route<dynamic> route) => route.isFirst);
       GFToast.showToast('${response?.message}', state.context as BuildContext,
           toastPosition: GFToastPosition.BOTTOM);
       emit(state.copyWith(
@@ -192,6 +225,34 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
           toastPosition: GFToastPosition.BOTTOM);
     } catch (e) {
       debugPrint('catch _onLogout ${e}');
+      emit(state.copyWith(state: NetworkStates.onError, message: '${e}'));
+    }
+  }
+
+  _uploadFile() async {
+    try {
+      FilesModel files = FilesModel();
+      files.file = File(
+        state.photo!.path,
+      );
+      files.type = 'upload_only';
+      var response = await contentService.uploadFile(files);
+      debugPrint('file data ${response?.data?.id} ${response?.data?.name}');
+      return response?.data;
+    } catch (e) {
+      debugPrint('ERROR FILE ${e}');
+      return FilesModel();
+    }
+  }
+
+  _addPhoto(AuthEventAddPhoto event, Emitter<AuthState> emit) async {
+    try {
+      // Pick an image
+      emit(state.copyWith(state: NetworkStates.onLoading));
+      final XFile? image = await _picker.pickImage(
+          source: ImageSource.gallery, imageQuality: 25);
+      emit(state.copyWith(photo: image, state: NetworkStates.onLoaded));
+    } catch (e) {
       emit(state.copyWith(state: NetworkStates.onError, message: '${e}'));
     }
   }

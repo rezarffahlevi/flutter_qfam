@@ -355,6 +355,8 @@ class _DetailArticleScreenState extends State<DetailArticleScreen> {
                                                               .routeName,
                                                           arguments: item),
                                                   name: '${item?.createdBy}',
+                                                  photo: item?.createdByPhoto,
+                                                  image: item?.image,
                                                   content: item?.content,
                                                   countComments:
                                                       item?.countComments,

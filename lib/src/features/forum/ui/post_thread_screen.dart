@@ -1,13 +1,13 @@
 import 'dart:io';
-import 'package:flutter_qfam/src/commons/spaces.dart';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_qfam/src/commons/spaces.dart';
+import 'package:flutter_qfam/src/features/auth/bloc/auth_bloc.dart';
 import 'package:flutter_qfam/src/features/forum/bloc/forum/forum_bloc.dart';
-import 'package:flutter_qfam/src/features/forum/ui/detail_forum_screen.dart';
 import 'package:flutter_qfam/src/helpers/helpers.dart';
 import 'package:flutter_qfam/src/models/forum/threads_model.dart';
 import 'package:flutter_qfam/src/styles/my_colors.dart';
-import 'package:flutter_qfam/src/styles/my_font_weight.dart';
 import 'package:flutter_qfam/src/styles/my_text_style.dart';
 import 'package:flutter_qfam/src/widgets/widgets.dart';
 import 'package:getwidget/getwidget.dart';
@@ -23,6 +23,7 @@ class PostThreadScreen extends StatefulWidget {
 }
 
 class _PostThreadScreenState extends State<PostThreadScreen> {
+  late AuthBloc authBloc;
   late ForumBloc bloc = ForumBloc();
   final RefreshController _refreshController =
       RefreshController(initialRefresh: false);
@@ -30,6 +31,7 @@ class _PostThreadScreenState extends State<PostThreadScreen> {
   @override
   void initState() {
     super.initState();
+    authBloc = context.read<AuthBloc>();
     bloc.add(ForumEventInitPostThread(context: context));
     bloc.add(ForumEventOnChangeThread(
         parentId: widget.argument?.parentId,
@@ -66,7 +68,8 @@ class _PostThreadScreenState extends State<PostThreadScreen> {
             onTapBack: () {
               Navigator.pop(context);
             },
-            child: 'Post ${widget.argument?.parentId == 0 ? 'Diskusi' : 'Balasan'}',
+            child:
+                'Post ${widget.argument?.parentId == 0 ? 'Diskusi' : 'Balasan'}',
             icon: Text(
               'Simpan',
               style: MyTextStyle.h5.bold.copyWith(color: MyColors.background),
@@ -105,7 +108,8 @@ class _PostThreadScreenState extends State<PostThreadScreen> {
                                   Container(
                                     margin: EdgeInsets.all(10),
                                     child: GFAvatar(
-                                      backgroundImage: NetworkImage(
+                                      backgroundImage: NetworkImage(authBloc
+                                              .state.currentUser?.photo ??
                                           'https://i.pinimg.com/originals/7c/c7/a6/7cc7a630624d20f7797cb4c8e93c09c1.png'),
                                       size: 25,
                                       backgroundColor: MyColors.background,

@@ -6,6 +6,7 @@ abstract class AuthEvent extends Equatable {
 }
 
 class AuthEventSetFormdataUser extends AuthEvent {
+  final int? id;
   final String? email;
   final String? password;
   final String? name;
@@ -13,8 +14,10 @@ class AuthEventSetFormdataUser extends AuthEvent {
   final String? gender;
   final String? religion;
   final String? photo;
+  final bool reset;
 
   AuthEventSetFormdataUser({
+    this.id,
     this.email,
     this.password,
     this.name,
@@ -22,10 +25,12 @@ class AuthEventSetFormdataUser extends AuthEvent {
     this.gender,
     this.religion,
     this.photo,
+    this.reset = false,
   });
 
   @override
-  List<Object?> get props => [email, password, name, telp, gender, religion, photo];
+  List<Object?> get props =>
+      [id, email, password, name, telp, gender, religion, photo, reset];
 }
 
 class AuthEventInitLogin extends AuthEvent {
@@ -47,9 +52,13 @@ class AuthEventInitRegister extends AuthEvent {
 }
 
 class AuthEventOnLogin extends AuthEvent {}
+
 class AuthEventOnLogout extends AuthEvent {}
+
 class AuthEventOnRegister extends AuthEvent {}
 
 class AuthEventGetCurrentUser extends AuthEvent {}
 
 class AuthEventRefresh extends AuthEvent {}
+
+class AuthEventAddPhoto extends AuthEvent {}

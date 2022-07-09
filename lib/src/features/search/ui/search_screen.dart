@@ -1,23 +1,17 @@
-import 'package:flutter/gestures.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_qfam/src/commons/constants.dart';
 import 'package:flutter_qfam/src/commons/spaces.dart';
 import 'package:flutter_qfam/src/features/article/ui/detail_article_screen.dart';
 import 'package:flutter_qfam/src/features/article/ui/post_article_screen.dart';
 import 'package:flutter_qfam/src/features/auth/bloc/auth_bloc.dart';
-import 'package:flutter_qfam/src/features/home/bloc/home_root/home_root_bloc.dart';
 import 'package:flutter_qfam/src/features/search/bloc/search/search_bloc.dart';
-import 'package:flutter_qfam/src/helpers/helpers.dart';
 import 'package:flutter_qfam/src/models/contents/contents_model.dart';
-import 'package:flutter_qfam/src/models/profile/user_model.dart';
 import 'package:flutter_qfam/src/styles/my_colors.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_qfam/src/styles/my_text_style.dart';
 import 'package:flutter_qfam/src/widgets/widgets.dart';
 import 'package:getwidget/getwidget.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
-import 'package:flutter_qfam/src/widgets/card/card_product_list.dart';
-import 'package:image_picker/image_picker.dart';
 
 class SearchScreen extends StatefulWidget {
   static const String routeName = '/search';
@@ -69,6 +63,7 @@ class _SearchScreenState extends State<SearchScreen> {
                       : null,
                   // onTap: () {},
                   // icon: Icons.filter_list,
+                  photo: authBloc.state.currentUser?.photo,
                   child: Container(
                     height: 35,
                     width: dimension.width - 120,

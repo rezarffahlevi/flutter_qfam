@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_qfam/src/commons/spaces.dart';
 import 'package:flutter_qfam/src/features/auth/bloc/auth_bloc.dart';
 import 'package:flutter_qfam/src/helpers/helpers.dart';
+import 'package:flutter_qfam/src/models/profile/user_model.dart';
 import 'package:flutter_qfam/src/styles/my_text_style.dart';
 import 'package:flutter_qfam/src/widgets/card/textfield.dart';
 import 'package:flutter_qfam/src/widgets/custom_loader.dart';
@@ -13,7 +14,7 @@ import 'package:pull_to_refresh/pull_to_refresh.dart';
 
 class RegisterScreen extends StatefulWidget {
   static const String routeName = '/register';
-  final int? argument;
+  final UserModel? argument;
   const RegisterScreen({Key? key, this.argument}) : super(key: key);
 
   @override
@@ -25,12 +26,31 @@ class _RegisterScreenState extends State<RegisterScreen> {
       RefreshController(initialRefresh: false);
   late AuthBloc bloc;
   CustomLoader loader = CustomLoader();
+  var isEdit = false;
 
   @override
   void initState() {
     super.initState();
     bloc = context.read<AuthBloc>();
     bloc.add(AuthEventInitRegister(context: context));
+    isEdit = !Helpers.isEmpty(widget.argument?.email);
+    if (isEdit) {
+      var user = widget.argument;
+      bloc.txtName.text = user?.name ?? '';
+      bloc.txtTelp.text = user?.telp ?? '';
+      bloc.txtEmail.text = user?.email ?? '';
+      bloc.txtPassword.text = '';
+      bloc.add(AuthEventSetFormdataUser(
+        id: user?.id,
+        name: user?.name,
+        telp: user?.telp,
+        gender: user?.gender,
+        religion: user?.religion,
+        email: user?.email,
+      ));
+    } else {
+      bloc.add(AuthEventSetFormdataUser(reset: true));
+    }
   }
 
   @override
@@ -51,7 +71,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
           onTapBack: () {
             Navigator.pop(context);
           },
-          child: 'Daftar',
+          child: isEdit ? 'Ubah Profil' : 'Daftar',
         ),
         body: SmartRefresher(
           enablePullDown: true,
@@ -197,10 +217,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                   ),
                                 ),
                                 Spaces.normalVertical(),
-                                _entryField(
-                                  'Email',
-                                  controller: bloc.txtEmail,
-                                ),
+                                _entryField('Email',
+                                    controller: bloc.txtEmail,
+                                    enabled: !isEdit),
                                 Spaces.normalVertical(),
                                 _entryField('Password',
                                     controller: bloc.txtPassword,
@@ -213,17 +232,35 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                 // ),
 
                                 Spaces.normalVertical(),
-                                InkWell(
-                                  onTap: () {},
-                                  child: Container(
-                                    margin: EdgeInsets.all(10),
-                                    child: Row(
-                                      children: [
-                                        Icon(Icons.add_photo_alternate),
-                                        Text('Upload gambar')
-                                      ],
+                                Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    InkWell(
+                                      onTap: () {
+                                        bloc.add(AuthEventAddPhoto());
+                                      },
+                                      child: Container(
+                                        margin: EdgeInsets.all(10),
+                                        child: Row(
+                                          children: [
+                                            Icon(Icons.add_photo_alternate),
+                                            Text('Upload gambar')
+                                          ],
+                                        ),
+                                      ),
                                     ),
-                                  ),
+                                    Text(
+                                        state.photo?.name.substring(
+                                                (state.photo?.name.length ??
+                                                        0) -
+                                                    18,
+                                                (state.photo?.name.length ??
+                                                        0) -
+                                                    0) ??
+                                            '',
+                                        overflow: TextOverflow.ellipsis),
+                                  ],
                                 ),
                                 Spaces.normalVertical(),
                                 GFButton(
@@ -275,6 +312,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
     String? errorText,
     bool obscureText = false,
     TextInputType keyboardType = TextInputType.emailAddress,
+    bool enabled = true,
   }) {
     return MyTextField(
       labelText: labelText,
@@ -283,6 +321,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
       obscureText: obscureText,
       errorText: errorText,
       keyboardType: keyboardType,
+      enabled: enabled,
     );
   }
 }

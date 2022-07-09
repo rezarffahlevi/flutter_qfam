@@ -1,13 +1,9 @@
-import 'package:flutter_qfam/src/commons/spaces.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_qfam/src/commons/spaces.dart';
 import 'package:flutter_qfam/src/features/article/bloc/detail_article/detail_article_bloc.dart';
-import 'package:flutter_qfam/src/features/forum/bloc/forum/forum_bloc.dart';
-import 'package:flutter_qfam/src/features/forum/ui/detail_forum_screen.dart';
 import 'package:flutter_qfam/src/helpers/helpers.dart';
 import 'package:flutter_qfam/src/models/contents/contents_model.dart';
-import 'package:flutter_qfam/src/styles/my_colors.dart';
-import 'package:flutter_qfam/src/styles/my_font_weight.dart';
 import 'package:flutter_qfam/src/styles/my_text_style.dart';
 import 'package:flutter_qfam/src/widgets/card/textfield.dart';
 import 'package:flutter_qfam/src/widgets/widgets.dart';

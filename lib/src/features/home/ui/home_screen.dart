@@ -1,16 +1,13 @@
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_qfam/src/commons/spaces.dart';
 import 'package:flutter_qfam/src/features/article/ui/detail_article_screen.dart';
 import 'package:flutter_qfam/src/features/auth/bloc/auth_bloc.dart';
 import 'package:flutter_qfam/src/features/home/bloc/home/home_bloc.dart';
 import 'package:flutter_qfam/src/features/home/bloc/home_root/home_root_bloc.dart';
 import 'package:flutter_qfam/src/features/notification/ui/notification_screen.dart';
-import 'package:flutter_qfam/src/features/search/ui/search_screen.dart';
 import 'package:flutter_qfam/src/helpers/helpers.dart';
-import 'package:flutter_qfam/src/models/contents/banner_model.dart';
-import 'package:flutter_qfam/src/models/contents/contents_model.dart';
 import 'package:flutter_qfam/src/styles/my_colors.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_qfam/src/styles/my_text_style.dart';
 import 'package:flutter_qfam/src/widgets/card/list_tile.dart';
 import 'package:flutter_qfam/src/widgets/widgets.dart';
@@ -50,69 +47,68 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     final dimension = MediaQuery.of(context).size;
     return BlocProvider(
-      create: (BuildContext context) => HomeBloc(),
-      child: Scaffold(
-          appBar: appBar(onTap: () {
-            Navigator.of(context).pushNamed(NotificationScreen.routeName);
-          }, fontFamily: 'GreatVibes'),
-          body: SmartRefresher(
-            enablePullDown: true,
-            enablePullUp: false,
-            controller: _refreshController,
-            onRefresh: () {
-              bloc.add(HomeEventRefresh());
-              authBloc.add(AuthEventGetCurrentUser());
-            },
-            child: SingleChildScrollView(
-              child: Column(
-                children: [
-                  BlocConsumer<HomeBloc, HomeState>(
-                      bloc: bloc,
-                      listener: (context, state) {
-                        _refreshController.refreshCompleted();
-                        _refreshController.loadComplete();
-                      },
-                      builder: (context, state) {
-                        final bannerList = state.bannerList;
-                        final sections = state.sections;
+      create: (BuildContext context) => bloc,
+      child: BlocConsumer<HomeBloc, HomeState>(
+          bloc: bloc,
+          listener: (context, state) {
+            _refreshController.refreshCompleted();
+            _refreshController.loadComplete();
+          },
+          builder: (context, state) {
+            final bannerList = state.bannerList;
+            final sections = state.sections;
 
-                        return Column(
-                          children: [
-                            _renderBanner(bannerList, state.activeBanner),
-                            Spaces.normalVertical(),
-                            Wrapper(
-                              state: state.state,
-                              onLoading: GFShimmer(
-                                child: Column(
+            return Scaffold(
+              appBar: appBar(
+                  onTap: () {
+                    Navigator.of(context)
+                        .pushNamed(NotificationScreen.routeName);
+                  },
+                  fontFamily: 'GreatVibes',
+                  photo: authBloc.state.currentUser?.photo),
+              body: SmartRefresher(
+                enablePullDown: true,
+                enablePullUp: false,
+                controller: _refreshController,
+                onRefresh: () {
+                  bloc.add(HomeEventRefresh());
+                  authBloc.add(AuthEventGetCurrentUser());
+                },
+                child: SingleChildScrollView(
+                  child: Column(
+                    children: [
+                      _renderBanner(bannerList, state.activeBanner),
+                      Spaces.normalVertical(),
+                      Wrapper(
+                        state: state.state,
+                        onLoading: GFShimmer(
+                          child: Column(
+                            children: [
+                              for (var i = 0; i < 12; i++)
+                                Column(
                                   children: [
-                                    for (var i = 0; i < 12; i++)
-                                      Column(
-                                        children: [
-                                          loadingBlock(dimension),
-                                          Spaces.normalVertical()
-                                        ],
-                                      ),
+                                    loadingBlock(dimension),
+                                    Spaces.normalVertical()
                                   ],
                                 ),
-                              ),
-                              onLoaded:
-                                  _renderArticle(dimension, state, sections),
-                              onError: Align(
-                                alignment: Alignment.center,
-                                child: Padding(
-                                    padding: const EdgeInsets.symmetric(
-                                        horizontal: 15.0),
-                                    child:
-                                        Text(state.message ?? 'Unknown Error')),
-                              ),
-                            ),
-                          ],
-                        );
-                      }),
-                ],
+                            ],
+                          ),
+                        ),
+                        onLoaded: _renderArticle(dimension, state, sections),
+                        onError: Align(
+                          alignment: Alignment.center,
+                          child: Padding(
+                              padding:
+                                  const EdgeInsets.symmetric(horizontal: 15.0),
+                              child: Text(state.message ?? 'Unknown Error')),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
               ),
-            ),
-          )),
+            );
+          }),
     );
   }
 

@@ -5,7 +5,8 @@ class ThreadsModel {
   String? image;
   int? forumId;
   int? contentId;
-  dynamic? createdBy;
+  dynamic createdBy;
+  String? createdByPhoto;
   String? createdByRole;
   int? parentId;
   int? isAnonymous;
@@ -24,6 +25,7 @@ class ThreadsModel {
       this.forumId,
       this.contentId,
       this.createdBy,
+      this.createdByPhoto,
       this.parentId,
       this.isAnonymous,
       this.countComments,
@@ -41,6 +43,7 @@ class ThreadsModel {
     forumId = json['forum_id'];
     contentId = json['content_id'];
     createdBy = json['created_by'];
+    createdByPhoto = json['created_by_photo'];
     createdByRole = json['created_by_role'];
     parentId = json['parent_id'];
     isAnonymous = json['is_anonymous'];
@@ -66,6 +69,7 @@ class ThreadsModel {
     data['forum_id'] = this.forumId;
     data['content_id'] = this.contentId;
     data['created_by'] = this.createdBy;
+    data['created_by_photo'] = this.createdByPhoto;
     data['created_by_role'] = this.createdByRole;
     data['parent_id'] = this.parentId;
     data['is_anonymous'] = this.isAnonymous;

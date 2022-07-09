@@ -135,8 +135,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                 background: Container(
                                   decoration: BoxDecoration(
                                     image: DecorationImage(
-                                        image: NetworkImage(
-                                            state.currentUser?.photo ?? ''),
+                                        image: NetworkImage(authState
+                                                .currentUser?.photo ??
+                                            'https://i.pinimg.com/originals/7c/c7/a6/7cc7a630624d20f7797cb4c8e93c09c1.png'),
                                         fit: BoxFit.cover),
                                   ),
                                 ),
@@ -210,7 +211,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     icon: Icons.edit,
                     text: 'Ubah Profil',
                     onTap: () {
-                      Navigator.of(context).pushNamed(RegisterScreen.routeName);
+                      Navigator.of(context).pushNamed(RegisterScreen.routeName,
+                          arguments: authBloc.state.currentUser);
                     }),
                 _menuWidget(
                     icon: Icons.favorite,

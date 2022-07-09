@@ -19,6 +19,7 @@ import 'package:flutter_qfam/src/helpers/helpers.dart';
 import 'package:flutter_qfam/src/helpers/notification_helper.dart';
 import 'package:flutter_qfam/src/models/contents/contents_model.dart';
 import 'package:flutter_qfam/src/models/forum/threads_model.dart';
+import 'package:flutter_qfam/src/models/profile/user_model.dart';
 
 class App extends StatefulWidget {
   const App({Key? key}) : super(key: key);
@@ -56,8 +57,11 @@ class _AppState extends State<App> {
           SplashScreen.routeName: (context) => const SplashScreen(),
           HomeRootScreen.routeName: (context) => const HomeRootScreen(),
           LoginScreen.routeName: (context) => const LoginScreen(),
-          RegisterScreen.routeName: (context) => const RegisterScreen(),
           NotificationScreen.routeName: (context) => const NotificationScreen(),
+          RegisterScreen.routeName: (context) => RegisterScreen(
+                argument:
+                    ModalRoute.of(context)?.settings.arguments as UserModel?,
+              ),
           LikesScreen.routeName: (context) => const LikesScreen(),
           SearchScreen.routeName: (context) => SearchScreen(
               argument: ModalRoute.of(context)?.settings.arguments as String?),

@@ -73,6 +73,7 @@ class _ForumScreenState extends State<ForumScreen>
                   // onTap: () {},
                   // icon: Icons.filter_list,
                   child: "Forum",
+                  photo: authBloc.state.currentUser?.photo,
                   fontFamily: 'GreatVibes'),
               body: Stack(
                 children: <Widget>[
@@ -201,6 +202,7 @@ class _ForumScreenState extends State<ForumScreen>
                                         name: '${item?.createdBy}',
                                         content: item?.content,
                                         image: item?.image,
+                                        photo: item?.createdByPhoto,
                                         countComments: item?.countComments,
                                         countLikes: item?.countLikes,
                                         isAnonymous: item?.isAnonymous == 1,
