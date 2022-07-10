@@ -354,7 +354,8 @@ class _DetailArticleScreenState extends State<DetailArticleScreen> {
                                                           DetailForumScreen
                                                               .routeName,
                                                           arguments: item),
-                                                  name: '${item?.createdBy}',
+                                                  name:
+                                                      '${item?.createdByName}',
                                                   photo: item?.createdByPhoto,
                                                   image: item?.image,
                                                   content: item?.content,

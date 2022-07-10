@@ -199,7 +199,7 @@ class _ForumScreenState extends State<ForumScreen>
                                             context,
                                             DetailForumScreen.routeName,
                                             arguments: item),
-                                        name: '${item?.createdBy}',
+                                        name: '${item?.createdByName}',
                                         content: item?.content,
                                         image: item?.image,
                                         photo: item?.createdByPhoto,

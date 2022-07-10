@@ -95,7 +95,7 @@ class _DetailForumScreenState extends State<DetailForumScreen> {
                     children: [
                       Threads(
                         isDetail: true,
-                        name: '${detail?.createdBy}',
+                        name: '${detail?.createdByName}',
                         content: detail?.content,
                         createdAt: detail?.createdAt,
                         image: detail?.image,
@@ -140,7 +140,7 @@ class _DetailForumScreenState extends State<DetailForumScreen> {
                               onTap: () => Navigator.pushNamed(
                                   context, DetailForumScreen.routeName,
                                   arguments: item),
-                              name: '${item.createdBy}',
+                              name: '${item.createdByName}',
                               content: item.content,
                               image: item.image,
                               photo: item.createdByPhoto,
