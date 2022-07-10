@@ -36,6 +36,7 @@ class _PostArticleScreenState extends State<PostArticleScreen> {
       bloc.txtThumbnail.text = data?.thumbnail ?? '';
       bloc.txtSourceBy.text = data?.sourceBy ?? '';
       bloc.txtVerifiedBy.text = data?.verifiedBy ?? '';
+      bloc.txtLink.text = data?.link ?? '';
 
       bloc.add(DetailArticleEventInitPost(formdata: data));
     } else {

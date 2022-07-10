@@ -9,6 +9,7 @@ class DetailArticleState extends Equatable {
   final int? activeBanner;
   final List<CategoryModel>? categoryList;
   final int page;
+  final double webviewHeight;
   final DefaultResponseModel? response;
   final XFile? thumbnail;
   final List<XFile>? banner;
@@ -22,6 +23,7 @@ class DetailArticleState extends Equatable {
     this.formdata,
     this.categoryList,
     this.page = 1,
+    this.webviewHeight = 600,
     this.response,
     this.thumbnail,
     this.banner,
@@ -36,6 +38,7 @@ class DetailArticleState extends Equatable {
     ContentsModel? formdata,
     List<CategoryModel>? categoryList,
     int? page = 1,
+    double? webviewHeight = 600,
     DefaultResponseModel? response,
     XFile? thumbnail,
     List<XFile>? banner,
@@ -49,6 +52,7 @@ class DetailArticleState extends Equatable {
       formdata: formdata ?? this.formdata,
       categoryList: categoryList ?? this.categoryList,
       page: page ?? this.page,
+      webviewHeight: webviewHeight ?? this.webviewHeight,
       response: response ?? this.response,
       thumbnail: thumbnail ?? this.thumbnail,
       banner: banner ?? this.banner,
@@ -65,6 +69,7 @@ class DetailArticleState extends Equatable {
         formdata,
         categoryList,
         page,
+        webviewHeight,
         response,
         thumbnail,
         banner,

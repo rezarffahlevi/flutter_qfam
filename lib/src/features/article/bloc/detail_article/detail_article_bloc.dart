@@ -30,6 +30,7 @@ class DetailArticleBloc extends Bloc<DetailArticleEvent, DetailArticleState> {
     on<DetailArticleEventGetCategory>(_getCategory);
     on<DetailArticleAddPhoto>(_addPhoto);
     on<DetailArticleOnLiked>(_toggleLike);
+    on<DetailArticleEventWebviewHeight>(_setWebviewHeight);
   }
   RefreshController refreshController =
       RefreshController(initialRefresh: false);
@@ -97,7 +98,8 @@ class DetailArticleBloc extends Bloc<DetailArticleEvent, DetailArticleState> {
             response: DefaultResponseModel(code: '01'),
             message: 'Link wajib di isi'));
       }
-      if (Helpers.isEmpty(state.formdata?.content)) {
+      if (state.formdata?.isExternal == 0 &&
+          Helpers.isEmpty(state.formdata?.content)) {
         return emit(state.copyWith(
             state: NetworkStates.onLoaded,
             response: DefaultResponseModel(code: '01'),
@@ -205,6 +207,11 @@ class DetailArticleBloc extends Bloc<DetailArticleEvent, DetailArticleState> {
   _setActiveBanner(DetailArticleEventSetActiveBanner event,
       Emitter<DetailArticleState> emit) async {
     emit(state.copyWith(activeBanner: event.activeBanner));
+  }
+
+  _setWebviewHeight(DetailArticleEventWebviewHeight event,
+      Emitter<DetailArticleState> emit) async {
+    emit(state.copyWith(webviewHeight: event.webviewHeight));
   }
 
   _addPhoto(

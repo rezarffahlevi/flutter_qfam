@@ -20,6 +20,15 @@ class DetailArticleEventGetCategory extends DetailArticleEvent {}
 
 class DetailArticleEventOnPost extends DetailArticleEvent {}
 
+class DetailArticleEventWebviewHeight extends DetailArticleEvent {
+  double webviewHeight;
+
+  DetailArticleEventWebviewHeight({this.webviewHeight = 300});
+
+  @override
+  List<Object?> get props => [webviewHeight];
+}
+
 class DetailArticleEventSetActiveBanner extends DetailArticleEvent {
   int activeBanner;
 
