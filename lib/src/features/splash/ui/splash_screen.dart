@@ -9,6 +9,8 @@ import 'package:flutter_qfam/src/helpers/helpers.dart';
 import 'package:flutter_qfam/src/styles/my_colors.dart';
 import 'package:flutter_qfam/src/styles/my_font_weight.dart';
 import 'package:flutter_qfam/src/styles/my_text_style.dart';
+import 'package:getwidget/components/toast/gf_toast.dart';
+import 'package:getwidget/getwidget.dart';
 
 class SplashScreen extends StatefulWidget {
   static const String routeName = '/';
@@ -73,6 +75,10 @@ class _SplashScreenState extends State<SplashScreen> {
                       ),
                     );
                   });
+            }
+            if (state.version?.message == 'error') {
+              return GFToast.showToast('Gagal terhubung ke server.', context,
+                  toastPosition: GFToastPosition.BOTTOM);
             }
           },
           builder: (context, state) {
