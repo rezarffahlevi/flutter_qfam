@@ -187,17 +187,20 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       var response = await apiService.onRegister(params: params);
       ResponseLoginModel? data = response?.data;
 
-      if (response?.code == '00' && state.formdataUser?.id == null) {
-        AuthArgument? formdataUser = AuthArgument(
-            email: state.formdataUser?.email,
-            password: state.formdataUser?.password);
-        await Prefs.setAuth(formdataUser);
-        await Prefs.setToken('${data?.tokenType} ${data?.token}');
-      } else {
-        add(AuthEventGetCurrentUser());
+      if (response?.code == '00') {
+        if (state.formdataUser?.id == null) {
+          AuthArgument? formdataUser = AuthArgument(
+              email: state.formdataUser?.email,
+              password: state.formdataUser?.password);
+          await Prefs.setAuth(formdataUser);
+          await Prefs.setToken('${data?.tokenType} ${data?.token}');
+        } else {
+          add(AuthEventGetCurrentUser());
+        }
+        Navigator.popUntil(state.context as BuildContext,
+            (Route<dynamic> route) => route.isFirst);
       }
-      Navigator.popUntil(state.context as BuildContext,
-          (Route<dynamic> route) => route.isFirst);
+      debugPrint('hii ${response?.code }');
       GFToast.showToast('${response?.message}', state.context as BuildContext,
           toastPosition: GFToastPosition.BOTTOM);
       emit(state.copyWith(
