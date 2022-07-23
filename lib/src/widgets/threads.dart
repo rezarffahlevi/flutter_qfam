@@ -73,27 +73,43 @@ class Threads extends StatelessWidget {
             children: [
               Spaces.smallVertical(),
               Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(
-                    isAnonymous ? 'Nama disamarkan' : name ?? '-',
-                    style: MyTextStyle.h5.bold.copyWith(
-                        decoration: isAnonymous
-                            ? TextDecoration.lineThrough
-                            : TextDecoration.none),
+                  Container(
+                    margin: EdgeInsets.only(top: 14),
+                    child: Row(
+                      children: [
+                        Text(
+                          isAnonymous ? 'Nama disamarkan' : name ?? '-',
+                          style: MyTextStyle.h5.bold.copyWith(
+                              decoration: isAnonymous
+                                  ? TextDecoration.lineThrough
+                                  : TextDecoration.none),
+                        ),
+                        Spaces.smallHorizontal(),
+                        isVerified && !isAnonymous
+                            ? Icon(
+                                Icons.verified_outlined,
+                                color: MyColors.primary,
+                                size: 18,
+                              )
+                            : Container(),
+                        Spaces.smallHorizontal(),
+                        Text(
+                          '· ${isVerified && !isAnonymous ? 'Edukator' : ''}',
+                          style: MyTextStyle.contentDescription,
+                        ),
+                      ],
+                    ),
                   ),
-                  Spaces.smallHorizontal(),
-                  isVerified && !isAnonymous
-                      ? Icon(
-                          Icons.verified_outlined,
-                          color: MyColors.primary,
-                          size: 18,
-                        )
-                      : Container(),
-                  Spaces.smallHorizontal(),
-                  Text(
-                    '· ${isVerified && !isAnonymous ? 'Edukator' : ''}',
-                    style: MyTextStyle.contentDescription,
-                  ),
+                  PopupMenuButton(
+                      itemBuilder: (context) => [
+                            PopupMenuItem(
+                              child: Text("Laporkan Diskusi"),
+                              onTap: () {},
+                            ),
+                          ])
                 ],
               ),
               Padding(
@@ -221,41 +237,54 @@ class Threads extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              GFAvatar(
-                backgroundImage: NetworkImage(photo ??
-                    'https://i.pinimg.com/originals/7c/c7/a6/7cc7a630624d20f7797cb4c8e93c09c1.png'),
-                backgroundColor: MyColors.background,
-              ),
-              Spaces.normalHorizontal(),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
+              Row(
                 children: [
-                  Row(
-                    children: [
-                      Text(
-                        isAnonymous ? 'Nama disamarkan' : name ?? '-',
-                        style: MyTextStyle.h5.bold.copyWith(
-                            decoration: isAnonymous
-                                ? TextDecoration.lineThrough
-                                : TextDecoration.none),
-                      ),
-                      Spaces.smallHorizontal(),
-                      isVerified && !isAnonymous
-                          ? Icon(
-                              Icons.verified_outlined,
-                              color: MyColors.primary,
-                              size: 18,
-                            )
-                          : Container(),
-                    ],
+                  GFAvatar(
+                    backgroundImage: NetworkImage(photo ??
+                        'https://i.pinimg.com/originals/7c/c7/a6/7cc7a630624d20f7797cb4c8e93c09c1.png'),
+                    backgroundColor: MyColors.background,
                   ),
-                  Text(
-                    '${isVerified && !isAnonymous ? 'Edukator' : ''}',
-                    style: MyTextStyle.contentDescription,
+                  Spaces.normalHorizontal(),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Row(
+                        children: [
+                          Text(
+                            isAnonymous ? 'Nama disamarkan' : name ?? '-',
+                            style: MyTextStyle.h5.bold.copyWith(
+                                decoration: isAnonymous
+                                    ? TextDecoration.lineThrough
+                                    : TextDecoration.none),
+                          ),
+                          Spaces.smallHorizontal(),
+                          isVerified && !isAnonymous
+                              ? Icon(
+                                  Icons.verified_outlined,
+                                  color: MyColors.primary,
+                                  size: 18,
+                                )
+                              : Container(),
+                        ],
+                      ),
+                      Text(
+                        '${isVerified && !isAnonymous ? 'Edukator' : ''}',
+                        style: MyTextStyle.contentDescription,
+                      ),
+                    ],
                   ),
                 ],
               ),
+              PopupMenuButton(
+                  itemBuilder: (context) => [
+                        PopupMenuItem(
+                          child: Text("Laporkan Diskusi"),
+                          onTap: () {},
+                        ),
+                      ])
             ],
           ),
           Column(
