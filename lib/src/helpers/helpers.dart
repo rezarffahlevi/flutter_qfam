@@ -3,6 +3,7 @@ import 'dart:io';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_qfam/src/commons/app_settings.dart';
 import 'package:flutter_qfam/src/commons/spaces.dart';
 import 'package:flutter_qfam/src/styles/my_colors.dart';
 import 'package:flutter_qfam/src/styles/my_text_style.dart';
@@ -19,6 +20,16 @@ class Helpers {
       return false;
     }
     return double.tryParse(s) != null;
+  }
+
+  static String refineUrl(String url) {
+    var base_url = AppSettings.getConfig.BASE_URL;
+    var replace_url = 'https://qfam.onepeerstech.com/';
+    if (url.contains(replace_url)) {
+      url = url.replaceAll("${replace_url}", "${base_url}");
+    }
+
+    return url;
   }
 
   static void dismissKeyboard(BuildContext context) {

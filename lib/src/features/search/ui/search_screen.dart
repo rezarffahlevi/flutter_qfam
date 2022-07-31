@@ -6,6 +6,7 @@ import 'package:flutter_qfam/src/features/article/ui/detail_article_screen.dart'
 import 'package:flutter_qfam/src/features/article/ui/post_article_screen.dart';
 import 'package:flutter_qfam/src/features/auth/bloc/auth_bloc.dart';
 import 'package:flutter_qfam/src/features/search/bloc/search/search_bloc.dart';
+import 'package:flutter_qfam/src/helpers/helpers.dart';
 import 'package:flutter_qfam/src/models/contents/contents_model.dart';
 import 'package:flutter_qfam/src/styles/my_colors.dart';
 import 'package:flutter_qfam/src/styles/my_text_style.dart';
@@ -172,7 +173,10 @@ class _SearchScreenState extends State<SearchScreen> {
                                                 borderRadius: BorderRadius.all(
                                                     Radius.circular(8)),
                                                 image: NetworkImage(
-                                                    article.thumbnail ?? ''),
+                                                    Helpers.refineUrl(
+                                                            article.thumbnail ??
+                                                                '') ??
+                                                        ''),
                                                 boxFit: BoxFit.fitWidth,
                                                 child: article.isVideo == 1
                                                     ? Icon(

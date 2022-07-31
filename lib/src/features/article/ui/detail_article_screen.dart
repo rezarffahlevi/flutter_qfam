@@ -173,7 +173,8 @@ class _DetailArticleScreenState extends State<DetailArticleScreen> {
                                         : _renderBanner(
                                             bannerList,
                                             state.activeBanner,
-                                            state.detail?.thumbnail),
+                                            Helpers.refineUrl(
+                                                state.detail?.thumbnail ?? '')),
                                     Container(
                                       padding: EdgeInsets.only(
                                           left: 16, right: 16, top: 16),
@@ -283,7 +284,8 @@ class _DetailArticleScreenState extends State<DetailArticleScreen> {
                                         right: 8,
                                       ),
                                       child: Html(
-                                        data: detail?.content ?? '',
+                                        data: Helpers.refineUrl(
+                                            detail?.content ?? ''),
                                         onLinkTap: (url, _, __, ___) {
                                           print("Opening $url...");
                                         },
@@ -576,7 +578,7 @@ class _DetailArticleScreenState extends State<DetailArticleScreen> {
                   margin: EdgeInsets.all(8.0),
                   child: ClipRRect(
                     borderRadius: BorderRadius.all(Radius.circular(5.0)),
-                    child: Image.network(item.link ?? '',
+                    child: Image.network(Helpers.refineUrl(item.link) ?? '',
                         fit: BoxFit.cover, width: 1000.0),
                   ),
                 );
@@ -617,14 +619,14 @@ class _DetailArticleScreenState extends State<DetailArticleScreen> {
       return GFImageOverlay(
         color: MyColors.greyPlaceHolder,
         height: 220,
-        image: NetworkImage(bannerList[0]?.link ?? ''),
+        image: NetworkImage(Helpers.refineUrl(bannerList[0]?.link) ?? ''),
         boxFit: BoxFit.fitWidth,
       );
     }
     return GFImageOverlay(
       color: MyColors.greyPlaceHolder,
       height: 220,
-      image: NetworkImage(thumbnail ?? ''),
+      image: NetworkImage(Helpers.refineUrl(thumbnail) ?? ''),
       boxFit: BoxFit.fitWidth,
     );
     ;

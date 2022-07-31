@@ -9,7 +9,7 @@ class AppSettings {
   static String name = 'Quality Family';
 
   // CHANGE THIS ENV
-  static AppEnv ENV = AppEnv.PRODUCTION;
+  static AppEnv ENV = AppEnv.DEVELOPMENT;
 
   AppSettings() {}
 
@@ -23,7 +23,7 @@ class AppSettings {
         break;
       case AppEnv.STAGING:
         config.ENV = AppEnv.STAGING;
-        config.BASE_URL = 'https://qfam.onepeerstech.com/';
+        config.BASE_URL = 'http://172.20.10.2:8000/';
         break;
       default:
         config.ENV = AppEnv.PRODUCTION;

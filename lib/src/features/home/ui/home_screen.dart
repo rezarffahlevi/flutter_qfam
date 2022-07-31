@@ -174,13 +174,21 @@ class _HomeScreenState extends State<HomeScreen> {
                                 decoration: BoxDecoration(
                                   image: DecorationImage(
                                     fit: BoxFit.cover,
-                                    image:
-                                        NetworkImage(article?.thumbnail ?? ''),
+                                    image: NetworkImage(
+                                        Helpers.refineUrl(article?.thumbnail) ??
+                                            ''),
                                   ),
                                   borderRadius:
                                       BorderRadius.all(Radius.circular(8.0)),
                                   color: Colors.grey,
                                 ),
+                                child: article.isVideo == 1
+                                    ? Icon(
+                                        Icons.play_circle,
+                                        size: 50,
+                                        color: Colors.white,
+                                      )
+                                    : Container(),
                               ),
                               Spaces.smallHorizontal(),
                               Flexible(
@@ -295,7 +303,9 @@ class _HomeScreenState extends State<HomeScreen> {
                                 height: 120,
                                 borderRadius:
                                     BorderRadius.all(Radius.circular(8)),
-                                image: NetworkImage(article?.thumbnail ?? ''),
+                                image: NetworkImage(
+                                    Helpers.refineUrl(article?.thumbnail) ??
+                                        ''),
                                 boxFit: BoxFit.fitWidth,
                                 child: article.isVideo == 1
                                     ? Icon(
@@ -377,7 +387,8 @@ class _HomeScreenState extends State<HomeScreen> {
                           shape: GFAvatarShape.square,
                           size: 60,
                           borderRadius: BorderRadius.circular(10),
-                          backgroundImage: NetworkImage('${article.thumbnail}'),
+                          backgroundImage: NetworkImage(
+                              '${Helpers.refineUrl(article?.thumbnail)}'),
                         ),
                         color: MyColors.background,
                         titleText: article.title,
@@ -439,7 +450,9 @@ class _HomeScreenState extends State<HomeScreen> {
                                 height: 120,
                                 borderRadius:
                                     BorderRadius.all(Radius.circular(8)),
-                                image: NetworkImage(article?.thumbnail ?? ''),
+                                image: NetworkImage(
+                                    Helpers.refineUrl(article?.thumbnail) ??
+                                        ''),
                                 boxFit: BoxFit.fitWidth,
                                 child: article.isVideo == 1
                                     ? Icon(
@@ -538,8 +551,9 @@ class _HomeScreenState extends State<HomeScreen> {
                                   child: Column(
                                     children: [
                                       GFAvatar(
-                                        backgroundImage:
-                                            NetworkImage(article.thumbnail),
+                                        backgroundImage: NetworkImage(
+                                            Helpers.refineUrl(
+                                                article?.thumbnail)),
                                       ),
                                       Spaces.normalVertical(),
                                       Text(article?.title ?? '-',
