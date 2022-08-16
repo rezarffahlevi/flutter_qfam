@@ -91,413 +91,400 @@ class _DetailArticleScreenState extends State<DetailArticleScreen> {
             final bannerList = state.bannerList;
 
             return Scaffold(
-                appBar: appBar(
-                    child: widget.argument.title ?? "Detail",
-                    onTapBack: () {
-                      Navigator.pop(context);
-                    },
-                    icon: authBloc.state.currentUser?.role != 'admin'
-                        ? null
-                        : Text(
-                            'Ubah',
-                            style: MyTextStyle.h5.bold
-                                .copyWith(color: MyColors.background),
-                          ),
-                    onTap: () async {
-                      var postArticle = await Navigator.of(context).pushNamed(
-                          PostArticleScreen.routeName,
-                          arguments: detail);
-                      if (postArticle != null) {
-                        await Future.delayed(Duration(seconds: 1));
+              appBar: appBar(
+                  child: widget.argument.title ?? "Detail",
+                  onTapBack: () {
+                    Navigator.pop(context);
+                  },
+                  icon: authBloc.state.currentUser?.role != 'admin'
+                      ? null
+                      : Text(
+                          'Ubah',
+                          style: MyTextStyle.h5.bold
+                              .copyWith(color: MyColors.background),
+                        ),
+                  onTap: () async {
+                    var postArticle = await Navigator.of(context).pushNamed(
+                        PostArticleScreen.routeName,
+                        arguments: detail);
+                    if (postArticle != null) {
+                      await Future.delayed(Duration(seconds: 1));
+                      bloc.add(DetailArticleEventGetDetail(
+                          uuid: widget.argument.uuid));
+                    }
+                  }),
+              body: state.detail?.isExternal == 1
+                  ? _webviewShow(state, dimension)
+                  : SmartRefresher(
+                      enablePullDown: true,
+                      enablePullUp: true,
+                      controller: bloc.refreshController,
+                      onRefresh: () {
+                        bloc.refreshController.resetNoData();
                         bloc.add(DetailArticleEventGetDetail(
                             uuid: widget.argument.uuid));
-                      }
-                    }),
-                body: state.detail?.isExternal == 1
-                    ? _webviewShow(state, dimension)
-                    : SmartRefresher(
-                        enablePullDown: true,
-                        enablePullUp: true,
-                        controller: bloc.refreshController,
-                        onRefresh: () {
-                          bloc.refreshController.resetNoData();
-                          bloc.add(DetailArticleEventGetDetail(
-                              uuid: widget.argument.uuid));
+                        blocForum.add(ForumEventGetData(
+                            contentId: widget.argument.id,
+                            parentId: 0,
+                            page: 1));
+                      },
+                      onLoading: () {
+                        if (blocForum.state.page <
+                            (blocForum.state.response?.pagination?.lastPage ??
+                                1)) {
                           blocForum.add(ForumEventGetData(
-                              contentId: widget.argument.id,
-                              parentId: 0,
-                              page: 1));
-                        },
-                        onLoading: () {
-                          if (blocForum.state.page <
-                              (blocForum.state.response?.pagination?.lastPage ??
-                                  1)) {
-                            blocForum.add(ForumEventGetData(
-                              contentId: widget.argument.id,
-                              parentId: 0,
-                              page: blocForum.state.page + 1,
-                            ));
-                          } else {
-                            bloc.refreshController.loadNoData();
-                          }
-                        },
-                        child: SingleChildScrollView(
-                          child: Column(children: [
-                            Wrapper(
-                              state: state.message == 'like'
-                                  ? NetworkStates.onLoaded
-                                  : state.state,
-                              onLoading: GFShimmer(
-                                child: Column(
-                                  children: [
-                                    Spaces.normalVertical(),
-                                    for (var i = 0; i < 12; i++)
-                                      Column(
-                                        children: [
-                                          loadingBlock(dimension),
-                                          Spaces.normalVertical()
-                                        ],
-                                      ),
-                                  ],
-                                ),
+                            contentId: widget.argument.id,
+                            parentId: 0,
+                            page: blocForum.state.page + 1,
+                          ));
+                        } else {
+                          bloc.refreshController.loadNoData();
+                        }
+                      },
+                      child: SingleChildScrollView(
+                        child: Column(children: [
+                          Wrapper(
+                            state: state.message == 'like'
+                                ? NetworkStates.onLoaded
+                                : state.state,
+                            onLoading: GFShimmer(
+                              child: Column(
+                                children: [
+                                  Spaces.normalVertical(),
+                                  for (var i = 0; i < 12; i++)
+                                    Column(
+                                      children: [
+                                        loadingBlock(dimension),
+                                        Spaces.normalVertical()
+                                      ],
+                                    ),
+                                ],
                               ),
-                              onLoaded: Container(
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    state.detail?.isVideo == 1
-                                        ? YoutubePlayerIFrame(
-                                            controller: bloc.ytController,
-                                            aspectRatio: 16 / 9,
-                                          )
-                                        : _renderBanner(
-                                            bannerList,
-                                            state.activeBanner,
-                                            Helpers.refineUrl(
-                                                state.detail?.thumbnail ?? '')),
-                                    Container(
-                                      padding: EdgeInsets.only(
-                                          left: 16, right: 16, top: 16),
-                                      child: Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: [
-                                          Text(
-                                            '${detail?.category}',
-                                            style: MyTextStyle.h7.bold.copyWith(
-                                              color: MyColors.primary,
-                                            ),
+                            ),
+                            onLoaded: Container(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  state.detail?.isVideo == 1
+                                      ? YoutubePlayerIFrame(
+                                          controller: bloc.ytController,
+                                          aspectRatio: 16 / 9,
+                                        )
+                                      : _renderBanner(
+                                          bannerList,
+                                          state.activeBanner,
+                                          Helpers.refineUrl(
+                                              state.detail?.thumbnail ?? '')),
+                                  Container(
+                                    padding: EdgeInsets.only(
+                                        left: 16, right: 16, top: 16),
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Text(
+                                          '${detail?.category}',
+                                          style: MyTextStyle.h7.bold.copyWith(
+                                            color: MyColors.primary,
                                           ),
-                                          Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.spaceBetween,
+                                        ),
+                                        Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceBetween,
+                                          children: [
+                                            RichText(
+                                              text: new TextSpan(
+                                                children: [
+                                                  new TextSpan(
+                                                    text:
+                                                        detail?.sourceBy == null
+                                                            ? 'Dibuat oleh '
+                                                            : 'Sumber dari ',
+                                                    style: MyTextStyle
+                                                        .contentDescription,
+                                                  ),
+                                                  new TextSpan(
+                                                    text:
+                                                        '${detail?.sourceBy ?? detail?.createdByName}',
+                                                    style: new TextStyle(
+                                                        color: MyColors.link),
+                                                  ),
+                                                ],
+                                              ),
+                                            ),
+                                            GestureDetector(
+                                              onTap: () {
+                                                if (authBloc.state.currentUser
+                                                        ?.email ==
+                                                    null)
+                                                  GFToast.showToast(
+                                                      'Anda harus login terlebih dahulu',
+                                                      context,
+                                                      toastPosition:
+                                                          GFToastPosition
+                                                              .BOTTOM);
+                                                else
+                                                  bloc.add(DetailArticleOnLiked(
+                                                      content_id: detail?.id));
+                                              },
+                                              child: Material(
+                                                elevation: 2.0,
+                                                color: Colors.transparent,
+                                                borderRadius:
+                                                    BorderRadius.circular(8),
+                                                child: Container(
+                                                  alignment: Alignment.topRight,
+                                                  child: Icon(
+                                                    detail?.isLiked == 1
+                                                        ? Icons.favorite
+                                                        : Icons
+                                                            .favorite_outline,
+                                                    color: MyColors.primary,
+                                                  ),
+                                                  padding: EdgeInsets.all(10),
+                                                  decoration: BoxDecoration(
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            8),
+                                                    color: MyColors.background,
+                                                  ),
+                                                ),
+                                              ),
+                                            )
+                                          ],
+                                        ),
+                                        Spaces.largeVertical(),
+                                        Text(
+                                          '${detail?.title}',
+                                          style: MyTextStyle.contentTitle,
+                                        ),
+                                        Spaces.smallVertical(),
+                                        Helpers.isEmpty(detail?.subtitle)
+                                            ? Container()
+                                            : Text(
+                                                '${detail?.subtitle}',
+                                                style: state.detail
+                                                            ?.isExternal ==
+                                                        1
+                                                    ? MyTextStyle.h6
+                                                    : MyTextStyle.sessionTitle,
+                                              ),
+                                        Spaces.normalVertical(),
+                                      ],
+                                    ),
+                                  ),
+                                  Container(
+                                    padding: EdgeInsets.only(
+                                      left: 8,
+                                      right: 8,
+                                    ),
+                                    child: Html(
+                                      data: Helpers.refineUrl(
+                                          detail?.content ?? ''),
+                                      onLinkTap: (url, _, __, ___) {
+                                        print("Opening $url...");
+                                      },
+                                      onImageTap: (src, _, __, ___) {
+                                        print(src);
+                                      },
+                                      onImageError: (exception, stackTrace) {
+                                        print(exception);
+                                      },
+                                      onCssParseError: (css, messages) {
+                                        print("css that errored: $css");
+                                        print("error messages:");
+                                        messages.forEach((element) {
+                                          print(element);
+                                        });
+                                      },
+                                    ),
+                                  ),
+                                  Helpers.isEmpty(detail?.verifiedBy)
+                                      ? Container()
+                                      : Container(
+                                          margin: EdgeInsets.symmetric(
+                                              horizontal: 16),
+                                          child: Row(
                                             children: [
                                               RichText(
                                                 text: new TextSpan(
                                                   children: [
                                                     new TextSpan(
-                                                      text: detail?.sourceBy ==
-                                                              null
-                                                          ? 'Dibuat oleh '
-                                                          : 'Sumber dari ',
+                                                      text: 'Terverifikasi ',
                                                       style: MyTextStyle
                                                           .contentDescription,
                                                     ),
                                                     new TextSpan(
                                                       text:
-                                                          '${detail?.sourceBy ?? detail?.createdByName}',
+                                                          '${detail?.verifiedBy}',
                                                       style: new TextStyle(
-                                                          color: MyColors.link),
+                                                        color: MyColors.link,
+                                                      ),
                                                     ),
                                                   ],
                                                 ),
                                               ),
-                                              GestureDetector(
-                                                onTap: () {
-                                                  if (authBloc.state.currentUser
-                                                          ?.email ==
-                                                      null)
-                                                    GFToast.showToast(
-                                                        'Anda harus login terlebih dahulu',
-                                                        context,
-                                                        toastPosition:
-                                                            GFToastPosition
-                                                                .BOTTOM);
-                                                  else
-                                                    bloc.add(
-                                                        DetailArticleOnLiked(
-                                                            content_id:
-                                                                detail?.id));
-                                                },
-                                                child: Material(
-                                                  elevation: 2.0,
-                                                  color: Colors.transparent,
-                                                  borderRadius:
-                                                      BorderRadius.circular(8),
-                                                  child: Container(
-                                                    alignment:
-                                                        Alignment.topRight,
-                                                    child: Icon(
-                                                      detail?.isLiked == 1
-                                                          ? Icons.favorite
-                                                          : Icons
-                                                              .favorite_outline,
+                                              detail?.verifiedBy == null
+                                                  ? Container()
+                                                  : Icon(
+                                                      Icons.verified_outlined,
                                                       color: MyColors.primary,
+                                                      size: 20,
                                                     ),
-                                                    padding: EdgeInsets.all(10),
-                                                    decoration: BoxDecoration(
-                                                      borderRadius:
-                                                          BorderRadius.circular(
-                                                              8),
-                                                      color:
-                                                          MyColors.background,
-                                                    ),
-                                                  ),
-                                                ),
-                                              )
                                             ],
                                           ),
-                                          Spaces.largeVertical(),
-                                          Text(
-                                            '${detail?.title}',
-                                            style: MyTextStyle.contentTitle,
-                                          ),
-                                          Spaces.smallVertical(),
-                                          Helpers.isEmpty(detail?.subtitle)
-                                              ? Container()
-                                              : Text(
-                                                  '${detail?.subtitle}',
-                                                  style: state.detail
-                                                              ?.isExternal ==
-                                                          1
-                                                      ? MyTextStyle.h6
-                                                      : MyTextStyle
-                                                          .sessionTitle,
-                                                ),
-                                          Spaces.normalVertical(),
-                                        ],
-                                      ),
+                                        ),
+                                  Spaces.largeVertical(),
+                                  Divider(),
+                                  Container(
+                                    margin: EdgeInsets.symmetric(horizontal: 8),
+                                    child: Text(
+                                      'Komentar atau Diskusi: ',
+                                      style: MyTextStyle.sessionTitle,
                                     ),
-                                    Container(
-                                      padding: EdgeInsets.only(
-                                        left: 8,
-                                        right: 8,
-                                      ),
-                                      child: Html(
-                                        data: Helpers.refineUrl(
-                                            detail?.content ?? ''),
-                                        onLinkTap: (url, _, __, ___) {
-                                          print("Opening $url...");
+                                  ),
+                                  Divider(),
+                                  Container(
+                                    margin: EdgeInsets.symmetric(horizontal: 8),
+                                    child: BlocConsumer<ForumBloc, ForumState>(
+                                        bloc: blocForum,
+                                        listener: (context, state) {
+                                          bloc.refreshController
+                                              .refreshCompleted();
+                                          bloc.refreshController.loadComplete();
                                         },
-                                        onImageTap: (src, _, __, ___) {
-                                          print(src);
-                                        },
-                                        onImageError: (exception, stackTrace) {
-                                          print(exception);
-                                        },
-                                        onCssParseError: (css, messages) {
-                                          print("css that errored: $css");
-                                          print("error messages:");
-                                          messages.forEach((element) {
-                                            print(element);
-                                          });
-                                        },
-                                      ),
-                                    ),
-                                    Helpers.isEmpty(detail?.verifiedBy)
-                                        ? Container()
-                                        : Container(
-                                            margin: EdgeInsets.symmetric(
-                                                horizontal: 16),
-                                            child: Row(
-                                              children: [
-                                                RichText(
-                                                  text: new TextSpan(
-                                                    children: [
-                                                      new TextSpan(
-                                                        text: 'Terverifikasi ',
-                                                        style: MyTextStyle
-                                                            .contentDescription,
-                                                      ),
-                                                      new TextSpan(
-                                                        text:
-                                                            '${detail?.verifiedBy}',
-                                                        style: new TextStyle(
-                                                          color: MyColors.link,
-                                                        ),
-                                                      ),
-                                                    ],
+                                        builder: (context, state) {
+                                          final list = state.threadsList;
+                                          return Wrapper(
+                                            state: NetworkStates.onLoaded,
+                                            onLoaded: state
+                                                        .threadsList!.length <
+                                                    1
+                                                ? Center(
+                                                    child: Text(
+                                                    'Belum ada diskusi',
+                                                    style: MyTextStyle.h4,
+                                                  ))
+                                                : ListView.separated(
+                                                    shrinkWrap: true,
+                                                    physics:
+                                                        NeverScrollableScrollPhysics(),
+                                                    itemBuilder: (c, i) {
+                                                      final item = list?[i];
+                                                      return Threads(
+                                                        onTap: () =>
+                                                            Navigator.pushNamed(
+                                                                context,
+                                                                DetailForumScreen
+                                                                    .routeName,
+                                                                arguments:
+                                                                    item),
+                                                        name:
+                                                            '${item?.createdByName}',
+                                                        photo: item
+                                                            ?.createdByPhoto,
+                                                        image: item?.image,
+                                                        content: item?.content,
+                                                        countComments:
+                                                            item?.countComments,
+                                                        countLikes:
+                                                            item?.countLikes,
+                                                        isAnonymous:
+                                                            item?.isAnonymous ==
+                                                                1,
+                                                        isLiked:
+                                                            item?.isLiked == 1,
+                                                        isVerified: !(item
+                                                                ?.createdByRole ==
+                                                            'user'),
+                                                        onTapLike: () {
+                                                          if (authBloc
+                                                                  .state
+                                                                  .currentUser
+                                                                  ?.email ==
+                                                              null)
+                                                            GFToast.showToast(
+                                                                'Anda harus login terlebih dahulu',
+                                                                context,
+                                                                toastPosition:
+                                                                    GFToastPosition
+                                                                        .BOTTOM);
+                                                          else
+                                                            blocForum.add(
+                                                                ForumEventOnLiked(
+                                                                    thread_id:
+                                                                        item?.id));
+                                                        },
+                                                        onTapShare: () {
+                                                          Share.share(
+                                                              'Lihat diskusi: ${item?.content} ${AppSettings.getConfig.BASE_URL}thread?id=${item?.uuid}',
+                                                              subject:
+                                                                  'Lihat disuksi ini');
+                                                        },
+                                                      );
+                                                    },
+                                                    separatorBuilder: (c, i) {
+                                                      return Spaces
+                                                          .normalHorizontal();
+                                                    },
+                                                    itemCount: list!.length,
                                                   ),
-                                                ),
-                                                detail?.verifiedBy == null
-                                                    ? Container()
-                                                    : Icon(
-                                                        Icons.verified_outlined,
-                                                        color: MyColors.primary,
-                                                        size: 20,
-                                                      ),
-                                              ],
-                                            ),
-                                          ),
-                                    Spaces.largeVertical(),
-                                    Divider(),
-                                    Container(
-                                      margin:
-                                          EdgeInsets.symmetric(horizontal: 8),
-                                      child: Text(
-                                        'Komentar atau Diskusi: ',
-                                        style: MyTextStyle.sessionTitle,
-                                      ),
-                                    ),
-                                    Divider(),
-                                    Container(
-                                      margin:
-                                          EdgeInsets.symmetric(horizontal: 8),
-                                      child: BlocConsumer<ForumBloc,
-                                              ForumState>(
-                                          bloc: blocForum,
-                                          listener: (context, state) {
-                                            bloc.refreshController
-                                                .refreshCompleted();
-                                            bloc.refreshController
-                                                .loadComplete();
-                                          },
-                                          builder: (context, state) {
-                                            final list = state.threadsList;
-                                            return Wrapper(
-                                              state: NetworkStates.onLoaded,
-                                              onLoaded: state
-                                                          .threadsList!.length <
-                                                      1
-                                                  ? Center(
-                                                      child: Text(
-                                                      'Belum ada diskusi',
-                                                      style: MyTextStyle.h4,
-                                                    ))
-                                                  : ListView.separated(
-                                                      shrinkWrap: true,
-                                                      physics:
-                                                          NeverScrollableScrollPhysics(),
-                                                      itemBuilder: (c, i) {
-                                                        final item = list?[i];
-                                                        return Threads(
-                                                          onTap: () => Navigator
-                                                              .pushNamed(
-                                                                  context,
-                                                                  DetailForumScreen
-                                                                      .routeName,
-                                                                  arguments:
-                                                                      item),
-                                                          name:
-                                                              '${item?.createdByName}',
-                                                          photo: item
-                                                              ?.createdByPhoto,
-                                                          image: item?.image,
-                                                          content:
-                                                              item?.content,
-                                                          countComments: item
-                                                              ?.countComments,
-                                                          countLikes:
-                                                              item?.countLikes,
-                                                          isAnonymous:
-                                                              item?.isAnonymous ==
-                                                                  1,
-                                                          isLiked:
-                                                              item?.isLiked ==
-                                                                  1,
-                                                          isVerified: !(item
-                                                                  ?.createdByRole ==
-                                                              'user'),
-                                                          onTapLike: () {
-                                                            if (authBloc
-                                                                    .state
-                                                                    .currentUser
-                                                                    ?.email ==
-                                                                null)
-                                                              GFToast.showToast(
-                                                                  'Anda harus login terlebih dahulu',
-                                                                  context,
-                                                                  toastPosition:
-                                                                      GFToastPosition
-                                                                          .BOTTOM);
-                                                            else
-                                                              blocForum.add(
-                                                                  ForumEventOnLiked(
-                                                                      thread_id:
-                                                                          item?.id));
-                                                          },
-                                                          onTapShare: () {
-                                                            Share.share(
-                                                                'Lihat diskusi: ${item?.content} ${AppSettings.getConfig.BASE_URL}thread?id=${item?.uuid}',
-                                                                subject:
-                                                                    'Lihat disuksi ini');
-                                                          },
-                                                        );
-                                                      },
-                                                      separatorBuilder: (c, i) {
-                                                        return Spaces
-                                                            .normalHorizontal();
-                                                      },
-                                                      itemCount: list!.length,
+                                            onLoading: GFShimmer(
+                                              child: Column(
+                                                children: [
+                                                  Spaces.normalVertical(),
+                                                  for (var i = 0; i < 2; i++)
+                                                    Column(
+                                                      children: [
+                                                        loadingBlock(dimension),
+                                                        Spaces.normalVertical()
+                                                      ],
                                                     ),
-                                              onLoading: GFShimmer(
-                                                child: Column(
-                                                  children: [
-                                                    Spaces.normalVertical(),
-                                                    for (var i = 0; i < 2; i++)
-                                                      Column(
-                                                        children: [
-                                                          loadingBlock(
-                                                              dimension),
-                                                          Spaces
-                                                              .normalVertical()
-                                                        ],
-                                                      ),
-                                                  ],
-                                                ),
+                                                ],
                                               ),
-                                              onError: Align(
-                                                alignment: Alignment.center,
-                                                child: Padding(
-                                                  padding: const EdgeInsets
-                                                          .symmetric(
-                                                      horizontal: 15.0),
-                                                  child: Text(state.message ??
-                                                      'Unknown Error'),
-                                                ),
+                                            ),
+                                            onError: Align(
+                                              alignment: Alignment.center,
+                                              child: Padding(
+                                                padding:
+                                                    const EdgeInsets.symmetric(
+                                                        horizontal: 15.0),
+                                                child: Text(state.message ??
+                                                    'Unknown Error'),
                                               ),
-                                            );
-                                          }),
-                                    ),
-                                  ],
-                                ),
+                                            ),
+                                          );
+                                        }),
+                                  ),
+                                ],
                               ),
-                              onError: Align(
-                                alignment: Alignment.center,
-                                child: Padding(
-                                  padding: const EdgeInsets.symmetric(
-                                      horizontal: 15.0),
-                                  child: Text(state.message ?? 'Unknown Error'),
-                                ),
+                            ),
+                            onError: Align(
+                              alignment: Alignment.center,
+                              child: Padding(
+                                padding: const EdgeInsets.symmetric(
+                                    horizontal: 15.0),
+                                child: Text(state.message ?? 'Unknown Error'),
                               ),
-                            )
-                          ]),
-                        ),
+                            ),
+                          )
+                        ]),
                       ),
-                floatingActionButton: state.detail?.isExternal == 1
-                    ? null
-                    : Stack(
-                        children: <Widget>[
-                          // Align(
-                          //   alignment: Alignment.bottomCenter,
-                          //   child: InkWell(
-                          //     child: Text('Lihat Komentar'),
-                          //     onTap: null,
-                          //   ),
-                          // ),
-                          Align(
-                            alignment: Alignment.bottomRight,
-                            child: FloatingActionButton(
+                    ),
+              floatingActionButton: state.detail?.isExternal == 1
+                  ? null
+                  : Stack(
+                      children: <Widget>[
+                        // Align(
+                        //   alignment: Alignment.bottomCenter,
+                        //   child: InkWell(
+                        //     child: Text('Lihat Komentar'),
+                        //     onTap: null,
+                        //   ),
+                        // ),
+                        Align(
+                          alignment: Alignment.bottomRight,
+                          child: FloatingActionButton.extended(
                               heroTag: null,
                               onPressed: () async {
                                 if (authBloc.state.currentUser?.email != null) {
@@ -520,13 +507,14 @@ class _DetailArticleScreenState extends State<DetailArticleScreen> {
                                 }
                               },
                               backgroundColor: MyColors.primary,
-                              child: const Icon(
+                              icon: const Icon(
                                 Icons.add,
                               ),
-                            ),
-                          ),
-                        ],
-                      ));
+                              label: Text("Komentari")),
+                        ),
+                      ],
+                    ),
+            );
           },
         ),
       ),
@@ -578,7 +566,7 @@ class _DetailArticleScreenState extends State<DetailArticleScreen> {
                   margin: EdgeInsets.all(8.0),
                   child: ClipRRect(
                     borderRadius: BorderRadius.all(Radius.circular(5.0)),
-                    child: Image.network(Helpers.refineUrl(item.link) ?? '',
+                    child: Image.network(Helpers.refineUrl(item.link),
                         fit: BoxFit.cover, width: 1000.0),
                   ),
                 );
@@ -619,14 +607,14 @@ class _DetailArticleScreenState extends State<DetailArticleScreen> {
       return GFImageOverlay(
         color: MyColors.greyPlaceHolder,
         height: 220,
-        image: NetworkImage(Helpers.refineUrl(bannerList[0]?.link) ?? ''),
+        image: NetworkImage(Helpers.refineUrl(bannerList[0]?.link ?? '')),
         boxFit: BoxFit.fitWidth,
       );
     }
     return GFImageOverlay(
       color: MyColors.greyPlaceHolder,
       height: 220,
-      image: NetworkImage(Helpers.refineUrl(thumbnail) ?? ''),
+      image: NetworkImage(Helpers.refineUrl(thumbnail)),
       boxFit: BoxFit.fitWidth,
     );
     ;

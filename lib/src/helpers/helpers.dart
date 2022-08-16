@@ -23,6 +23,7 @@ class Helpers {
   }
 
   static String refineUrl(String url) {
+    return url;
     var base_url = AppSettings.getConfig.BASE_URL;
     var replace_url = 'https://qfam.onepeerstech.com/';
     if (url.contains(replace_url)) {

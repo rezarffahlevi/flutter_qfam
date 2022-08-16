@@ -174,9 +174,8 @@ class _SearchScreenState extends State<SearchScreen> {
                                                     Radius.circular(8)),
                                                 image: NetworkImage(
                                                     Helpers.refineUrl(
-                                                            article.thumbnail ??
-                                                                '') ??
-                                                        ''),
+                                                        article.thumbnail ??
+                                                            '')),
                                                 boxFit: BoxFit.fitWidth,
                                                 child: article.isVideo == 1
                                                     ? Icon(

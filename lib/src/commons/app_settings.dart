@@ -9,7 +9,7 @@ class AppSettings {
   static String name = 'Quality Family';
 
   // CHANGE THIS ENV
-  static AppEnv ENV = AppEnv.DEVELOPMENT;
+  static AppEnv ENV = AppEnv.PRODUCTION;
 
   AppSettings() {}
 

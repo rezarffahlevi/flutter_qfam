@@ -175,8 +175,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                   image: DecorationImage(
                                     fit: BoxFit.cover,
                                     image: NetworkImage(
-                                        Helpers.refineUrl(article?.thumbnail) ??
-                                            ''),
+                                        Helpers.refineUrl(article?.thumbnail)),
                                   ),
                                   borderRadius:
                                       BorderRadius.all(Radius.circular(8.0)),
@@ -303,9 +302,8 @@ class _HomeScreenState extends State<HomeScreen> {
                                 height: 120,
                                 borderRadius:
                                     BorderRadius.all(Radius.circular(8)),
-                                image: NetworkImage(
-                                    Helpers.refineUrl(article?.thumbnail) ??
-                                        ''),
+                                image: NetworkImage(Helpers.refineUrl(
+                                    article?.thumbnail ?? '')),
                                 boxFit: BoxFit.fitWidth,
                                 child: article.isVideo == 1
                                     ? Icon(
@@ -451,8 +449,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                 borderRadius:
                                     BorderRadius.all(Radius.circular(8)),
                                 image: NetworkImage(
-                                    Helpers.refineUrl(article?.thumbnail) ??
-                                        ''),
+                                    Helpers.refineUrl(article?.thumbnail)),
                                 boxFit: BoxFit.fitWidth,
                                 child: article.isVideo == 1
                                     ? Icon(
